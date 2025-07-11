@@ -57,12 +57,12 @@ const DHPHeroSection: React.FC = () => {
 
               {/* CTA Buttons */}
               <div className="flex  sm:flex-row gap-4 justify-center lg:justify-center w-full">
-                <button onClick={()=>window.location.href = "/loign"} className="btn-primary group inline-flex items-center gap-3 px-8 py-4 rounded-full text-white font-semibold text-lg transition-all duration-300 hover:shadow-xl">
+                <button onClick={()=>window.location.href = "/register"} className="btn-primary group inline-flex items-center gap-3 px-8 py-4 rounded-full text-white font-semibold text-lg transition-all duration-300 hover:shadow-xl">
                   <span>Get Started</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
                 </button>
 
-                <button onClick={()=>window.location.href = "/loign"} className="group inline-flex items-center gap-3 px-8 py-4 rounded-full text-white font-semibold text-lg border-2 border-white/30 hover:bg-white/10 transition-all duration-300">
+                <button onClick={()=>window.location.href = "/login"} className="group inline-flex items-center gap-3 px-8 py-4 rounded-full text-white font-semibold text-lg border-2 border-white/30 hover:bg-white/10 transition-all duration-300">
                   <User2 className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
                   <span>Invite </span>
                 </button>
