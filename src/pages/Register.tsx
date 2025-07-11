@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import mainAxios from "../comps/Instance/mainAxios";
 type FormErrors = {
   fname?: string;
   lname?: string;
@@ -57,14 +57,31 @@ export default function DHPRegisterPage() {
 
   const handleRegister = () => {
     if (validateForm()) {
-      console.log("Registration attempted", {
-        fname,
-        lname,
-        uname,
-        email,
-        password,
-        rememberMe
-      });
+      mainAxios.post("register/", {
+        "first_name": fname,
+        "last_name": lname,
+        "username": uname,
+        "email": email,
+        "password": password
+      })
+        .then(response => {
+          console.log("Registration successful", response.data);
+          // Redirect to login or home page
+          window.location.href = "/login";
+        })
+        .catch(error => {
+          console.error("Registration failed", error);
+          if (error.response) {
+            // Handle specific error responses
+            if (error.response.status === 400) {
+              setErrors(prev => ({ ...prev, email: "Email already exists" }));
+            } else {
+              console.error("An unexpected error occurred", error.response.data);
+            }
+          }
+        });
+
+
     } else {
       console.log("Form has validation errors");
     }

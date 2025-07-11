@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import mainAxios from "../comps/Instance/mainAxios";
 
 type FormErrors = {
   email?: string;
@@ -11,8 +12,8 @@ export default function DHPLoginPage() {
   const nav = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [email, setEmail] = useState("johndadev");
-  const [password, setPassword] = useState("••••••••••••••");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState(" ");
   const [errors, setErrors] = useState<FormErrors>({});
 
   const validateForm = (): boolean => {
@@ -38,7 +39,20 @@ export default function DHPLoginPage() {
   const handleLogin = () => {
     if (validateForm()) {
       console.log("Login attempted", { email, password, rememberMe });
-      // Here you would typically make an API call to authenticate the user
+      mainAxios.post("login/", {
+        "username": email,
+        "password": password,
+      })
+        .then(response => {
+          // Handle successful login
+          const { token } = response.data.access
+          localStorage.setItem("authToken", token);
+          nav("/dashboard");
+        })
+        .catch(error => {
+          console.error("Login failed", error);
+          setErrors({ email: "Invalid Username or password", password: "Invalid Username or password" });
+        });
     } else {
       console.log("Form has validation errors");
     }
@@ -96,9 +110,9 @@ export default function DHPLoginPage() {
           {/* Login form */}
           <div className="space-y-6">
             <div>
-              <label htmlFor="email" className="text-gray-500 text-xs">Email or username</label>
+              <label htmlFor="email" className="text-gray-500 text-xs">username</label>
               <input
-                id="email"
+                id="text"
                 type="text"
                 placeholder="johndadev"
                 className={`w-full px-3 py-4 border-b focus:outline-none ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-green-500'
