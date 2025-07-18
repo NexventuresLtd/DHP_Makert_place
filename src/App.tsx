@@ -7,6 +7,8 @@ import HomePage from "./pages/HomePage"
 import AboutUs from "./pages/AboutUs"
 import DigRepo from "./pages/DigRepo"
 import Elearning from './pages/Elearning';
+import DHPDashboard from "./pages/Dashboard"
+import AdminLogin  from "./pages/adminLoginPage"
 
 
 
@@ -24,6 +26,8 @@ function App() {
       <Route path="/market" element={<MarketPlace/>}/>
       <Route path="/about" element={<DHPHeroSection/>}/>
       <Route path="/login" element={<DHPLoginPage/>}/>
+      <Route path="/admin/dashboard" element={<DHPDashboard/>}/>
+      <Route path="/admin/login" element={<AdminLogin/>}/>
       <Route path="/register" element={<DHPRegisterPage/>}/>
     </Routes>
     </BrowserRouter>

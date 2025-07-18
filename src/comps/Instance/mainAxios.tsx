@@ -1,4 +1,5 @@
 import axios from "axios";
+import { token } from "../../app/Localstorage";
 
 const mainAxios = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -28,7 +29,6 @@ mainAxios.interceptors.response.use(
 // Optional: Add request interceptor for auth token if needed
 mainAxios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("authToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

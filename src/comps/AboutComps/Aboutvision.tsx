@@ -4,7 +4,7 @@ import React from 'react';
 const MissionVision: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-16 px-4">
-      <div className="max-w-7xl mx-auto">
+      <div className="w-full md:max-w-11/12 mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">Mission and Vision</h1>

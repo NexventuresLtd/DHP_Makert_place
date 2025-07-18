@@ -13,7 +13,7 @@ export default function DHPLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(" ");
+  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
 
   const validateForm = (): boolean => {
@@ -45,9 +45,13 @@ export default function DHPLoginPage() {
       })
         .then(response => {
           // Handle successful login
-          const { token } = response.data.access
+          const token = response.data.access
           localStorage.setItem("authToken", token);
-          nav("/dashboard");
+          localStorage.setItem("userInfo", JSON.stringify({
+            "username": email,
+            "type": "user",
+          }));
+          nav("/");
         })
         .catch(error => {
           console.error("Login failed", error);

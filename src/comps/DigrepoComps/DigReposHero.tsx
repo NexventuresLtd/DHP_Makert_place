@@ -192,7 +192,7 @@ const DigitalRepository = ({ showThings, viewDig, setShowThings, setViewDig }: D
                     <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-transparent" />
 
                     {/* Content */}
-                    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                    <div className="relative w-full md:max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8 py-20">
                         <div className="max-w-4xl">
                             <div className="bg-black/40 backdrop-blur-md rounded-3xl p-8 lg:p-12 shadow-2xl">
                                 <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
@@ -235,7 +235,7 @@ const DigitalRepository = ({ showThings, viewDig, setShowThings, setViewDig }: D
 
                 {/* Stats Section */}
                 <div className="py-16 bg-white/90 backdrop-blur-sm">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="w-full md:max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
                             <div className="text-center">
                                 <div className="w-16 h-16 bg-gradient-to-r from-green-800 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
