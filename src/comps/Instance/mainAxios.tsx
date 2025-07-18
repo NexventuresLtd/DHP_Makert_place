@@ -1,40 +1,100 @@
 import axios from "axios";
-import { token } from "../../app/Localstorage";
+import { token} from "../../app/Localstorage";
 
+// Create Axios instance
 const mainAxios = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: false,
   headers: {
-    
     "Content-Type": "application/json",
     Accept: "application/json",
-    // Add any other default headers here
   },
 });
 
-mainAxios.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401 && !window.location.pathname.includes("/login")) {
-      // Store the current location to return after login
-      localStorage.setItem("redirectPath", window.location.pathname);
-      // Redirect to login page
-      window.location.href = "/login";
-      return Promise.reject(error);
+// Flag to avoid multiple refresh calls at once
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
     }
+  });
+  failedQueue = [];
+};
+
+// RESPONSE INTERCEPTOR
+mainAxios.interceptors.response.use(
+  response => response,
+  async error => {
+    const originalRequest = error.config;
+
+    // Handle expired token (401) only once
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      if (isRefreshing) {
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        })
+          .then(token => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return mainAxios(originalRequest);
+          })
+          .catch(err => {
+            return Promise.reject(err);
+          });
+      }
+
+      isRefreshing = true;
+
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}login/refresh/`,
+          { refresh: token },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        );
+
+        const newAccessToken = response.data.access;
+
+        // Store the new token using your local storage handler
+        localStorage.setItem("authToken", newAccessToken);
+
+        processQueue(null, newAccessToken);
+
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return mainAxios(originalRequest);
+      } catch (err) {
+        processQueue(err, null);
+        localStorage.setItem("redirectPath", window.location.pathname);
+        // window.location.href = "/login";
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
     return Promise.reject(error);
   }
 );
 
-// Optional: Add request interceptor for auth token if needed
+// REQUEST INTERCEPTOR
 mainAxios.interceptors.request.use(
-  (config) => {
+  config => {
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  error => Promise.reject(error)
 );
 
 export default mainAxios;
