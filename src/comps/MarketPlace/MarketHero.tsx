@@ -14,290 +14,291 @@ import {
     Star,
     Heart,
     Eye,
-    Gift,
-    Zap,
     Percent,
     Clock,
-    LogOutIcon,
-    UserCog2Icon
+    LogOut,
+    Loader2
 } from 'lucide-react';
-import { isLoggedIn, getUserInfo } from '../../app/Localstorage';
+import mainAxios from '../Instance/mainAxios';
+import { getUserInfo, isLoggedIn } from '../../app/Localstorage';
 import { Logout_action } from '../../app/SharedUtilities';
-import type { UserInfo } from '../../types/sharedtypes';
 
-const RwandanEcommerceLayout = () => {
-    const [selectedCategory, setSelectedCategory] = useState('All category');
-    const [searchQuery, setSearchQuery] = useState('');
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
-    const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-    const [selectedCountry, setSelectedCountry] = useState('Rwanda, RWF');
-    const [currentSlide, setCurrentSlide] = useState(0);
+interface Category {
+    id: number;
+    name: string;
+    slug?: string;
+    image?: string;
+}
 
+interface ProductImage {
+    id: number;
+    image: string;
+    is_primary: boolean;
+    product?: number;
+}
+
+interface Product {
+    id: number;
+    name: string;
+    description: string;
+    price: string | number;
+    original_price?: string | number;
+    condition: 'new' | 'used' | 'refurbished';
+    rating: number;
+    review_count: number;
+    stock: number;
+    images: ProductImage[];
+    is_featured?: boolean;
+    category?: number | Category;
+    created_at?: string;
+    updated_at?: string;
+}
+
+interface UserInfo {
+    username: string;
+    email?: string;
+    first_name?: string;
+    last_name?: string;
+    avatar?: string;
+}
+
+const ModernEcommerceLayout = () => {
+    const [selectedCategory, setSelectedCategory] = useState<string>('All category');
+    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+    const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState<boolean>(false);
+    const [isUserDropdownOpen, setIsUserDropdownOpen] = useState<boolean>(false);
+    const [selectedCountry, setSelectedCountry] = useState<string>('Rwanda, RWF');
+    const [currentSlide, setCurrentSlide] = useState<number>(0);
     const [user, setUser] = useState<UserInfo | null>(null);
 
-    const categories = [
-        'All category',
-        'Traditional Paintings',
-        'Wood Sculptures',
-        'Imigongo Art',
-        'Cultural Instruments',
-        'Musical Instruments',
-        'Traditional Utensils',
-        'Handcrafted Tools'
-    ];
+    const [categories, setCategories] = useState<string[]>([]);
+    const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+    const [isLoadingCategories, setIsLoadingCategories] = useState<boolean>(true);
+    const [isLoadingProducts, setIsLoadingProducts] = useState<boolean>(true);
 
-    const sidebarCategories = [
-        'Paintings',
-        'Sculptures',
-        'Drawings',
-        'Cultural tools, equipments',
-        'Music tools',
-        'Utensils',
-        'Traditional tools'
-    ];
+    const fetchCategories = async (): Promise<void> => {
+        try {
+            setIsLoadingCategories(true);
+            const response = await mainAxios.get<Category[]>('/market/categories/', {
+                headers: {
+                    'accept': 'application/json'
+                }
+            });
 
-    const countries = [
-        'Rwanda, RWF',
-        'Kenya, KES',
-        'Uganda, UGX',
-        'Tanzania, TZS'
-    ];
-
-    const deals = [
-        {
-            id: 1,
-            title: "Traditional Imigongo Art",
-            subtitle: "Handcrafted Heritage",
-            price: "RWF 25,000",
-            originalPrice: "RWF 35,000",
-            discount: "30% OFF",
-            icon: <Star className="w-6 h-6" />,
-            bgColor: "from-purple-200 via-blue-200 to-purple-300",
-            buttonColor: "bg-purple-600 hover:bg-purple-700",
-            decorativeElements: (
-                <>
-                    <div className="absolute top-4 right-4 w-16 h-12">
-                        <div className="w-4 h-4 bg-red-400 rounded-full"></div>
-                        <div className="w-3 h-3 bg-white rounded-full mt-1 ml-2"></div>
-                        <div className="w-2 h-2 bg-yellow-300 rounded-full mt-1 ml-4"></div>
-                    </div>
-                    <div className="absolute bottom-8 right-8 w-8 h-8 bg-purple-400 rounded-full opacity-60"></div>
-                </>
-            )
-        },
-        {
-            id: 2,
-            title: "Wood Sculpture Collection",
-            subtitle: "Master Craftsman Series",
-            price: "RWF 45,000",
-            originalPrice: "RWF 60,000",
-            discount: "25% OFF",
-            icon: <Gift className="w-6 h-6" />,
-            bgColor: "from-green-200 via-teal-200 to-green-300",
-            buttonColor: "bg-green-600 hover:bg-green-700",
-            decorativeElements: (
-                <>
-                    <div className="absolute top-6 right-6 w-12 h-12">
-                        <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
-                        <div className="w-4 h-4 bg-green-500 rounded-full mt-2 ml-1"></div>
-                        <div className="w-2 h-2 bg-white rounded-full mt-1 ml-3"></div>
-                    </div>
-                    <div className="absolute bottom-6 right-10 w-6 h-6 bg-green-500 rounded-full opacity-70"></div>
-                </>
-            )
-        },
-        {
-            id: 3,
-            title: "Cultural Instruments",
-            subtitle: "Traditional Music Heritage",
-            price: "RWF 18,000",
-            originalPrice: "RWF 24,000",
-            discount: "Flash Sale",
-            icon: <Zap className="w-6 h-6" />,
-            bgColor: "from-orange-200 via-yellow-200 to-orange-300",
-            buttonColor: "bg-orange-600 hover:bg-orange-700",
-            decorativeElements: (
-                <>
-                    <div className="absolute top-5 right-5 w-14 h-10">
-                        <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                        <div className="w-4 h-4 bg-yellow-400 rounded-full mt-1 ml-2"></div>
-                        <div className="w-2 h-2 bg-red-400 rounded-full mt-1 ml-4"></div>
-                    </div>
-                    <div className="absolute bottom-7 right-7 w-7 h-7 bg-yellow-400 rounded-full opacity-75"></div>
-                </>
-            )
-        },
-        {
-            id: 4,
-            title: "Handwoven Baskets",
-            subtitle: "Authentic Rwandan Craft",
-            price: "RWF 12,000",
-            originalPrice: "RWF 16,000",
-            discount: "Limited Time",
-            icon: <Heart className="w-6 h-6" />,
-            bgColor: "from-pink-200 via-rose-200 to-pink-300",
-            buttonColor: "bg-pink-600 hover:bg-pink-700",
-            decorativeElements: (
-                <>
-                    <div className="absolute top-4 right-4 w-15 h-11">
-                        <div className="w-4 h-4 bg-pink-400 rounded-full"></div>
-                        <div className="w-3 h-3 bg-rose-300 rounded-full mt-1 ml-1"></div>
-                        <div className="w-2 h-2 bg-white rounded-full mt-1 ml-3"></div>
-                    </div>
-                    <div className="absolute bottom-6 right-9 w-8 h-8 bg-rose-400 rounded-full opacity-65"></div>
-                </>
-            )
+            setCategories(['All category', ...response.data.map(cat => cat.name)]);
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+            setCategories(['All category']);
+        } finally {
+            setIsLoadingCategories(false);
         }
-    ];
+    };
+
+    const fetchFeaturedProducts = async (): Promise<void> => {
+        try {
+            setIsLoadingProducts(true);
+            const response = await mainAxios.get<Product[]>('/market/products/', {
+                params: {
+                    is_featured: true,
+                },
+                headers: {
+                    Accept: 'application/json',
+                },
+            });
+
+            setFeaturedProducts(response.data || []);
+            console.log('Featured products:', response.data);
+        } catch (error) {
+            console.error('Error fetching featured products:', error);
+            setFeaturedProducts([]);
+        } finally {
+            setIsLoadingProducts(false);
+        }
+    };
 
     useEffect(() => {
+        fetchCategories();
+        fetchFeaturedProducts();
+
         if (isLoggedIn) {
-            setUser(getUserInfo);
+            const userData = getUserInfo;
+            if (userData) {
+                setUser(userData as UserInfo);
+            }
         }
     }, []);
 
-    const handleSearch = () => {
+    const handleSearch = (): void => {
         console.log('Searching for:', searchQuery, 'in category:', selectedCategory);
+        // Implement actual search functionality here
     };
 
-    const handleLogout = () => {
+    const handleLogout = (): void => {
         if (window.confirm('Are you sure you want to log out?')) {
             Logout_action();
             window.location.href = '/login';
         }
     };
 
-    const nextSlide = () => {
-        setCurrentSlide((prev) => (prev + 1) % deals.length);
+    const nextSlide = (): void => {
+        if (featuredProducts.length > 0) {
+            setCurrentSlide((prev) => (prev + 1) % featuredProducts.length);
+        }
     };
 
-    const prevSlide = () => {
-        setCurrentSlide((prev) => (prev - 1 + deals.length) % deals.length);
+    const prevSlide = (): void => {
+        if (featuredProducts.length > 0) {
+            setCurrentSlide((prev) => (prev - 1 + featuredProducts.length) % featuredProducts.length);
+        }
     };
 
     useEffect(() => {
-        const timer = setInterval(nextSlide, 5000);
-        return () => clearInterval(timer);
-    }, []);
+        if (featuredProducts.length > 0) {
+            const timer = setInterval(nextSlide, 5000);
+            return () => clearInterval(timer);
+        }
+    }, [featuredProducts]);
 
-    const currentDeal = deals[currentSlide];
+    const currentProduct: Product | undefined = featuredProducts[currentSlide];
 
+    const formatPrice = (price: string | number | undefined): string => {
+        if (!price) return 'RWF 0';
+        const priceNumber = typeof price === 'string' ? parseFloat(price) : price;
+        return `RWF ${priceNumber.toLocaleString()}`;
+    };
+
+    const getProductImage = (product: Product | undefined): string => {
+        if (!product) return 'https://via.placeholder.com/400x300?text=No+Image';
+
+        if (product?.images && product.images.length > 0) {
+            const primaryImage = product.images.find(img => img.is_primary);
+            return primaryImage ? primaryImage.image : product.images[0].image;
+        }
+        return 'https://via.placeholder.com/400x300?text=No+Image';
+    };
+
+    const sidebarCategories: string[] = categories.length > 0 ? categories : ['All category'];
+    console.log(featuredProducts)
     return (
         <div className="bg-gray-50 font-sans">
             {/* Header */}
-            <header className="bg-white shadow-sm border-b border-gray-200">
-                <div className="w-full md:max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
+            <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
+                <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
-                        {/* Logo */}
+                        {/* Logo and Mobile Menu Button */}
                         <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                                <img src="logos/logo-circle.png" alt="Digital Heritage" className="w-8 h-8 rounded-full" />
+                            <button
+                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                className="lg:hidden p-2 text-gray-700 mr-2"
+                            >
+                                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                            </button>
+                            <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center">
+                                <div className="w-6 h-6 bg-white rounded-md opacity-90"></div>
                             </div>
-                            <div className="hidden lg:block">
-                                <h1 className="text-lg font-semibold text-gray-900">Digital Heritage</h1>
+                            <div className="hidden sm:block">
+                                <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                                    Digital Heritage
+                                </h1>
                                 <p className="text-xs text-gray-500">Preservationists Platform</p>
                             </div>
                         </div>
 
-                        {/* Search Bar */}
-                        <div className="hidden lg:flex flex-1 max-w-xl mx-4">
-                            <div className="flex w-full">
+                        {/* Search Bar - Hidden on mobile */}
+                        <div className="hidden md:flex flex-1 max-w-2xl mx-4 lg:mx-8">
+                            <div className="flex w-full bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden">
                                 <input
                                     type="text"
-                                    placeholder="Search for products..."
+                                    placeholder="Search for heritage products..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
-                                    aria-label="Search products"
+                                    className="flex-1 px-4 lg:px-6 py-2 lg:py-3 bg-transparent focus:outline-none text-gray-700 placeholder-gray-400 text-sm lg:text-base"
                                 />
-                                <div className="relative">
+                                <div className="relative border-l border-gray-200">
                                     <select
                                         value={selectedCategory}
                                         onChange={(e) => setSelectedCategory(e.target.value)}
-                                        className="appearance-none bg-white border-t border-b border-gray-300 px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm text-gray-700"
-                                        aria-label="Select category"
+                                        disabled={isLoadingCategories}
+                                        className="appearance-none bg-transparent px-3 lg:px-4 py-2 lg:py-3 pr-8 focus:outline-none text-gray-700 cursor-pointer disabled:opacity-50 text-sm lg:text-base"
                                     >
-                                        {categories.map((category) => (
-                                            <option key={category} value={category}>{category}</option>
-                                        ))}
+                                        {isLoadingCategories ? (
+                                            <option>Loading...</option>
+                                        ) : (
+                                            categories.map((category) => (
+                                                <option key={category} value={category}>
+                                                    {category}
+                                                </option>
+                                            ))
+                                        )}
                                     </select>
-                                    <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                                    <ChevronDown className="absolute right-2 lg:right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                                 </div>
                                 <button
                                     onClick={handleSearch}
-                                    className="bg-primary text-white px-6 py-2 rounded-r-md transition-colors duration-200"
-                                    aria-label="Search"
+                                    className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 lg:px-6 py-2 lg:py-3 transition-colors duration-200"
                                 >
-                                    <Search className="w-4 h-4" />
+                                    <Search className="w-4 h-4 lg:w-5 lg:h-5" />
                                 </button>
                             </div>
                         </div>
 
                         {/* Right Icons */}
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-4 lg:space-x-6">
                             {isLoggedIn ? (
-                                <div className="flex items-center space-x-4">
-                                    <div className="hidden lg:flex items-center space-x-4">
+                                <>
+                                    <div className="hidden md:flex items-center space-x-4 lg:space-x-6">
                                         <div className="relative">
                                             <button
                                                 onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                                                className="flex items-center space-x-2 text-gray-700 hover:text-green-600 transition-colors duration-200"
-                                                aria-label="User menu"
+                                                className="flex items-center space-x-2 text-gray-700 hover:text-emerald-600 transition-colors duration-200"
                                             >
-                                                <UserCog2Icon className="w-5 h-5" />
-                                                <span className="text-sm">{user?.username || 'Account'}</span>
+                                                <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center">
+                                                    <User className="w-4 h-4 text-white" />
+                                                </div>
+                                                <span className="font-medium hidden lg:inline">{user?.username || 'Account'}</span>
+                                                <ChevronDown className="w-4 h-4 hidden lg:inline" />
                                             </button>
                                             {isUserDropdownOpen && (
-                                                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md z-10">
-                                                    <button
-                                                        onClick={() => window.location.href = '/profile'}
-                                                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                    >
+                                                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-lg z-50">
+                                                    <button className="block w-full text-left px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
                                                         Profile
                                                     </button>
-                                                    <button
-                                                        onClick={() => window.location.href = '/orders'}
-                                                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                    >
+                                                    <button className="block w-full text-left px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
                                                         Orders
                                                     </button>
                                                     <button
                                                         onClick={handleLogout}
-                                                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                                                        className="block w-full text-left px-6 py-3 text-red-600 hover:bg-red-50 transition-colors"
                                                     >
                                                         Logout
                                                     </button>
                                                 </div>
                                             )}
                                         </div>
-                                        <button
-                                            onClick={() => window.location.href = '/cart'}
-                                            className="text-center cursor-pointer hover:text-green-600 transition-colors duration-200"
-                                            aria-label="Cart"
-                                        >
-                                            <ShoppingCart className="w-5 h-5 mx-auto text-gray-500" />
-                                            <span className="text-xs text-gray-500">My cart</span>
+
+                                        <button className="relative p-2 text-gray-700 hover:text-emerald-600 transition-colors">
+                                            <ShoppingCart className="w-5 h-5 lg:w-6 lg:h-6" />
+                                            <span className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 text-white text-xs rounded-full flex items-center justify-center">
+                                                2
+                                            </span>
                                         </button>
                                     </div>
 
-                                    {/* Mobile menu button */}
+                                    {/* Mobile search button */}
                                     <button
-                                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                                        className="lg:hidden p-2"
-                                        aria-label="Toggle mobile menu"
+                                        onClick={handleSearch}
+                                        className="md:hidden p-2 text-gray-700"
                                     >
-                                        {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                                        <Search className="w-5 h-5" />
                                     </button>
-                                </div>
+                                </>
                             ) : (
                                 <button
                                     onClick={() => window.location.href = '/login'}
-                                    className="flex items-center space-x-2 text-gray-700 hover:text-green-600 transition-colors duration-200"
-                                    aria-label="Login"
+                                    className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl transition-colors duration-200 font-medium text-sm lg:text-base"
                                 >
-                                    <User className="w-5 h-5" />
-                                    <span className="text-sm">Login</span>
+                                    Login
                                 </button>
                             )}
                         </div>
@@ -306,77 +307,44 @@ const RwandanEcommerceLayout = () => {
 
                 {/* Mobile Menu */}
                 {isMobileMenuOpen && (
-                    <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg z-50">
+                    <div className="lg:hidden bg-white border-t border-gray-100">
                         <div className="px-4 py-4 space-y-4">
                             {/* Mobile Search */}
-                            <div className="flex">
-                                <select
-                                    value={selectedCategory}
-                                    onChange={(e) => setSelectedCategory(e.target.value)}
-                                    className="appearance-none bg-gray-100 border border-r-0 border-gray-300 rounded-l-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                                    aria-label="Select category"
-                                >
-                                    {categories.map((category) => (
-                                        <option key={category} value={category}>{category}</option>
-                                    ))}
-                                </select>
+                            <div className="flex bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
                                 <input
                                     type="text"
-                                    placeholder="Search for products..."
+                                    placeholder="Search products..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="flex-1 px-3 py-2 border border-l-0 border-r-0 border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                                    aria-label="Search products"
+                                    className="flex-1 px-4 py-3 bg-transparent focus:outline-none text-gray-700"
                                 />
                                 <button
                                     onClick={handleSearch}
-                                    className="bg-green-600 text-white px-4 py-2 rounded-r-md"
-                                    aria-label="Search"
+                                    className="bg-emerald-500 text-white px-4 py-3"
                                 >
-                                    <Search className="w-4 h-4" />
+                                    <Search className="w-5 h-5" />
                                 </button>
                             </div>
 
                             {/* Mobile Navigation */}
-                            {isLoggedIn ? (
-                                <div className="flex flex-col space-y-4 pt-4 border-t">
-                                    <button
-                                        onClick={() => window.location.href = '/profile'}
-                                        className="flex items-center space-x-2 text-gray-700 hover:text-green-600"
-                                    >
-                                        <UserCog2Icon className="w-5 h-5" />
-                                        <span className="text-sm">Profile</span>
+                            {isLoggedIn && (
+                                <div className="flex flex-col space-y-3 pt-4 border-t border-gray-100">
+                                    <button className="flex items-center space-x-3 text-gray-700 hover:text-emerald-600 py-2">
+                                        <User className="w-5 h-5" />
+                                        <span>Profile</span>
                                     </button>
-                                    <button
-                                        onClick={() => window.location.href = '/orders'}
-                                        className="flex items-center space-x-2 text-gray-700 hover:text-green-600"
-                                    >
+                                    <button className="flex items-center space-x-3 text-gray-700 hover:text-emerald-600 py-2">
                                         <ShoppingCart className="w-5 h-5" />
-                                        <span className="text-sm">Orders</span>
-                                    </button>
-                                    <button
-                                        onClick={() => window.location.href = '/cart'}
-                                        className="flex items-center space-x-2 text-gray-700 hover:text-green-600"
-                                    >
-                                        <ShoppingCart className="w-5 h-5" />
-                                        <span className="text-sm">My cart</span>
+                                        <span>Cart</span>
                                     </button>
                                     <button
                                         onClick={handleLogout}
-                                        className="flex items-center space-x-2 text-red-600 hover:text-red-700"
+                                        className="flex items-center space-x-3 text-red-600 hover:text-red-700 py-2"
                                     >
-                                        <LogOutIcon className="w-5 h-5" />
-                                        <span className="text-sm">Logout</span>
+                                        <LogOut className="w-5 h-5" />
+                                        <span>Logout</span>
                                     </button>
                                 </div>
-                            ) : (
-                                <button
-                                    onClick={() => window.location.href = '/login'}
-                                    className="flex items-center space-x-2 text-gray-700 hover:text-green-600"
-                                >
-                                    <User className="w-5 h-5" />
-                                    <span className="text-sm">Login</span>
-                                </button>
                             )}
                         </div>
                     </div>
@@ -384,48 +352,39 @@ const RwandanEcommerceLayout = () => {
             </header>
 
             {/* Secondary Navigation */}
-            <nav className="bg-white border-b border-gray-200">
-                <div className="w-full md:max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-12">
-                        <div className="flex items-center space-x-6">
-                            <button
-                                onClick={() => window.location.href = '/'}
-                                className="flex items-center space-x-2 text-gray-800 hover:text-green-600 transition-colors duration-200"
-                                aria-label="Home"
-                            >
+            <nav className="bg-white border-b border-gray-100 sticky top-16 z-40">
+                <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between h-12 overflow-x-auto">
+                        <div className="flex items-center space-x-4 lg:space-x-8 min-w-max">
+                            <button className="flex items-center space-x-2 text-gray-600 hover:text-emerald-600 transition-colors whitespace-nowrap">
                                 <Home className="w-4 h-4" />
-                                <span>Home</span>
+                                <span className="font-medium text-sm lg:text-base">Home</span>
                             </button>
-                            <button
-                                onClick={() => window.location.href = '/help'}
-                                className="flex items-center space-x-2 text-gray-800 hover:text-green-600 transition-colors duration-200"
-                                aria-label="Help"
-                            >
+                            <button className="flex items-center space-x-2 text-gray-600 hover:text-emerald-600 transition-colors whitespace-nowrap">
                                 <Settings2 className="w-4 h-4" />
-                                <span>Help</span>
+                                <span className="font-medium text-sm lg:text-base">Help</span>
                             </button>
                         </div>
 
-                        <div className="flex items-center space-x-6">
+                        <div className="flex items-center space-x-4 lg:space-x-6 min-w-max">
                             <div className="relative">
                                 <button
                                     onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
-                                    className="flex items-center space-x-2 text-gray-800 hover:text-green-600 transition-colors duration-200"
-                                    aria-label="Select country"
+                                    className="flex items-center space-x-2 text-gray-600 hover:text-emerald-600 transition-colors whitespace-nowrap"
                                 >
-                                    <span>{selectedCountry}</span>
+                                    <span className="font-medium text-sm lg:text-base">{selectedCountry}</span>
                                     <ChevronDown className="w-4 h-4" />
                                 </button>
                                 {isCountryDropdownOpen && (
-                                    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-                                        {countries.map((country) => (
+                                    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-100 rounded-xl overflow-hidden shadow-lg z-50">
+                                        {['Rwanda, RWF', 'Kenya, KES', 'Uganda, UGX', 'Tanzania, TZS'].map((country) => (
                                             <button
                                                 key={country}
                                                 onClick={() => {
                                                     setSelectedCountry(country);
                                                     setIsCountryDropdownOpen(false);
                                                 }}
-                                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors text-sm"
                                             >
                                                 {country}
                                             </button>
@@ -435,11 +394,14 @@ const RwandanEcommerceLayout = () => {
                             </div>
 
                             <div className="flex items-center space-x-2">
-                                <span className="text-gray-800">Ship to</span>
-                                <div className="w-6 h-4 bg-blue-500 rounded-sm flex items-center justify-center overflow-hidden">
-                                    <img src="https://flagdom.com/flag-resources/flag-images/international/rwanda/rwanda-flag_3000x2000.png" alt="Rwanda flag" className="w-full h-full" />
+                                <span className="text-gray-600 font-medium text-sm lg:text-base whitespace-nowrap">Ship to</span>
+                                <div className="w-6 h-4 rounded overflow-hidden">
+                                    <img
+                                        src="https://flagdom.com/flag-resources/flag-images/international/rwanda/rwanda-flag_3000x2000.png"
+                                        alt="Rwanda flag"
+                                        className="w-full h-full object-cover"
+                                    />
                                 </div>
-                                <ChevronDown className="w-4 h-4 text-gray-600" />
                             </div>
                         </div>
                     </div>
@@ -447,167 +409,201 @@ const RwandanEcommerceLayout = () => {
             </nav>
 
             {/* Main Content */}
-            <div className="w-full md:max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <div className="flex flex-col lg:flex-row gap-6">
-                    {/* Sidebar */}
-                    <aside className="lg:w-80 w-full">
-                        <div className="bg-white rounded-lg p-6 ">
-                            <h3 className="text-lg font-semibold text-gray-800 mb-4">Gallery</h3>
-                            <ul className="space-y-3">
+            <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-8">
+                <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
+                    {/* Sidebar - Hidden on mobile unless menu is open */}
+                    <aside className={`${isMobileMenuOpen ? 'block' : 'hidden'} lg:block lg:w-80 w-full`}>
+                        <div className="bg-white rounded-2xl lg:rounded-3xl p-4 lg:p-6 border border-gray-100">
+                            <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-4 lg:mb-6">Browse Gallery</h3>
+                            <ul className="space-y-2 lg:space-y-4">
                                 {sidebarCategories.map((category, index) => (
                                     <li key={index}>
-                                        <button
-                                            className="text-gray-700 hover:text-green-600 transition-colors duration-200 text-left text-sm"
-                                            aria-label={`Filter by ${category}`}
-                                        >
+                                        <button className="w-full text-left text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl transition-all duration-200 font-medium text-sm lg:text-base">
                                             {category}
                                         </button>
                                     </li>
                                 ))}
                             </ul>
-                            <button
-                                className="text-blue-600 hover:text-blue-800 mt-4 font-medium text-sm"
-                                aria-label="See all categories"
-                            >
-                                See all
+                            <button className="text-emerald-600 hover:text-emerald-700 mt-4 lg:mt-6 font-semibold flex items-center space-x-2 px-3 lg:px-4 text-sm lg:text-base">
+                                <span>See all categories</span>
+                                <ChevronRight className="w-4 h-4" />
                             </button>
                         </div>
                     </aside>
 
-                    {/* Main Content Area - Deal Slider */}
+                    {/* Main Content Area */}
                     <main className="flex-1">
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            {/* Hero Section with Deal Slider */}
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
+                            {/* Hero Section with Product Slider */}
                             <div className="lg:col-span-2">
-                                <div
-                                    className={`bg-gradient-to-r ${currentDeal.bgColor} rounded-lg p-6 sm:p-8 h-80 sm:h-96 flex items-center relative overflow-hidden transition-all duration-500 touch-pan-x`}
-                                    role="region"
-                                    aria-label="Deal slider"
-                                >
-                                    {/* Navigation Arrows */}
-                                    <button
-                                        onClick={prevSlide}
-                                        className="absolute left-2 top-1/2 transform -translate-y-1/2 z-20 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200"
-                                        aria-label="Previous deal"
-                                    >
-                                        <ChevronLeft className="w-5 h-5 text-gray-700" />
-                                    </button>
-                                    <button
-                                        onClick={nextSlide}
-                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 z-20 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200"
-                                        aria-label="Next deal"
-                                    >
-                                        <ChevronRight className="w-5 h-5 text-gray-700" />
-                                    </button>
-
-                                    {/* Deal Content */}
-                                    <div className="flex-1 z-10 pr-4">
-                                        <div className="flex items-center space-x-2 mb-2">
-                                            <div className="text-gray-700">
-                                                {currentDeal.icon}
-                                            </div>
-                                            <span className="text-sm text-gray-700 font-medium">{currentDeal.discount}</span>
-                                        </div>
-                                        <h2 className="text-sm text-gray-700 mb-2">Latest trending</h2>
-                                        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-2">
-                                            {currentDeal.title}
-                                        </h1>
-                                        <p className="text-base text-gray-700 mb-4">{currentDeal.subtitle}</p>
-
-                                        {/* Price Display */}
-                                        <div className="flex items-center space-x-3 mb-6">
-                                            <span className="text-xl font-bold text-gray-800">{currentDeal.price}</span>
-                                            <span className="text-base text-gray-500 line-through">{currentDeal.originalPrice}</span>
-                                        </div>
-
-                                        <div className="flex flex-wrap gap-4">
-                                            <button
-                                                className="bg-white text-gray-800 px-6 py-2 rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-sm flex items-center space-x-2"
-                                                aria-label="View details"
-                                            >
-                                                <Eye className="w-4 h-4" />
-                                                <span>View Details</span>
-                                            </button>
-                                            <button
-                                                className={`${currentDeal.buttonColor} text-white px-6 py-2 rounded-md transition-colors duration-200 shadow-sm flex items-center space-x-2`}
-                                                aria-label="Add to cart"
-                                            >
-                                                <ShoppingCart className="w-4 h-4" />
-                                                <span>Add to Cart</span>
-                                            </button>
+                                {isLoadingProducts ? (
+                                    <div className="bg-white rounded-2xl lg:rounded-3xl p-6 lg:p-8 h-64 lg:h-96 flex items-center justify-center border border-gray-100">
+                                        <div className="flex items-center space-x-3 text-gray-500">
+                                            <Loader2 className="w-5 h-5 lg:w-6 lg:h-6 animate-spin" />
+                                            <span className="font-medium text-sm lg:text-base">Loading featured products...</span>
                                         </div>
                                     </div>
+                                ) : featuredProducts.length > 0 && currentProduct ? (
+                                    <div className="bg-gradient-to-br from-slate-50 via-emerald-50 to-teal-50 rounded-2xl lg:rounded-3xl p-4 lg:p-8 min-h-64 lg:min-h-96 flex flex-col lg:flex-row items-center relative overflow-hidden border border-gray-100">
+                                        {/* Navigation Arrows */}
+                                        {featuredProducts.length > 1 && (
+                                            <>
+                                                <button
+                                                    onClick={prevSlide}
+                                                    className="absolute left-2 lg:left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/90 hover:bg-white p-2 lg:p-3 rounded-full border border-gray-200 transition-all duration-200"
+                                                >
+                                                    <ChevronLeft className="w-4 h-4 lg:w-5 lg:h-5 text-gray-700" />
+                                                </button>
+                                                <button
+                                                    onClick={nextSlide}
+                                                    className="absolute right-2 lg:right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/90 hover:bg-white p-2 lg:p-3 rounded-full border border-gray-200 transition-all duration-200"
+                                                >
+                                                    <ChevronRight className="w-4 h-4 lg:w-5 lg:h-5 text-gray-700" />
+                                                </button>
+                                            </>
+                                        )}
 
-                                    {/* Traditional Rwandan Item Illustration */}
-                                    <div className="flex-1 flex items-center justify-center relative">
-                                        {currentDeal.decorativeElements}
-
-                                        {/* Main Item Display */}
-                                        <div className="relative">
-                                            <div className="w-36 sm:w-48 h-20 sm:h-24 bg-white rounded-full border-4 border-gray-200 shadow-lg relative">
-                                                <div className="absolute top-0 right-6 sm:right-8 w-12 sm:w-16 h-3 sm:h-4 bg-gray-800 rounded-full opacity-20"></div>
-                                                <div className="absolute top-1 right-7 sm:right-9 w-10 sm:w-14 h-1 sm:h-2 bg-gray-600 rounded-full opacity-30"></div>
-                                                <div className="absolute inset-2 bg-gray-100 rounded-full"></div>
+                                        {/* Product Content */}
+                                        <div className="flex-1 z-10 lg:pr-8 order-2 lg:order-1 mt-4 lg:mt-0">
+                                            <div className="flex items-center space-x-2 mb-2 lg:mb-3">
+                                                <div className="w-5 h-5 lg:w-6 lg:h-6 bg-emerald-500 rounded-md lg:rounded-lg flex items-center justify-center">
+                                                    <Star className="w-3 h-3 lg:w-4 lg:h-4 text-white" />
+                                                </div>
+                                                <span className="text-emerald-700 font-semibold bg-emerald-100 px-2 lg:px-3 py-0.5 lg:py-1 rounded-full text-xs lg:text-sm">
+                                                    Featured Product
+                                                </span>
                                             </div>
 
-                                            <div className="absolute -bottom-2 left-8 sm:left-12 transform rotate-12">
-                                                <div className="w-16 sm:w-20 h-2 sm:h-3 bg-green-600 rounded-full"></div>
-                                                <div className="w-6 sm:w-8 h-4 sm:h-6 bg-green-700 rounded-full -mt-1 ml-12 sm:ml-16 transform -rotate-12"></div>
-                                                <div className="w-1 h-1 bg-red-500 rounded-full absolute top-1 right-3 sm:right-4"></div>
+                                            <div className="mb-2 lg:mb-3">
+                                                <span className="text-xs lg:text-sm text-gray-500 font-medium">
+                                                    {currentProduct.condition === 'new' ? 'Brand New' : 'Pre-owned'}
+                                                </span>
+                                            </div>
+
+                                            <h1 className="text-xl lg:text-3xl xl:text-4xl font-bold text-gray-900 mb-2 lg:mb-3">
+                                                {currentProduct.name}
+                                            </h1>
+                                            <p className="text-gray-600 mb-4 lg:mb-6 text-sm lg:text-lg leading-relaxed line-clamp-2 lg:line-clamp-3">
+                                                {currentProduct.description}
+                                            </p>
+
+                                            {/* Price Display */}
+                                            <div className="flex items-center space-x-2 lg:space-x-4 mb-4 lg:mb-8">
+                                                <span className="text-lg lg:text-2xl font-bold text-gray-900">
+                                                    {formatPrice(currentProduct.price)}
+                                                </span>
+                                                {currentProduct.original_price && currentProduct.original_price !== currentProduct.price && (
+                                                    <>
+                                                        <span className="text-sm lg:text-lg text-gray-400 line-through">
+                                                            {formatPrice(currentProduct.original_price)}
+                                                        </span>
+                                                        <span className="bg-red-100 text-red-700 px-2 lg:px-3 py-0.5 lg:py-1 rounded-full text-xs lg:text-sm font-semibold">
+                                                            Save {Math.round((1 - Number(currentProduct.price) / Number(currentProduct.original_price) * 100))}%
+                                                        </span>
+                                                    </>
+                                                )}
+                                            </div>
+
+                                            {/* Action Buttons */}
+                                            <div className="flex flex-wrap gap-2 lg:gap-4">
+                                                <button className="bg-white text-gray-700 px-4 lg:px-6 py-2 lg:py-3 rounded-lg lg:rounded-xl border border-gray-200 hover:bg-gray-50 transition-all duration-200 font-semibold flex items-center space-x-2 text-sm lg:text-base">
+                                                    <Eye className="w-3 h-3 lg:w-4 lg:h-4" />
+                                                    <span>View Details</span>
+                                                </button>
+                                                <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 lg:px-6 py-2 lg:py-3 rounded-lg lg:rounded-xl transition-all duration-200 font-semibold flex items-center space-x-2 text-sm lg:text-base">
+                                                    <ShoppingCart className="w-3 h-3 lg:w-4 lg:h-4" />
+                                                    <span>Add to Cart</span>
+                                                </button>
+                                                <button className="p-2 lg:p-3 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-lg lg:rounded-xl transition-all duration-200">
+                                                    <Heart className="w-4 h-4 lg:w-5 lg:h-5" />
+                                                </button>
+                                            </div>
+
+                                            {/* Product Info */}
+                                            <div className="flex items-center space-x-4 lg:space-x-6 mt-4 lg:mt-6 text-xs lg:text-sm text-gray-500">
+                                                <div className="flex items-center space-x-1">
+                                                    <Star className="w-3 h-3 lg:w-4 lg:h-4 fill-current text-yellow-400" />
+                                                    <span className="font-medium text-gray-700">
+                                                        {currentProduct.rating} ({currentProduct.review_count} reviews)
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <span className="font-medium">Stock: </span>
+                                                    <span className={currentProduct.stock > 0 ? 'text-emerald-600' : 'text-red-500'}>
+                                                        {currentProduct.stock > 0 ? `${currentProduct.stock} available` : 'Out of stock'}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div className="absolute top-8 sm:top-12 left-3 sm:left-4 w-4 sm:w-6 h-4 sm:h-6 bg-white rounded-full opacity-80"></div>
-                                    </div>
+                                        {/* Product Image */}
+                                        <div className="flex-1 flex items-center justify-center relative order-1 lg:order-2">
+                                            <div className="w-40 h-40 lg:w-64 lg:h-64 rounded-xl lg:rounded-2xl overflow-hidden border border-gray-200 bg-white">
+                                                <img
+                                                    src={getProductImage(currentProduct)}
+                                                    alt={currentProduct.name}
+                                                    className="w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        e.currentTarget.src = 'https://via.placeholder.com/400x300?text=No+Image';
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
 
-                                    {/* Slide Indicators */}
-                                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-                                        {deals.map((_, index) => (
-                                            <button
-                                                key={index}
-                                                onClick={() => setCurrentSlide(index)}
-                                                className={`w-2 h-2 rounded-full transition-all duration-200 ${index === currentSlide ? 'bg-white w-6' : 'bg-white/50'}`}
-                                                aria-label={`Go to slide ${index + 1}`}
-                                            />
-                                        ))}
+                                        {/* Slide Indicators */}
+                                        {featuredProducts.length > 1 && (
+                                            <div className="absolute bottom-2 lg:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-1 lg:space-x-2 z-10 order-3">
+                                                {featuredProducts.map((_, index) => (
+                                                    <button
+                                                        key={index}
+                                                        onClick={() => setCurrentSlide(index)}
+                                                        className={`h-1.5 lg:h-2 rounded-full transition-all duration-200 ${index === currentSlide
+                                                            ? 'bg-emerald-500 w-6 lg:w-8'
+                                                            : 'bg-gray-300 w-1.5 lg:w-2 hover:bg-gray-400'
+                                                            }`}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
+                                ) : (
+                                    <div className="bg-white rounded-2xl lg:rounded-3xl p-6 lg:p-8 h-64 lg:h-96 flex items-center justify-center border border-gray-100">
+                                        <div className="text-center">
+                                            <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gray-100 rounded-xl lg:rounded-2xl flex items-center justify-center mx-auto mb-3 lg:mb-4">
+                                                <ShoppingCart className="w-6 h-6 lg:w-8 lg:h-8 text-gray-400" />
+                                            </div>
+                                            <h3 className="text-lg lg:text-xl font-semibold text-gray-900 mb-1 lg:mb-2">No Featured Products</h3>
+                                            <p className="text-gray-500 text-sm lg:text-base">Check back later for featured items</p>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Action Cards */}
-                            <div className="space-y-4">
-                                <button
-                                    className="bg-orange-400 text-white p-6 rounded-lg hover:bg-orange-500 transition-colors duration-200 w-full text-left"
-                                    aria-label="Get US $10 off"
-                                >
-                                    <div className="flex items-center justify-between mb-2">
-                                        <h3 className="font-semibold">Get US $10 off</h3>
-                                        <Percent className="w-5 h-5" />
+                            <div className="space-y-3 lg:space-y-6">
+                                <div className="bg-gradient-to-br from-orange-400 to-orange-500 text-white p-4 lg:p-6 rounded-2xl lg:rounded-3xl hover:from-orange-500 hover:to-orange-600 transition-all duration-200 cursor-pointer">
+                                    <div className="flex items-center justify-between mb-2 lg:mb-3">
+                                        <h3 className="text-base lg:text-lg font-bold">Get 10% Off</h3>
+                                        <Percent className="w-5 h-5 lg:w-6 lg:h-6" />
                                     </div>
-                                    <p className="text-sm opacity-90">with a new supplier</p>
-                                </button>
+                                    <p className="text-orange-100 text-sm lg:text-base">on your first purchase</p>
+                                </div>
 
-                                <button
-                                    className="bg-teal-400 text-white p-6 rounded-lg hover:bg-teal-500 transition-colors duration-200 w-full text-left"
-                                    aria-label="Send quotes"
-                                >
-                                    <div className="flex items-center justify-between mb-2">
-                                        <h3 className="font-semibold">Send quotes with</h3>
-                                        <Settings className="w-5 h-5" />
+                                <div className="bg-gradient-to-br from-teal-400 to-teal-500 text-white p-4 lg:p-6 rounded-2xl lg:rounded-3xl hover:from-teal-500 hover:to-teal-600 transition-all duration-200 cursor-pointer">
+                                    <div className="flex items-center justify-between mb-2 lg:mb-3">
+                                        <h3 className="text-base lg:text-lg font-bold">Free Consultation</h3>
+                                        <Settings className="w-5 h-5 lg:w-6 lg:h-6" />
                                     </div>
-                                    <p className="text-sm opacity-90">supplier preferences</p>
-                                </button>
+                                    <p className="text-teal-100 text-sm lg:text-base">Heritage preservation advice</p>
+                                </div>
 
-                                <button
-                                    className="bg-red-400 text-white p-6 rounded-lg hover:bg-red-500 transition-colors duration-200 w-full text-left"
-                                    aria-label="Limited time offer"
-                                >
-                                    <div className="flex items-center justify-between mb-2">
-                                        <h3 className="font-semibold">Limited Time Offer</h3>
-                                        <Clock className="w-5 h-5" />
+                                <div className="bg-gradient-to-br from-purple-400 to-purple-500 text-white p-4 lg:p-6 rounded-2xl lg:rounded-3xl hover:from-purple-500 hover:to-purple-600 transition-all duration-200 cursor-pointer">
+                                    <div className="flex items-center justify-between mb-2 lg:mb-3">
+                                        <h3 className="text-base lg:text-lg font-bold">Limited Collection</h3>
+                                        <Clock className="w-5 h-5 lg:w-6 lg:h-6" />
                                     </div>
-                                    <p className="text-sm opacity-90">Free shipping available</p>
-                                </button>
+                                    <p className="text-purple-100 text-sm lg:text-base">Exclusive heritage pieces</p>
+                                </div>
                             </div>
                         </div>
                     </main>
@@ -617,4 +613,4 @@ const RwandanEcommerceLayout = () => {
     );
 };
 
-export default RwandanEcommerceLayout;
+export default ModernEcommerceLayout;

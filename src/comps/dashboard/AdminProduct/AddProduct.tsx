@@ -1,8 +1,17 @@
-import { useState, useRef } from "react";
-import {  Upload, AlertCircle, CheckCircle, Loader2, X, Star, PlusCircle } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Upload, AlertCircle, CheckCircle, Loader2, X, Star, PlusCircle } from "lucide-react";
 import mainAxios from "../../Instance/mainAxios";
 
+interface Category {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+    image: string;
+}
+
 interface ProductFormData {
+    [x: string]: any;
     uploaded_images: string[];
     name: string;
     description: string;
@@ -31,9 +40,12 @@ interface FormErrors {
 interface AddProductFormProps {
     onSuccess: () => void;
     onCancel: () => void;
+    productToEdit?: ProductFormData; // Add this prop for editing
 }
 
-export default function AddProductForm({ onSuccess, onCancel }: AddProductFormProps) {
+export default function AddProductForm({ onSuccess, onCancel, productToEdit }: AddProductFormProps) {
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [isLoadingCategories, setIsLoadingCategories] = useState(false);
     const [formData, setFormData] = useState<ProductFormData>({
         uploaded_images: [],
         name: "",
@@ -52,6 +64,38 @@ export default function AddProductForm({ onSuccess, onCancel }: AddProductFormPr
     const [successMessage, setSuccessMessage] = useState("");
     const [imagePreviews, setImagePreviews] = useState<string[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Fetch categories on component mount
+    useEffect(() => {
+        const fetchCategories = async () => {
+            setIsLoadingCategories(true);
+            try {
+                const response = await mainAxios.get("/market/categories/");
+                setCategories(response.data);
+            } catch (error) {
+                console.error("Failed to fetch categories:", error);
+                setErrors(prev => ({
+                    ...prev,
+                    general: "Failed to load categories. Please try again later."
+                }));
+            } finally {
+                setIsLoadingCategories(false);
+            }
+        };
+
+        fetchCategories();
+    }, []);
+
+    // Initialize form with product data if editing
+    useEffect(() => {
+        if (productToEdit) {
+            setFormData(productToEdit);
+            // If editing, set the image previews from the existing product images
+            if (productToEdit.uploaded_images && productToEdit.uploaded_images.length > 0) {
+                setImagePreviews(productToEdit.uploaded_images);
+            }
+        }
+    }, [productToEdit]);
 
     // Handle image upload
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -207,14 +251,21 @@ export default function AddProductForm({ onSuccess, onCancel }: AddProductFormPr
                     category: parseInt(formData.category.toString())
                 };
 
-                const response = await mainAxios.post("/market/products/", payload);
+                let response;
+                if (productToEdit) {
+                    // Update existing product (you'll need to adjust the endpoint as needed)
+                    response = await mainAxios.put(`/market/products/${productToEdit.id}/`, payload);
+                } else {
+                    // Create new product
+                    response = await mainAxios.post("/market/products/", payload);
+                }
 
-                setSuccessMessage("Product added successfully!");
+                setSuccessMessage(`Product ${productToEdit ? 'updated' : 'added'} successfully!`);
                 setTimeout(() => {
                     onSuccess();
                 }, 1500);
             } catch (error: any) {
-                console.error("Error adding product:", error);
+                console.error(`Error ${productToEdit ? 'updating' : 'adding'} product:`, error);
 
                 if (error.response?.data) {
                     // Handle API validation errors
@@ -233,7 +284,7 @@ export default function AddProductForm({ onSuccess, onCancel }: AddProductFormPr
                     setErrors(fieldErrors);
                 } else {
                     setErrors({
-                        general: "Failed to add product. Please try again."
+                        general: `Failed to ${productToEdit ? 'update' : 'add'} product. Please try again.`
                     });
                 }
             } finally {
@@ -251,7 +302,7 @@ export default function AddProductForm({ onSuccess, onCancel }: AddProductFormPr
                     <div>
                         <p className="text-green-700 font-medium">{successMessage}</p>
                         <p className="text-green-600 text-sm mt-1">
-                            The product has been added to your marketplace.
+                            The product has been {productToEdit ? 'updated' : 'added'} to your marketplace.
                         </p>
                     </div>
                 </div>
@@ -483,26 +534,33 @@ export default function AddProductForm({ onSuccess, onCancel }: AddProductFormPr
                     <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
                         Category *
                     </label>
-                    <input
-                        type="number"
-                        id="category"
-                        name="category"
-                        value={formData.category}
-                        onChange={handleInputChange}
-                        min="1"
-                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors ${errors.category ? 'border-red-300' : 'border-gray-300'
-                            }`}
-                        placeholder="Category ID"
-                    />
+                    {isLoadingCategories ? (
+                        <div className="flex items-center justify-center h-12">
+                            <Loader2 className="w-5 h-5 text-primary animate-spin" />
+                        </div>
+                    ) : (
+                        <select
+                            id="category"
+                            name="category"
+                            value={formData.category}
+                            onChange={handleInputChange}
+                            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors ${errors.category ? 'border-red-300' : 'border-gray-300'
+                                }`}
+                        >
+                            <option value="0">Select a category</option>
+                            {categories.map((category) => (
+                                <option key={category.id} value={category.id}>
+                                    {category.name}
+                                </option>
+                            ))}
+                        </select>
+                    )}
                     {errors.category && (
                         <p className="mt-2 text-sm text-red-600 flex items-center">
                             <AlertCircle className="w-4 h-4 mr-1" />
                             {errors.category}
                         </p>
                     )}
-                    <p className="text-xs text-gray-500 mt-1">
-                        Enter the numeric ID of the category
-                    </p>
                 </div>
 
                 {/* Rating */}
@@ -571,12 +629,12 @@ export default function AddProductForm({ onSuccess, onCancel }: AddProductFormPr
                     {isLoading ? (
                         <>
                             <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                            Adding...
+                            {productToEdit ? 'Updating...' : 'Adding...'}
                         </>
                     ) : (
                         <>
                             <PlusCircle className="w-5 h-5 mr-2" />
-                            Add Product
+                            {productToEdit ? 'Update Product' : 'Add Product'}
                         </>
                     )}
                 </button>

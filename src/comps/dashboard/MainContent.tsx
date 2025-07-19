@@ -20,8 +20,10 @@ export const MainContent: React.FC<MainContentProps> = ({ activeItem }) => {
         return <CategoriesDashboard />;
       case 'customers':
         return <CustomerManagement />;
-      case 'analytics':
-        return <GenericContent title="Analytics" description="Analyze your sales and performance" />;
+      case 'orders':
+        return <GenericContent title="orders" description="Analyze your sales and performance" />;
+      case 'carts':
+        return <GenericContent title="carts" description="Analyze your sales and performance" />;
       case 'settings':
         return <GenericContent title="Settings" description="Configure your account and preferences" />;
       default:

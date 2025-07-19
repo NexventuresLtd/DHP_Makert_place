@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import mainAxios from "../comps/Instance/mainAxios";
+import { Logout_action } from "../app/SharedUtilities";
 
 type FormErrors = {
   email?: string;
@@ -44,14 +45,18 @@ export default function DHPLoginPage() {
         "password": password,
       })
         .then(response => {
+          Logout_action(); // Clear any previous session
           // Handle successful login
           const token = response.data.access
+          const refresh = response.data.refresh;
           localStorage.setItem("authToken", token);
+          localStorage.setItem("refresh", refresh);
           localStorage.setItem("userInfo", JSON.stringify({
             "username": email,
             "type": "user",
           }));
           nav("/");
+          window.location.reload(); // Reload the page to reflect changes
         })
         .catch(error => {
           console.error("Login failed", error);

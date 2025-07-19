@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PlusCircle, Image, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import mainAxios from "../../Instance/mainAxios";
 
 interface CategoryFormData {
+    id?: number;
     name: string;
     slug: string;
     description: string;
@@ -16,27 +17,64 @@ interface FormErrors {
     image?: string;
     general?: string;
 }
+
 interface AddCategoryFormProps {
-    handleCategoryAdded?: () => void;
+    categoryToEdit?: CategoryFormData;
+    handleCategoryAdded: () => void;
+    onCancel?: () => void;
 }
 
-export default function AddCategoryForm({ handleCategoryAdded }: AddCategoryFormProps) {
+export default function AddCategoryForm({ 
+    categoryToEdit, 
+    handleCategoryAdded,
+    onCancel 
+}: AddCategoryFormProps) {
     const [formData, setFormData] = useState<CategoryFormData>({
         name: "",
         slug: "",
         description: "",
-        image: "https://www.wildernessdestinations.com/media/guebj5vt/wilderness-bisate-villas-rwanda-volcanoes-national-park.jpg?rmode=crop&height=809"
+        image: ""
     });
     const [errors, setErrors] = useState<FormErrors>({});
     const [isLoading, setIsLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [isEditMode, setIsEditMode] = useState(false);
+
+    // Initialize form when categoryToEdit changes
+    useEffect(() => {
+        if (categoryToEdit) {
+            setFormData({
+                name: categoryToEdit.name,
+                slug: categoryToEdit.slug,
+                description: categoryToEdit.description,
+                image: categoryToEdit.image
+            });
+            setImagePreview(categoryToEdit.image);
+            setIsEditMode(true);
+        } else {
+            resetForm();
+            setIsEditMode(false);
+        }
+    }, [categoryToEdit]);
 
     const generateSlug = (name: string) => {
         const randomString = Math.random().toString(36).substring(2, 15) +
             Math.random().toString(36).substring(2, 15);
         const baseSlug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
         return `${baseSlug}_${randomString}`;
+    };
+
+    const resetForm = () => {
+        setFormData({
+            name: "",
+            slug: "",
+            description: "",
+            image: ""
+        });
+        setImagePreview(null);
+        setErrors({});
+        setSuccessMessage("");
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -47,8 +85,8 @@ export default function AddCategoryForm({ handleCategoryAdded }: AddCategoryForm
             [name]: value
         }));
 
-        // Auto-generate slug when name changes
-        if (name === "name") {
+        // Auto-generate slug when name changes (only in add mode)
+        if (name === "name" && !isEditMode) {
             setFormData(prev => ({
                 ...prev,
                 slug: generateSlug(value)
@@ -135,26 +173,29 @@ export default function AddCategoryForm({ handleCategoryAdded }: AddCategoryForm
             setIsLoading(true);
 
             try {
-                const response = await mainAxios.post("/market/categories/", formData);
+                let response;
+                if (isEditMode && categoryToEdit) {
+                    // Update existing category
+                    response = await mainAxios.put(`/market/categories/${categoryToEdit.id}/`, formData);
+                    setSuccessMessage("Category updated successfully!");
+                } else {
+                    // Create new category
+                    response = await mainAxios.post("/market/categories/", formData);
+                    setSuccessMessage("Category added successfully!");
+                }
 
-                setSuccessMessage("Category added successfully!");
-                setFormData({
-                    name: "",
-                    slug: "",
-                    description: "",
-                    image: ""
-                });
-                setImagePreview(null);
+                // Clear form if not in edit mode
+                if (!isEditMode) {
+                    resetForm();
+                }
 
-                // Clear success message after 5 seconds
+                // Clear success message after 5 seconds and trigger callback
                 setTimeout(() => {
                     setSuccessMessage("");
-                    if (handleCategoryAdded) {
-                        handleCategoryAdded();
-                    }
+                    handleCategoryAdded();
                 }, 1000);
             } catch (error: any) {
-                console.error("Error adding category:", error);
+                console.error(isEditMode ? "Error updating category:" : "Error adding category:", error);
 
                 if (error.response) {
                     // Handle API validation errors
@@ -169,7 +210,9 @@ export default function AddCategoryForm({ handleCategoryAdded }: AddCategoryForm
                         setErrors(fieldErrors);
                     } else {
                         setErrors({
-                            general: "Failed to add category. Please try again."
+                            general: isEditMode 
+                                ? "Failed to update category. Please try again."
+                                : "Failed to add category. Please try again."
                         });
                     }
                 } else {
@@ -192,7 +235,9 @@ export default function AddCategoryForm({ handleCategoryAdded }: AddCategoryForm
                     <div>
                         <p className="text-green-700 font-medium">{successMessage}</p>
                         <p className="text-green-600 text-sm mt-1">
-                            The category has been added to your marketplace.
+                            {isEditMode 
+                                ? "The category has been updated successfully."
+                                : "The category has been added to your marketplace."}
                         </p>
                     </div>
                 </div>
@@ -218,8 +263,9 @@ export default function AddCategoryForm({ handleCategoryAdded }: AddCategoryForm
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors ${errors.name ? 'border-red-300' : 'border-gray-300'
-                            }`}
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors ${
+                            errors.name ? 'border-red-300' : 'border-gray-300'
+                        }`}
                         placeholder="e.g. Electronics, Clothing"
                     />
                     {errors.name && (
@@ -245,9 +291,11 @@ export default function AddCategoryForm({ handleCategoryAdded }: AddCategoryForm
                             name="slug"
                             value={formData.slug}
                             onChange={handleInputChange}
-                            className={`flex-1 px-4 py-3 border rounded-r-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors ${errors.slug ? 'border-red-300' : 'border-gray-300'
-                                }`}
+                            className={`flex-1 px-4 py-3 border rounded-r-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors ${
+                                errors.slug ? 'border-red-300' : 'border-gray-300'
+                            }`}
                             placeholder="auto-generated-slug"
+                            readOnly={isEditMode} // Slug should not be editable in edit mode
                         />
                     </div>
                     <p className="mt-2 text-sm text-gray-500">
@@ -339,19 +387,16 @@ export default function AddCategoryForm({ handleCategoryAdded }: AddCategoryForm
                     <button
                         type="button"
                         onClick={() => {
-                            setFormData({
-                                name: "",
-                                slug: "",
-                                description: "",
-                                image: ""
-                            });
-                            setImagePreview(null);
-                            setErrors({});
+                            if (onCancel) {
+                                onCancel();
+                            } else {
+                                resetForm();
+                            }
                         }}
                         className="px-6 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                         disabled={isLoading}
                     >
-                        Reset Form
+                        {onCancel ? 'Cancel' : 'Reset Form'}
                     </button>
                     <button
                         type="submit"
@@ -366,7 +411,7 @@ export default function AddCategoryForm({ handleCategoryAdded }: AddCategoryForm
                         ) : (
                             <>
                                 <PlusCircle className="w-5 h-5 mr-2" />
-                                Add Category
+                                {isEditMode ? 'Update Category' : 'Add Category'}
                             </>
                         )}
                     </button>

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { PlusCircle, Edit, Trash2, Image as ImageIcon, Loader2, ChevronLeft, ChevronRight, AlertCircle } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Image as ImageIcon, Loader2, ChevronLeft, ChevronRight, AlertCircle, Eye } from "lucide-react";
 import mainAxios from "../../Instance/mainAxios";
 import AddCategoryForm from "./AddCategory";
+import CategoryDetailModal from "./ViewMoreDetails";
 
 interface Category {
     id: number;
@@ -19,7 +20,8 @@ export default function CategoriesDashboard() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 8;
-
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+    const [editCategory, setEditCategory] = useState<Category | null>(null);
     // Fetch categories from API
     const fetchCategories = async () => {
         setIsLoading(true);
@@ -156,14 +158,13 @@ export default function CategoriesDashboard() {
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    <button className="text-primary hover:text-primary/80 mr-4">
-                                                        <Edit size={16} />
-                                                    </button>
                                                     <button
-                                                        onClick={() => handleDelete(category.id)}
-                                                        className="text-red-600 hover:text-red-800"
+                                                        onClick={() => setSelectedCategory(category)}
+                                                        className="text-primary hover:text-primary mr-4 flex gap-2 items-center"
+                                                        title="View details"
                                                     >
-                                                        <Trash2 size={16} />
+                                                        <Edit className="w-4 h-4" />
+                                                        View
                                                     </button>
                                                 </td>
                                             </tr>
@@ -252,27 +253,52 @@ export default function CategoriesDashboard() {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                         <div className="flex justify-between items-center bg-primary p-6 text-white sticky top-0 z-10">
-
-                            <div className="">
-                                <div className="flex items-center">
-                                    <PlusCircle className="w-8 h-8 mr-3" />
-                                    <h2 className="text-2xl font-bold">Add New Category</h2>
-                                </div>
-                                <p className="mt-1 opacity-90">Fill in the details to create a new product category</p>
+                            <div className="flex items-center">
+                                <PlusCircle className="w-8 h-8 mr-3" />
+                                <h2 className="text-xl font-bold">
+                                    {editCategory ? 'Edit Category' : 'Add New Category'}
+                                </h2>
                             </div>
                             <button
-                                onClick={() => setIsModalOpen(false)}
-                                className="text-white text-4xl cursor-pointer hover:text-gray-200"
+                                onClick={() => {
+                                    setIsModalOpen(false);
+                                    setEditCategory(null);
+                                }}
+                                className="text-white text-4xl hover:text-gray-200"
                             >
                                 &times;
                             </button>
                         </div>
-                        <div className="d-flex">
-                            <AddCategoryForm handleCategoryAdded={handleCategoryAdded} />
+                        <div className="p-6">
+                            <AddCategoryForm
+                                categoryToEdit={editCategory ?? undefined}
+                                handleCategoryAdded={() => {
+                                    handleCategoryAdded();
+                                    setIsModalOpen(false);
+                                    setEditCategory(null);
+                                }}
+                                onCancel={() => {
+                                    setIsModalOpen(false);
+                                    setEditCategory(null);
+                                }}
+                            />
                         </div>
                     </div>
                 </div>
             )}
+            {selectedCategory && (
+                <CategoryDetailModal
+                    category={selectedCategory}
+                    onClose={() => setSelectedCategory(null)}
+                    onEdit={() => {
+                        setEditCategory(selectedCategory);
+                        setSelectedCategory(null);
+                        setIsModalOpen(true);
+                    }}
+                    onDelete={handleDelete}
+                />
+            )}
+
         </div>
     );
 }

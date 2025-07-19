@@ -1,5 +1,5 @@
 import axios from "axios";
-import { token} from "../../app/Localstorage";
+import { refreshToken, token} from "../../app/Localstorage";
 
 // Create Axios instance
 const mainAxios = axios.create({
@@ -54,7 +54,7 @@ mainAxios.interceptors.response.use(
       try {
         const response = await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}login/refresh/`,
-          { refresh: token },
+          { refresh: refreshToken },
           {
             headers: {
               "Content-Type": "application/json",
@@ -67,12 +67,13 @@ mainAxios.interceptors.response.use(
 
         // Store the new token using your local storage handler
         localStorage.setItem("authToken", newAccessToken);
-
+        console.log(newAccessToken)
         processQueue(null, newAccessToken);
 
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return mainAxios(originalRequest);
       } catch (err) {
+        console.error("Token refresh failed:", localStorage.getItem("authToken"));
         processQueue(err, null);
         localStorage.setItem("redirectPath", window.location.pathname);
         // window.location.href = "/login";
