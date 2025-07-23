@@ -251,7 +251,7 @@ export default function AddProductForm({ onSuccess, onCancel, productToEdit }: A
                     category: parseInt(formData.category.toString())
                 };
 
-                let response;
+                let response
                 if (productToEdit) {
                     // Update existing product (you'll need to adjust the endpoint as needed)
                     response = await mainAxios.put(`/market/products/${productToEdit.id}/`, payload);
@@ -264,6 +264,7 @@ export default function AddProductForm({ onSuccess, onCancel, productToEdit }: A
                 setTimeout(() => {
                     onSuccess();
                 }, 1500);
+                console.log("Product response:", response.data); // 👈 use it!
             } catch (error: any) {
                 console.error(`Error ${productToEdit ? 'updating' : 'adding'} product:`, error);
 

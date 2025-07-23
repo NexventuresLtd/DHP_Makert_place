@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { PlusCircle, Edit, Trash2, Image as ImageIcon, Loader2, ChevronLeft, ChevronRight, AlertCircle, Eye } from "lucide-react";
+import { PlusCircle, Edit, Image as ImageIcon, Loader2, ChevronLeft, ChevronRight, AlertCircle } from "lucide-react";
 import mainAxios from "../../Instance/mainAxios";
 import AddCategoryForm from "./AddCategory";
 import CategoryDetailModal from "./ViewMoreDetails";

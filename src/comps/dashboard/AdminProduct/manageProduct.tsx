@@ -87,11 +87,6 @@ export default function ProductsDashboard() {
         }
     };
 
-    // Handle successful product addition
-    const handleProductAdded = () => {
-        setIsModalOpen(false);
-        fetchProducts(); // Refresh the list
-    };
 
     // Apply filters
     const applyFilters = () => {
@@ -126,10 +121,6 @@ export default function ProductsDashboard() {
         }).format(parseFloat(price));
     };
 
-    // Format date
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString();
-    };
 
     return (
         <div className="container mx-auto px-4 py-8">

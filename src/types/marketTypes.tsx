@@ -1,6 +1,6 @@
 // types.ts
 // types.ts
-import { BarChart3, ListOrdered, Package, Settings, ShoppingBag, ShoppingCart, TrendingUp, Users } from 'lucide-react';
+import { BarChart3, ListOrdered, Package, ShoppingBag, ShoppingCart, Users } from 'lucide-react';
 import type { ComponentType } from 'react';
 
 export interface Product {

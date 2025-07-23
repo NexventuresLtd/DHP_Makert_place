@@ -168,12 +168,12 @@ export default function AddCategoryForm({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSuccessMessage("");
+        let response;
 
         if (validateForm()) {
             setIsLoading(true);
 
             try {
-                let response;
                 if (isEditMode && categoryToEdit) {
                     // Update existing category
                     response = await mainAxios.put(`/market/categories/${categoryToEdit.id}/`, formData);
@@ -194,6 +194,7 @@ export default function AddCategoryForm({
                     setSuccessMessage("");
                     handleCategoryAdded();
                 }, 1000);
+                console.log("Product response:", response.data); // 👈 use it!
             } catch (error: any) {
                 console.error(isEditMode ? "Error updating category:" : "Error adding category:", error);
 
