@@ -1,4 +1,3 @@
-// components/SecureAdminLogin.tsx
 import { useState } from "react";
 import { Eye, EyeOff, Shield, AlertCircle } from "lucide-react";
 import DragCaptcha from "../comps/sharedComps/DragCaptcha";
@@ -25,7 +24,6 @@ export default function SecureAdminLogin() {
   const [lockoutTime, setLockoutTime] = useState<number | null>(null);
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [resetCaptcha, setResetCaptcha] = useState(false);
-  const nav = useNavigate();
 
   // Security enhancements
   const MAX_LOGIN_ATTEMPTS = 5;
