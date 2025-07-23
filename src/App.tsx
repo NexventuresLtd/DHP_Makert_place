@@ -32,7 +32,7 @@ function App() {
           <Route path="/about" element={<DHPHeroSection />} />
           <Route path="/login" element={tokenUser && !isAdmin ? <HomePage /> : <DHPLoginPage />} />
           <Route path="/admin/dashboard" element={tokenUser && isAdmin ? <DHPDashboard /> : <AdminLogin />} />
-          <Route path="/admin/login" element={tokenUser && isAdmin ? <DHPDashboard /> : <AdminLogin />} />
+          <Route path="/dhp/admin/login" element={tokenUser && isAdmin ? <DHPDashboard /> : <AdminLogin />} />
           <Route path="/register" element={tokenUser && !isAdmin ? <HomePage /> : <DHPRegisterPage />} />
         </Routes>
       </BrowserRouter>

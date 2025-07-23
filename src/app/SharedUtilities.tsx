@@ -15,5 +15,5 @@ export const Logout_action_admin = () => {
     sessionStorage.removeItem("authToken");
     sessionStorage.removeItem("userInfo");
     // Redirect to admin login page
-    window.location.href = "/admin/login";
+    window.location.href = "/dhp/admin/login";
 };
