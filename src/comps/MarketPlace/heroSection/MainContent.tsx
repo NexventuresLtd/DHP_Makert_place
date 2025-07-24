@@ -1,28 +1,9 @@
 import { ChevronLeft, ChevronRight, Star, Heart, Eye, Percent, Clock, Settings, Loader2, ShoppingCart } from 'lucide-react';
+import ProductDetailModal from '../../dashboard/AdminProduct/ViewMoreDetails';
+import { useState } from 'react';
+import type { Product } from '../../../types/marketTypes';
 
-interface ProductImage {
-    id: number;
-    image: string;
-    is_primary: boolean;
-    product?: number;
-}
 
-interface Product {
-    id: number;
-    name: string;
-    description: string;
-    price: string | number;
-    original_price?: string | number;
-    condition: 'new' | 'used' | 'refurbished';
-    rating: number;
-    review_count: number;
-    stock: number;
-    images: ProductImage[];
-    is_featured?: boolean;
-    category?: any;
-    created_at?: string;
-    updated_at?: string;
-}
 
 interface MainContentProps {
     isMobileMenuOpen: boolean;
@@ -51,10 +32,11 @@ const MainContent = ({
 }: MainContentProps) => {
     const currentProduct = featuredProducts[currentSlide];
     const sidebarCategories = categories.length > 0 ? categories : ['All category'];
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     return (
-        <div className="w-full bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
-            <div className="container mx-auto px-4 lg:px-6 xl:px-8 py-6 xl:py-12 max-w-full">
+        <div className="w-full bg-gradient-to-br from-gray-50 via-white to-gray-50 max-h-[70vh]">
+            <div className=" mx-auto px-4 lg:px-6 xl:px-8 py-6 xl:py-12 max-w-full">
                 <div className="flex flex-col xl:flex-row gap-6 xl:gap-8">
                     {/* Sidebar - Glass Design */}
                     <aside className={`
@@ -224,7 +206,9 @@ const MainContent = ({
 
                                             {/* Action Buttons */}
                                             <div className="flex flex-wrap gap-3 xl:gap-4 mb-6 xl:mb-8">
-                                                <button className="
+                                                <button
+                                                    onClick={() => { setSelectedProduct(currentProduct); setIsModalOpen(true); }}
+                                                    className="
                                                     bg-white/80 backdrop-blur-sm text-gray-700 border border-gray-200/50
                                                     hover:border-indigo-300/70 hover:text-indigo-600 hover:bg-indigo-50/70
                                                     px-6 xl:px-8 py-3 xl:py-4 rounded-2xl 
@@ -235,7 +219,7 @@ const MainContent = ({
                                                     <span>View Details</span>
                                                 </button>
 
-                                                <button className="
+                                                <button onClick={() => { setSelectedProduct(currentProduct); setIsModalOpen(true); }} className="
                                                     bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white 
                                                     px-6 xl:px-8 py-3 xl:py-4 rounded-2xl 
                                                     transition-all duration-300 font-semibold 
@@ -265,8 +249,8 @@ const MainContent = ({
                                                     </span>
                                                 </div>
                                                 <div className={`px-3 py-2 rounded-xl border backdrop-blur-sm ${currentProduct.stock > 0
-                                                        ? 'bg-emerald-50/70 border-emerald-200/50 text-emerald-700'
-                                                        : 'bg-red-50/70 border-red-200/50 text-red-600'
+                                                    ? 'bg-emerald-50/70 border-emerald-200/50 text-emerald-700'
+                                                    : 'bg-red-50/70 border-red-200/50 text-red-600'
                                                     }`}>
                                                     <span className="font-medium">Stock: </span>
                                                     <span className="font-semibold">
@@ -303,8 +287,8 @@ const MainContent = ({
                                                         key={index}
                                                         onClick={() => setCurrentSlide(index)}
                                                         className={`h-2 xl:h-3 rounded-full transition-all duration-300 ${index === currentSlide
-                                                                ? 'bg-indigo-600 w-8 xl:w-12'
-                                                                : 'bg-gray-300/70 backdrop-blur-sm w-2 xl:w-3 hover:bg-gray-400/70'
+                                                            ? 'bg-indigo-600 w-8 xl:w-12'
+                                                            : 'bg-gray-300/70 backdrop-blur-sm w-2 xl:w-3 hover:bg-gray-400/70'
                                                             }`}
                                                     />
                                                 ))}
@@ -383,6 +367,16 @@ const MainContent = ({
                             </div>
                         </div>
                     </main>
+                    {selectedProduct && isModalOpen && (
+                        <div className="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50">
+                            <div className="bg-white rounded-xl max-w-11/12 w-full max-h-[90vh] overflow-y-auto">
+                                <ProductDetailModal
+                                    product={selectedProduct}
+                                    onClose={() => setSelectedProduct(null)}
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

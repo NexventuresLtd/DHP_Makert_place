@@ -9,10 +9,13 @@ import {
     X,
     Image as ImageIcon,
     Loader2,
-    AlertCircle
+    AlertCircle,
+    Coins,
+
 } from "lucide-react";
 import mainAxios from "../../Instance/mainAxios";
 import { getUserInfo } from "../../../app/Localstorage";
+import { addItemToCart } from "../../../app/addToCartUtil";
 
 
 interface ProductImage {
@@ -135,7 +138,7 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
                 {/* Header */}
                 <div className="sticky top-0 bg-white z-10 p-4 border-b border-gray-200 flex justify-between items-center">
@@ -182,8 +185,8 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                                             key={index}
                                             onClick={() => setSelectedImage(index)}
                                             className={`relative h-20 rounded-md overflow-hidden border-2 ${selectedImage === index
-                                                    ? "border-primary"
-                                                    : "border-transparent"
+                                                ? "border-primary"
+                                                : "border-transparent"
                                                 }`}
                                         >
                                             <img
@@ -221,8 +224,8 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                                     <button
                                         onClick={() => setIsWishlisted(!isWishlisted)}
                                         className={`p-2 rounded-full ${isWishlisted
-                                                ? "text-red-500 bg-red-50"
-                                                : "text-gray-500 hover:bg-gray-100"
+                                            ? "text-red-500 bg-red-50"
+                                            : "text-gray-500 hover:bg-gray-100"
                                             }`}
                                     >
                                         <Heart
@@ -261,8 +264,8 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                                         <Star
                                             key={star}
                                             className={`w-5 h-5 ${star <= Math.floor(parseFloat(product.rating))
-                                                    ? "text-yellow-400 fill-current"
-                                                    : "text-gray-300"
+                                                ? "text-yellow-400 fill-current"
+                                                : "text-gray-300"
                                                 }`}
                                         />
                                     ))}
@@ -343,23 +346,37 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                             {getUserInfo.type !== "admin" && (<>
                                 <div className="flex flex-col sm:flex-row gap-3 mb-8">
                                     <button
+                                        onClick={async () => {
+                                            // Add to cart logic here
+                                            console.log(`Added ${quantity} of ${product.name} to cart`);
+                                            if((await addItemToCart(product.id, quantity)).status) {
+                                                alert(`${quantity} ${product.name} added to cart`);
+                                            }else{
+                                                alert(`Failed to add ${quantity} ${product.name} to cart`);
+                                            }
+                                        }}
                                         disabled={product.stock <= 0}
                                         className={`flex-1 flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white ${product.stock > 0
-                                                ? "bg-primary hover:bg-primary/90"
-                                                : "bg-gray-400 cursor-not-allowed"
+                                            ? "bg-primary hover:bg-primary/90"
+                                            : "bg-gray-400 cursor-not-allowed"
                                             }`}
                                     >
                                         <ShoppingCart className="w-5 h-5 mr-2" />
                                         Add to Cart
                                     </button>
                                     <button
+                                        onClick={() => {
+                                            window.open('https://wa.me/0788282962', '_blank');
+                                        }}
+
                                         disabled={product.stock <= 0}
                                         className={`flex-1 flex items-center justify-center px-6 py-3 border border-primary rounded-md shadow-sm text-base font-medium ${product.stock > 0
-                                                ? "text-primary bg-white hover:bg-gray-50"
-                                                : "text-gray-400 border-gray-400 cursor-not-allowed"
+                                            ? "text-primary bg-white hover:bg-gray-50"
+                                            : "text-gray-400 border-gray-400 cursor-not-allowed"
                                             }`}
                                     >
-                                        Buy Now
+                                        <Coins className="w-5 h-5 mr-2" />
+                                        Buy
                                     </button>
                                 </div>
                             </>)}

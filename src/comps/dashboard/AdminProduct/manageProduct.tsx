@@ -3,39 +3,17 @@ import { PlusCircle, Trash2, Star, Filter, Search, Loader2, ChevronLeft, Chevron
 import mainAxios from "../../Instance/mainAxios";
 import AddProductForm from "./AddProduct";
 import ProductDetailModal from "./ViewMoreDetails";
+import type { Product } from "../../../types/marketTypes";
 
-interface ProductImage {
-    image: string;
-}
-
-interface Product {
-    id: number;
-    images: ProductImage[];
-    name: string;
-    slug: string;
-    description: string;
-    price: string;
-    original_price: string;
-    condition: "new" | "used" | "refurbished";
-    stock: number;
-    rating: string;
-    review_count: number;
-    created_at: string;
-    updated_at: string;
-    is_featured: boolean;
-    is_active: boolean;
-    seller: number;
-    category: number;
-}
 
 export default function ProductsDashboard() {
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 8;
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     // Filter states
     const [searchTerm, setSearchTerm] = useState("");
@@ -445,7 +423,7 @@ export default function ProductsDashboard() {
 
             {/* Add Product Modal */}
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center p-4 z-50">
+                <div className="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                         <div className="flex justify-between items-center bg-primary p-6 text-white sticky top-0 z-10">
                             <h2 className="text-xl font-bold">
@@ -486,7 +464,7 @@ export default function ProductsDashboard() {
                 </div>
             )}
             {selectedProduct && !isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+                <div className="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-xl max-w-11/12 w-full max-h-[90vh] overflow-y-auto">
                         <ProductDetailModal
                             product={selectedProduct}

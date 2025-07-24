@@ -5,6 +5,7 @@ import { getUserInfo, isLoggedIn } from '../../app/Localstorage';
 import Header from './heroSection/Header';
 import SecondaryNav from './heroSection/SecondaryNav';
 import MainContent from './heroSection/MainContent';
+import type { Product } from '../../types/marketTypes';
 
 interface Category {
     id: number;
@@ -20,22 +21,7 @@ interface ProductImage {
     product?: number;
 }
 
-interface Product {
-    id: number;
-    name: string;
-    description: string;
-    price: string | number;
-    original_price?: string | number;
-    condition: 'new' | 'used' | 'refurbished';
-    rating: number;
-    review_count: number;
-    stock: number;
-    images: ProductImage[];
-    is_featured?: boolean;
-    category?: number | Category;
-    created_at?: string;
-    updated_at?: string;
-}
+
 
 interface UserInfo {
     username: string;

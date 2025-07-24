@@ -250,7 +250,7 @@ export default function CategoriesDashboard() {
 
             {/* Add Category Modal */}
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                <div className="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                         <div className="flex justify-between items-center bg-primary p-6 text-white sticky top-0 z-10">
                             <div className="flex items-center">

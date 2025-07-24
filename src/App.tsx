@@ -10,6 +10,7 @@ import Elearning from './pages/Elearning';
 import DHPDashboard from "./pages/Dashboard"
 import AdminLogin from "./pages/adminLoginPage"
 import { getUserInfo, isLoggedIn } from "./app/Localstorage"
+import NotFound from "./comps/sharedComps/NotFound"
 
 
 
@@ -34,6 +35,7 @@ function App() {
           <Route path="/admin/dashboard" element={tokenUser && isAdmin ? <DHPDashboard /> : <AdminLogin />} />
           <Route path="/dhp/admin/login" element={tokenUser && isAdmin ? <DHPDashboard /> : <AdminLogin />} />
           <Route path="/register" element={tokenUser && !isAdmin ? <HomePage /> : <DHPRegisterPage />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </>
