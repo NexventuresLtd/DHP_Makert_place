@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Star, Heart, Eye, Percent, Clock, Settings, Loader2, ShoppingCart } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Star,  Eye, Percent, Clock, Settings, Loader2, ShoppingCart } from 'lucide-react';
 import ProductDetailModal from '../../dashboard/AdminProduct/ViewMoreDetails';
 import { useState } from 'react';
 import type { Product } from '../../../types/marketTypes';

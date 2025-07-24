@@ -242,10 +242,10 @@ const ModernProductsShowcase: React.FC = () => {
     return Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
   };
 
-  const getCurrentSlideProducts = () => {
-    const start = currentSlide * itemsPerSlide;
-    return products.slice(start, start + itemsPerSlide);
-  };
+  // const getCurrentSlideProducts = () => {
+  //   const start = currentSlide * itemsPerSlide;
+  //   return products.slice(start, start + itemsPerSlide);
+  // };
 
   return (
     <div className="max-w-7xl mx-auto p-6 bg-gradient-to-br from-gray-50 to-white">
