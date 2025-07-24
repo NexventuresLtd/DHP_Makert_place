@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Eye, EyeOff, Shield, AlertCircle } from "lucide-react";
 import DragCaptcha from "../comps/sharedComps/DragCaptcha";
 import mainAxios from "../comps/Instance/mainAxios";
-import { Logout_action_admin } from "../app/SharedUtilities";
+import { Logout_action_admin } from "../app/utlis/SharedUtilities";
 
 
 type FormErrors = {

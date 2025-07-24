@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import mainAxios from "../../Instance/mainAxios";
 import { getUserInfo, isLoggedIn } from "../../../app/Localstorage";
-import { addItemToCart } from "../../../app/addToCartUtil";
+import { addItemToCart } from "../../../app/utlis/addToCartUtil";
 
 
 interface ProductImage {

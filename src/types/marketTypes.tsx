@@ -36,7 +36,14 @@ export interface SidebarItem {
   badge?: number;
 }
 
-
+// Category type based on your provided sample
+export interface Category {
+  id: number;
+  slug: string;
+  name: string;
+  description: string;
+  image: string;
+}
 
 export const sidebarItems: SidebarItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },

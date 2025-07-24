@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import mainAxios from "../comps/Instance/mainAxios";
-import { Logout_action } from "../app/SharedUtilities";
+import { Logout_action } from "../app/utlis/SharedUtilities";
 
 type FormErrors = {
   email?: string;

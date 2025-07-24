@@ -1,6 +1,6 @@
 //
 
-import mainAxios from "../comps/Instance/mainAxios";
+import mainAxios from "../../comps/Instance/mainAxios";
 
 export async function addItemToCart(product_id: number, quantity: number): Promise<{status: boolean, message: string}> {
   try {

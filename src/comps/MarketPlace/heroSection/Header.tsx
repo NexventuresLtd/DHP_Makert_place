@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Search, ShoppingCart, User, ChevronDown, Menu, X, LogOut } from 'lucide-react';
 import { isLoggedIn } from '../../../app/Localstorage';
-import { Logout_action } from '../../../app/SharedUtilities';
+import { Logout_action } from '../../../app/utlis/SharedUtilities';
 
 interface UserInfo {
     username: string;

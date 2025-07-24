@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Search, Bell, User } from 'lucide-react';
 import { getUserInfo } from '../../app/Localstorage';
-import { Logout_action_admin } from '../../app/SharedUtilities';
+import { Logout_action_admin } from '../../app/utlis/SharedUtilities';
 
 interface NavbarProps {
   onSearch: (query: string) => void;
