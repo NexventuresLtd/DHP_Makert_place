@@ -94,7 +94,7 @@ export default function RecommendedItemsSection() {
             <span className="text-sm text-gray-600">Filter by:</span>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          {/* <div className="flex flex-wrap gap-2">
             {categories.map((category) => (
               <button
                 key={category}
@@ -108,7 +108,7 @@ export default function RecommendedItemsSection() {
                 {category}
               </button>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -132,7 +132,7 @@ export default function RecommendedItemsSection() {
             ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
             : 'grid-cols-1'
         }`}>
-          {filteredProducts.map((product) => (
+          {filteredProducts && filteredProducts?.map((product) => (
             <div key={product.id} className={`group bg-white rounded-2xl hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 ${
               viewMode === 'list' ? 'flex' : ''
             }`}>
@@ -265,7 +265,7 @@ export default function RecommendedItemsSection() {
       )}
 
       {/* Empty State */}
-      {!isLoading && !error && filteredProducts.length === 0 && (
+      {!isLoading && !error && filteredProducts && filteredProducts?.length === 0 && (
         <div className="text-center py-12">
           <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
             <Eye className="w-10 h-10 text-gray-400" />
