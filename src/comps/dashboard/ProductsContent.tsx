@@ -1,11 +1,11 @@
 // components/ProductsContent.tsx
 import { useState } from 'react';
 import { Plus, Filter, Grid, List, Eye, Edit, Trash2 } from 'lucide-react';
-import { sampleProducts, type Product } from '../../types/marketTypes';
+import {  type Product } from '../../types/marketTypes';
 
 
 export const ProductsContent: React.FC = () => {
-  const [products] = useState<Product[]>(sampleProducts);
+  const [products] = useState<Product[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [filterStatus, setFilterStatus] = useState<string>('all');
 
@@ -77,7 +77,7 @@ export const ProductsContent: React.FC = () => {
             viewMode === 'list' ? 'flex items-center space-x-6' : ''
           }`}>
             <img 
-              src={product.image} 
+              src={product.images.length > 0 ? product.images[0].image : 'https://via.placeholder.com/150'} 
               alt={product.name} 
               className={viewMode === 'list' ? 'w-20 h-20 rounded-lg' : 'w-full h-48 rounded-lg mb-4 object-cover'}
             />

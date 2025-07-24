@@ -14,13 +14,6 @@ interface Category {
     image?: string;
 }
 
-interface ProductImage {
-    id: number;
-    image: string;
-    is_primary: boolean;
-    product?: number;
-}
-
 
 
 interface UserInfo {

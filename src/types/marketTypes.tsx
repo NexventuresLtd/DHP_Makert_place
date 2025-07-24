@@ -9,6 +9,8 @@ export interface ProductImage {
     product?: number;
 }
 export interface Product {
+    sales: number;
+    status: string;
     id: number;
     images: ProductImage[];
     name: string;
