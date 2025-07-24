@@ -14,7 +14,7 @@ import {
 
 } from "lucide-react";
 import mainAxios from "../../Instance/mainAxios";
-import { getUserInfo } from "../../../app/Localstorage";
+import { getUserInfo, isLoggedIn } from "../../../app/Localstorage";
 import { addItemToCart } from "../../../app/addToCartUtil";
 
 
@@ -343,7 +343,7 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
 
                             {/* Actions */}
                             {/** check if admin hide this */}
-                            {getUserInfo?.type !== "admin" && (<>
+                            {getUserInfo?.type !== "admin" && isLoggedIn  && (<>
                                 <div className="flex flex-col sm:flex-row gap-3 mb-8">
                                     <button
                                         onClick={async () => {
