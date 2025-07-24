@@ -230,14 +230,14 @@ const MainContent = ({
                                                     <span>Add to Cart</span>
                                                 </button>
 
-                                                <button className="
+                                                {/* <button className="
                                                     p-3 xl:p-4 text-gray-500 hover:text-red-500 
                                                     hover:bg-red-50/70 backdrop-blur-sm rounded-2xl 
                                                     transition-all duration-300 border border-gray-200/50 
                                                     hover:border-red-200/50
                                                 ">
                                                     <Heart className="w-5 h-5 xl:w-6 xl:h-6" />
-                                                </button>
+                                                </button> */}
                                             </div>
 
                                             {/* Product Info */}
@@ -263,7 +263,7 @@ const MainContent = ({
                                         {/* Product Image */}
                                         <div className="flex-1 flex items-center justify-center relative order-1 lg:order-2 mb-6 lg:mb-0">
                                             <div className="
-                                                w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 xl:w-80 xl:h-80 
+                                                w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 xl:w-80 xl:h-80
                                                 rounded-3xl overflow-hidden 
                                                 border border-white/40 bg-white/80 backdrop-blur-sm
                                                 transform hover:scale-105 transition-transform duration-500

@@ -343,7 +343,7 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
 
                             {/* Actions */}
                             {/** check if admin hide this */}
-                            {getUserInfo.type !== "admin" && (<>
+                            {getUserInfo?.type !== "admin" && (<>
                                 <div className="flex flex-col sm:flex-row gap-3 mb-8">
                                     <button
                                         onClick={async () => {
