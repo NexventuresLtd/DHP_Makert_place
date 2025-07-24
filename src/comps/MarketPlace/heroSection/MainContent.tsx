@@ -35,7 +35,7 @@ const MainContent = ({
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     return (
-        <div className="w-full bg-gradient-to-br from-gray-50 via-white to-gray-50 max-h-[70vh]">
+        <div className="w-full bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
             <div className=" mx-auto px-4 lg:px-6 xl:px-8 py-6 xl:py-12 max-w-full">
                 <div className="flex flex-col xl:flex-row gap-6 xl:gap-8">
                     {/* Sidebar - Glass Design */}
