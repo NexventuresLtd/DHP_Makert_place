@@ -5,7 +5,7 @@ import RwandanEcommerceLayout from '../comps/MarketPlace/MarketDis';
 import EcommerceLayout from '../comps/MarketPlace/MarketHero';
 import RecommendedItemsSection from '../comps/MarketPlace/MarketPlaceReco';
 import SupplierInquiryForm from '../comps/MarketPlace/MarketPlacetrust';
-import ProductCatalog from '../comps/MarketPlace/MarketProducts';
+// import ProductCatalog from '../comps/MarketPlace/MarketProducts';
 import Footer from '../comps/sharedComps/Footer';
 import type { Category } from '../types/marketTypes';
 const MarketPlace = () => {
