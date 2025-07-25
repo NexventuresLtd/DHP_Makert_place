@@ -40,8 +40,8 @@ const MarketPlace = () => {
                 {categories.map((data: any) => (
                     <RwandanEcommerceLayout data={data} />
                 ))}
-                {/* <ProductCatalog /> */}
                 <SupplierInquiryForm />
+                {/* <ProductCatalog /> */}
                 <RecommendedItemsSection />
                 <Footer />
             </div>

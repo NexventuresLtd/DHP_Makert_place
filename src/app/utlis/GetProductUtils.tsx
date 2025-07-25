@@ -8,7 +8,27 @@ interface ProductFilterOptions {
   search?: string;
 }
 
+// Helper to generate a unique cache key based on filters
+function getCacheKey(filters: ProductFilterOptions): string {
+  return `filteredProducts_${JSON.stringify(filters)}`;
+}
+
+const CACHE_DURATION_MS = 3 * 60 * 60 * 1000; // 3 hours
+
 export async function fetchFilteredProducts(filters: ProductFilterOptions = {}) {
+  const cacheKey = getCacheKey(filters);
+  const cachedDataString = localStorage.getItem(cacheKey);
+
+  if (cachedDataString) {
+    const { timestamp, data } = JSON.parse(cachedDataString);
+    const now = Date.now();
+
+    if (now - timestamp < CACHE_DURATION_MS) {
+      console.log("Using cached data");
+      return data;
+    }
+  }
+
   try {
     const params: Record<string, any> = {};
 
@@ -19,8 +39,15 @@ export async function fetchFilteredProducts(filters: ProductFilterOptions = {}) 
     if (filters.search) params.search = filters.search;
 
     const response = await mainAxios.get("/market/products/", { params });
-    console.log(response.data)
-    return response.data; 
+
+    // Cache the new data with current timestamp
+    const newCache = {
+      timestamp: Date.now(),
+      data: response.data,
+    };
+    localStorage.setItem(cacheKey, JSON.stringify(newCache));
+
+    return response.data;
   } catch (error) {
     console.error("Failed to fetch filtered products:", error);
     throw error;
