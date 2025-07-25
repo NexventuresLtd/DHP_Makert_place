@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Heart, Star, ChevronLeft, ChevronRight, ShoppingCart, Package, TrendingUp, Eye, Loader2, Play, Pause, Sparkles } from 'lucide-react';
+import { Heart, Star, ChevronLeft, ChevronRight, ShoppingCart, Package, TrendingUp, Eye, Play, Pause, Sparkles } from 'lucide-react';
 import type { Category, Product } from '../../types/marketTypes';
 import { fetchFilteredProducts } from '../../app/utlis/GetProductUtils';
 
