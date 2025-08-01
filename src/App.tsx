@@ -11,6 +11,7 @@ import DHPDashboard from "./pages/Dashboard"
 import AdminLogin from "./pages/adminLoginPage"
 import { getUserInfo, isLoggedIn } from "./app/Localstorage"
 import NotFound from "./comps/sharedComps/NotFound"
+import ShoppingCartViewer from "./comps/MarketPlace/shoppingCart"
 
 
 
@@ -30,11 +31,13 @@ function App() {
           <Route path="/elearning" element={<Elearning />} />
           <Route path="/resources" element={<DigRepo />} />
           <Route path="/market" element={<MarketPlace />} />
+          <Route path="/market/cart" element={tokenUser && !isAdmin ? <ShoppingCartViewer /> : <MarketPlace />} />
           <Route path="/about" element={<DHPHeroSection />} />
           <Route path="/login" element={tokenUser && !isAdmin ? <HomePage /> : <DHPLoginPage />} />
           <Route path="/admin/dashboard" element={tokenUser && isAdmin ? <DHPDashboard /> : <AdminLogin />} />
           <Route path="/dhp/admin/login" element={tokenUser && isAdmin ? <DHPDashboard /> : <AdminLogin />} />
           <Route path="/register" element={tokenUser && !isAdmin ? <HomePage /> : <DHPRegisterPage />} />
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

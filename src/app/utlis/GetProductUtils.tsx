@@ -45,7 +45,7 @@ export async function fetchFilteredProducts(filters: ProductFilterOptions = {}) 
       timestamp: Date.now(),
       data: response.data,
     };
-    localStorage.setItem(cacheKey, JSON.stringify(newCache));
+    // localStorage.setItem(cacheKey, JSON.stringify(newCache));
 
     return response.data;
   } catch (error) {

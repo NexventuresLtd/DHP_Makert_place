@@ -8,6 +8,7 @@ import SupplierInquiryForm from '../comps/MarketPlace/MarketPlacetrust';
 // import ProductCatalog from '../comps/MarketPlace/MarketProducts';
 import Footer from '../comps/sharedComps/Footer';
 import type { Category } from '../types/marketTypes';
+import ProductsShowcase from '../comps/MarketPlace/nonFeuturedProducINCategories';
 const MarketPlace = () => {
     const [loading, setLoading] = useState(false)
     const [categories, setCategories] = useState<Category[]>([]);
@@ -41,8 +42,11 @@ const MarketPlace = () => {
                     <RecommendedItemsSection />
                 </div>
                 {categories.map((data: any) => (
-                    
+
                     <RwandanEcommerceLayout data={data} />
+                ))}
+                {categories.map((data: any) => (
+                    <ProductsShowcase data={data} />
                 ))}
                 <SupplierInquiryForm />
                 {/* <ProductCatalog /> */}

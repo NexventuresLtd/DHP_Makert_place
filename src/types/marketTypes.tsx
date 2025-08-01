@@ -44,7 +44,22 @@ export interface Category {
   description: string;
   image: string;
 }
+export interface CartItem {
+  id: number;
+  product: Product;
+  quantity: number;
+  created_at: string;
+  updated_at: string;
+}
 
+export interface Cart {
+  id: number;
+  items: CartItem[];
+  total_items: number;
+  total_price: number;
+  created_at: string;
+  updated_at: string;
+}
 export const sidebarItems: SidebarItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
   { id: 'categories', label: 'Categories', icon: ShoppingCart, },

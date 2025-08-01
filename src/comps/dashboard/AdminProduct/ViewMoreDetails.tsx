@@ -364,7 +364,7 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                                         <ShoppingCart className="w-5 h-5 mr-2" />
                                         Add to Cart
                                     </button>
-                                    <button
+                                    {/* <button
                                         onClick={() => {
                                             window.open('https://wa.me/0788282962', '_blank');
                                         }}
@@ -377,7 +377,7 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                                     >
                                         <Coins className="w-5 h-5 mr-2" />
                                         Buy
-                                    </button>
+                                    </button> */}
                                 </div>
                             </>)}
                             {/* Product Details */}
