@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, BookOpen, ShoppingCart, GraduationCap, LogIn, UserPlus, Menu, X, User, UserCog2, LogOut } from 'lucide-react';
 import { isLoggedIn, getUserInfo } from '../../app/Localstorage';
-import type { UserInfo } from '../../types/sharedtypes';
+import type { UserInfo } from '../../types/marketTypes';
+
 
 interface NavItem {
     name: string;

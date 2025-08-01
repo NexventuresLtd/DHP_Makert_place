@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Heart, ShoppingCart, Eye, Star, Filter, Grid, List, Sparkles, ArrowRight } from 'lucide-react';
+import {  ShoppingCart, Eye, Star, Filter, Grid, List, Sparkles, ArrowRight } from 'lucide-react';
 import type { Product } from '../../types/marketTypes';
 import { fetchFilteredProducts } from '../../app/utlis/GetProductUtils';
 import ProductDetailModal from '../dashboard/AdminProduct/ViewMoreDetails';
+import { WishlistHeart } from '../sharedComps/WishListHeart';
 
 export default function RecommendedItemsSection() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -19,7 +20,7 @@ export default function RecommendedItemsSection() {
         console.log('Fetching products...');
 
         const response = await fetchFilteredProducts({ category: "" });
-        console.log('API Response:', response);
+        // console.log('API Response:', response);
 
         // Handle different response structures
         const productsData = response?.data || response || [];
@@ -40,9 +41,9 @@ export default function RecommendedItemsSection() {
     loadProducts();
   }, []);
 
-  const toggleLike = (id: number) => {
-    console.log('Toggle like for product:', id);
-  };
+  // const toggleLike = (id: number) => {
+  //   console.log('Toggle like for product:', id);
+  // };
 
   const getPrimaryImage = (product: Product) => {
     if (!product.images || product.images.length === 0) {
@@ -158,7 +159,7 @@ export default function RecommendedItemsSection() {
           {/* Enhanced Error State */}
           {error && (
             <div className="max-w-md mx-auto">
-              <div className="bg-gradient-to-r from-red-50 to-green-50 border border-red-200/50 rounded-3xl p-8 text-center ">
+              <div className="border border-red-200/50 rounded-3xl p-8 text-center ">
                 <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <Eye className="w-8 h-8 text-red-500" />
                 </div>
@@ -166,7 +167,7 @@ export default function RecommendedItemsSection() {
                 <p className="text-red-700 mb-6">{error}</p>
                 <button
                   onClick={() => window.location.reload()}
-                  className="px-6 py-3 bg-gradient-to-r from-red-500 to-green-500 text-white font-medium rounded-2xl hover:from-red-600 hover:to-green-600 transition-all duration-300  shadow-red-500/25"
+                  className="px-6 py-3 bg-primary text-white font-medium rounded-2xl transition-all duration-300  shadow-red-500/25"
                 >
                   Try Again
                 </button>
@@ -216,12 +217,7 @@ export default function RecommendedItemsSection() {
                         {/* Enhanced Overlay Actions */}
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500 flex items-center justify-center opacity-0 group-hover:opacity-100">
                           <div className="flex gap-3 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            <button
-                              onClick={() => toggleLike(product.id)}
-                              className="p-3 bg-white/90 backdrop-blur-sm text-slate-600 rounded-2xl hover:bg-red-50 hover:text-red-500 transition-all duration-300  hover:shadow-red-500/25 hover:scale-110"
-                            >
-                              <Heart className="w-5 h-5" />
-                            </button>
+                            <WishlistHeart productId={product.id} className="w-5 h-5" />
                             <button
                               onClick={() => { setSelectedProduct(product); setIsModalOpen(true); }}
                               className="p-3 bg-white/90 backdrop-blur-sm text-slate-600 rounded-2xl hover:bg-emerald-50 hover:text-emerald-600 transition-all duration-300  hover:shadow-emerald-500/25 hover:scale-110"
@@ -292,12 +288,7 @@ export default function RecommendedItemsSection() {
                             </div>
 
                             <div className="flex items-center gap-4">
-                              <button
-                                onClick={() => toggleLike(product.id)}
-                                className="p-3 rounded-2xl bg-slate-100 text-slate-600 hover:bg-red-50 hover:text-red-500 transition-all duration-300 hover:scale-105"
-                              >
-                                <Heart className="w-5 h-5" />
-                              </button>
+                              <WishlistHeart productId={product.id} className="w-5 h-5" />
                               <button
                                 onClick={() => { setSelectedProduct(product); setIsModalOpen(true); }}
                                 className="flex-1 px-8 py-4 bg-primary text-white font-semibold rounded-2xl transition-all duration-300 flex items-center justify-center gap-3  shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105"

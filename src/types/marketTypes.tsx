@@ -44,6 +44,22 @@ export interface Category {
   description: string;
   image: string;
 }
+export interface Category_nav {
+    id: number;
+    name: string;
+    slug?: string;
+    image?: string;
+}
+
+
+
+export interface UserInfo {
+    username: string;
+    email?: string;
+    first_name?: string;
+    last_name?: string;
+    avatar?: string;
+}
 export interface CartItem {
   id: number;
   product: Product;

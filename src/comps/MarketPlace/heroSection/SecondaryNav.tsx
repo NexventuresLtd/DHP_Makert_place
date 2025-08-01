@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Home, ChevronDown, ShoppingCart } from 'lucide-react';
+import { Home, ShoppingCart } from 'lucide-react';
 
 interface SecondaryNavProps {
     selectedCountry: string;
@@ -31,11 +31,11 @@ const SecondaryNav = ({ selectedCountry, setSelectedCountry }: SecondaryNavProps
                                 className="flex items-center space-x-2 text-gray-600 hover:text-emerald-600 transition-colors whitespace-nowrap"
                             >
                                 <span className="font-medium text-sm lg:text-base">{selectedCountry}</span>
-                                <ChevronDown className="w-4 h-4" />
+                                {/* <ChevronDown className="w-4 h-4" /> */}
                             </button>
                             {isCountryDropdownOpen && (
-                                <div className="fixed top-16 right-0 z-50 mt-2 w-40 bg-white border border-gray-100 rounded-xl overflow-hidden shadow-lg">
-                                    {['Rwanda, RWF', 'Kenya, KES', 'Uganda, UGX', 'Tanzania, TZS'].map((country) => (
+                                <div className="fixed top-26 right-50 z-50 mt-2 w-40 bg-white border border-gray-100 rounded-xl overflow-hidden shadow-lg">
+                                    {['Rwanda, RWF'].map((country) => (
                                         <button
                                             key={country}
                                             onClick={() => {

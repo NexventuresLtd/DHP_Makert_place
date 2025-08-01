@@ -105,7 +105,7 @@ const Header = ({
                                     <ChevronDown className="absolute right-2 lg:right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                                 </div>
                                 <button
-                                    onClick={handleSearch}
+                                    onClick={() => handleSearch()}
                                     className="bg-primary text-white px-4 lg:px-5 py-2 transition-colors duration-200"
                                     aria-label="Search"
                                 >
@@ -148,10 +148,10 @@ const Header = ({
                                                         <p className="text-sm font-medium text-gray-900">{user?.username}</p>
                                                         <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                                                     </div>
-                                                    <button className="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                                                    {/* <button onClick={() => {window.location.href ="/profile"}} className="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                                                         My Profile
-                                                    </button>
-                                                    <button className="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                                                    </button> */}
+                                                    <button onClick={() => {window.location.href ="/market/cart"}} className="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                                                         My Orders
                                                     </button>
                                                     <button

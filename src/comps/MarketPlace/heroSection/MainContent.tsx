@@ -1,7 +1,8 @@
-import { ChevronLeft, ChevronRight, Star, Eye, Percent, Clock, Loader2, ShoppingCart, ArrowRight, Zap, Shield, Heart } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Star, Eye, Percent, Clock, Loader2, ShoppingCart, ArrowRight, Zap, Shield } from 'lucide-react';
 import ProductDetailModal from '../../dashboard/AdminProduct/ViewMoreDetails';
 import { useState } from 'react';
 import type { Product } from '../../../types/marketTypes';
+import { WishlistHeart } from '../../sharedComps/WishListHeart';
 
 interface MainContentProps {
     isMobileMenuOpen: boolean;
@@ -123,9 +124,7 @@ const MainContent = ({
                                         </div>
 
                                         {/* Heart Icon */}
-                                        <button className="absolute top-4 right-4 z-20 w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-50 transition-all">
-                                            <Heart className="w-4 h-4 text-gray-600 hover:text-red-500 transition-colors" />
-                                        </button>
+                                        <WishlistHeart productId={currentProduct.id} className="w-5 h-5" />
                                     </div>
 
                                     {/* Product Details */}
@@ -173,8 +172,8 @@ const MainContent = ({
                                                     </span>
                                                 </div>
                                                 <div className={`px-3 py-1 rounded-full text-xs font-medium border ${currentProduct.stock > 0
-                                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                                                        : 'bg-red-50 text-red-600 border-red-200'
+                                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                                    : 'bg-red-50 text-red-600 border-red-200'
                                                     }`}>
                                                     <div className="flex items-center space-x-1.5">
                                                         <div className={`w-1.5 h-1.5 rounded-full ${currentProduct.stock > 0 ? 'bg-second' : 'bg-red-500'

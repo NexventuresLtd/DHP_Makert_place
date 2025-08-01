@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Heart, Star, ShoppingCart, Sparkles, X, Filter, Sliders, Info, Package, Minus, Plus } from 'lucide-react';
+import {  Star, ShoppingCart, Sparkles, X, Filter, Sliders, Info, Package, Minus, Plus } from 'lucide-react';
 import type { Category, Product } from '../../types/marketTypes';
 import { fetchFilteredProducts } from '../../app/utlis/GetProductUtils';
 import { addItemToCart } from '../../app/utlis/addToCartUtil';
+import { WishlistHeart } from '../sharedComps/WishListHeart';
 
 interface ProductsShowcaseProps {
     data: Category;
@@ -14,7 +15,6 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-    const [likedProducts, setLikedProducts] = useState<Set<number>>(new Set());
     const [activeFilter, setActiveFilter] = useState<string>('all');
     const [showFilters, setShowFilters] = useState(false);
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
@@ -87,13 +87,6 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
         setFilteredProducts(result);
     }, [products, activeFilter, priceRange, sortOption]);
 
-    const toggleLike = (productId: number) => {
-        setLikedProducts(prev => {
-            const newLiked = new Set(prev);
-            newLiked.has(productId) ? newLiked.delete(productId) : newLiked.add(productId);
-            return newLiked;
-        });
-    };
 
     const calculateDiscount = (original: string, current: string) => {
         const originalPrice = parseFloat(original);
@@ -319,14 +312,7 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
                                         </h3>
                                         <p className="text-gray-500 text-xs line-clamp-2 mt-1">{product.description}</p>
                                     </div>
-                                    <button
-                                        onClick={() => toggleLike(product.id)}
-                                        className="p-1 text-gray-400 hover:text-red-500 transition-colors"
-                                    >
-                                        <Heart
-                                            className={`w-5 h-5 ${likedProducts.has(product.id) ? 'fill-red-500 text-red-500' : ''}`}
-                                        />
-                                    </button>
+                                    <WishlistHeart productId={product.id} className="w-5 h-5" />
                                 </div>
 
                                 {/* Rating */}
@@ -472,14 +458,7 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
                                                 </span>
                                             </div>
                                         </div>
-                                        <button
-                                            onClick={() => toggleLike(selectedProduct.id)}
-                                            className={`p-2 rounded-full ${likedProducts.has(selectedProduct.id) ? 'text-red-500' : 'text-gray-400 hover:text-red-500'} transition-colors`}
-                                        >
-                                            <Heart
-                                                className={`w-5 h-5 ${likedProducts.has(selectedProduct.id) ? 'fill-red-500' : ''}`}
-                                            />
-                                        </button>
+                                        <WishlistHeart productId={selectedProduct.id} className="w-5 h-5" />
                                     </div>
                                 </div>
 

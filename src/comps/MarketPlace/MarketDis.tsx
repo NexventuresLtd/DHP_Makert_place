@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Heart, Star, ChevronLeft, ChevronRight, ShoppingCart, Package, TrendingUp, Eye, Play, Pause, Sparkles } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight, ShoppingCart, Package, TrendingUp, Eye, Play, Pause, Sparkles } from 'lucide-react';
 import type { Category, Product } from '../../types/marketTypes';
 import { fetchFilteredProducts } from '../../app/utlis/GetProductUtils';
 import ProductDetailModal from '../dashboard/AdminProduct/ViewMoreDetails';
+import { WishlistHeart } from '../sharedComps/WishListHeart';
 
 interface ProductsShowcaseProps {
   data: Category;
@@ -11,7 +12,7 @@ interface ProductsShowcaseProps {
 const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [likedProducts, setLikedProducts] = useState<Set<number>>(new Set());
+
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -51,13 +52,6 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
     return () => clearInterval(interval);
   }, [isAutoPlaying, totalSlides, products.length]);
 
-  const toggleLike = (productId: number) => {
-    setLikedProducts(prev => {
-      const newLiked = new Set(prev);
-      newLiked.has(productId) ? newLiked.delete(productId) : newLiked.add(productId);
-      return newLiked;
-    });
-  };
 
   const navigateSlide = (direction: 'prev' | 'next') => {
     setCurrentSlide(prev =>
@@ -97,7 +91,7 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
   const renderProductCard = (product: Product) => {
     const primaryImage = product.images.find(img => img.is_primary) || product.images[0];
     const discount = calculateDiscount(product.original_price, product.price);
-    const isLiked = likedProducts.has(product.id);
+
     const stockStatus = product.stock > 10
       ? { text: 'In Stock', class: 'bg-emerald-50 text-emerald-700 border border-emerald-200' }
       : product.stock > 0
@@ -130,16 +124,7 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
             )}
           </div>
 
-          <button
-            onClick={() => toggleLike(product.id)}
-            className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-xl hover:bg-white transition-all duration-200 hover:scale-105"
-            aria-label={isLiked ? 'Remove from wishlist' : 'Add to wishlist'}
-          >
-            <Heart
-              size={16}
-              className={`transition-colors ${isLiked ? 'fill-red-500 text-red-500' : 'text-slate-400 hover:text-red-400'}`}
-            />
-          </button>
+          <WishlistHeart productId={product.id} className="w-5 h-5" size={16} />
 
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
             <button onClick={() => { setSelectedProduct(product); setIsModalOpen(true); }} className="bg-white/95 backdrop-blur-sm text-slate-900 px-4 py-2 rounded-xl font-medium hover:bg-white transition-all duration-200 flex items-center space-x-2 hover:scale-105 text-sm">
@@ -378,7 +363,7 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
           </div>
         </div>
       </div>
-      
+
       {selectedProduct && isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-200">
@@ -448,8 +433,8 @@ const PaginationDots: React.FC<{
         key={i}
         onClick={() => onClick(i)}
         className={`h-1.5 rounded-full transition-all duration-200 ${i === current
-            ? 'bg-primary w-4'
-            : 'bg-slate-300 w-1.5 hover:bg-slate-400'
+          ? 'bg-primary w-4'
+          : 'bg-slate-300 w-1.5 hover:bg-slate-400'
           }`}
         aria-label={`Go to slide ${i + 1}`}
       />
@@ -464,8 +449,8 @@ const AutoPlayToggle: React.FC<{
   <button
     onClick={onToggle}
     className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 ${isPlaying
-        ? 'bg-primary text-white hover:bg-primary/90'
-        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+      ? 'bg-primary text-white hover:bg-primary/90'
+      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
       }`}
     aria-label={isPlaying ? 'Pause auto-play' : 'Play auto-play'}
   >

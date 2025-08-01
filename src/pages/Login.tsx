@@ -108,13 +108,13 @@ export default function DHPLoginPage() {
           <h1 className="text-3xl font-bold text-center mb-10">Welcome back to the DHP Community</h1>
 
           {/* Google sign in button */}
-          <button
+          {/* <button
             className="flex items-center justify-center w-full border border-gray-300 rounded-full py-4 px-4 mb-6 cursor-pointer hover:bg-gray-100"
             onClick={() => console.log("Google sign-in")}
           >
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png" alt="Google logo" className="w-5 h-5 mr-2" />
             <span className="text-sm text-gray-500">Sign up with Google</span>
-          </button>
+          </button> */}
 
           {/* Login form */}
           <div className="space-y-6">
