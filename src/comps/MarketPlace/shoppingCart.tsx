@@ -174,7 +174,7 @@ const ShoppingCartViewer: React.FC = () => {
                         </div>
                         <h2 className="text-2xl font-bold text-gray-800 mb-3">Your Cart is Empty</h2>
                         <p className="text-gray-500 mb-6">Add some products to get started</p>
-                        <button className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-medium transition-colors inline-flex items-center">
+                        <button onClick={() => window.location.href = '/market'} className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-medium transition-colors inline-flex items-center">
                             Browse Products
                             <ArrowRight className="w-4 h-4 ml-2" />
                         </button>
@@ -258,7 +258,7 @@ const ShoppingCartViewer: React.FC = () => {
                                                                         Cancel
                                                                     </button>
                                                                     <button
-                                                                        onClick={() => deleteCartItem(item.id)}
+                                                                        onClick={() => deleteCartItem(cart.id)}
                                                                         disabled={deleteLoading === item.id}
                                                                         className="flex-1 text-sm py-1 px-2 bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors disabled:opacity-70"
                                                                     >
