@@ -10,7 +10,6 @@ import {
     Image as ImageIcon,
     Loader2,
     AlertCircle,
-    Coins,
 
 } from "lucide-react";
 import mainAxios from "../../Instance/mainAxios";

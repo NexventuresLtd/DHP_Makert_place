@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Home, Settings2, ChevronDown } from 'lucide-react';
+import { Home, ChevronDown, ShoppingCart } from 'lucide-react';
 
 interface SecondaryNavProps {
     selectedCountry: string;
@@ -14,13 +14,13 @@ const SecondaryNav = ({ selectedCountry, setSelectedCountry }: SecondaryNavProps
             <div className="max-w-full md:max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-12 overflow-x-auto">
                     <div className="flex items-center space-x-4 lg:space-x-8 min-w-max">
-                        <button className="flex items-center space-x-2 text-gray-600 hover:text-emerald-600 transition-colors whitespace-nowrap">
+                        <button onClick={() => {window.location.href = '/'}} className="flex items-center space-x-2 text-gray-600 hover:text-emerald-600 transition-colors whitespace-nowrap">
                             <Home className="w-4 h-4" />
                             <span className="font-medium text-sm lg:text-base">Home</span>
                         </button>
                         <button className="flex items-center space-x-2 text-gray-600 hover:text-emerald-600 transition-colors whitespace-nowrap">
-                            <Settings2 className="w-4 h-4" />
-                            <span className="font-medium text-sm lg:text-base">Help</span>
+                            <ShoppingCart className="w-4 h-4" />
+                            <span className="font-medium text-sm lg:text-base">Cart</span>
                         </button>
                     </div>
 

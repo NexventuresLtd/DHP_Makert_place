@@ -44,10 +44,6 @@ export default function RecommendedItemsSection() {
     console.log('Toggle like for product:', id);
   };
 
-  const addToCart = (product: Product) => {
-    console.log('Add to cart:', product);
-  };
-
   const getPrimaryImage = (product: Product) => {
     if (!product.images || product.images.length === 0) {
       return '/placeholder/300/200';

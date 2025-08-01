@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Heart, Star, ChevronRight, ShoppingCart, Sparkles, X, ArrowRight, Filter, Sliders, Info, Package, Minus, Plus } from 'lucide-react';
+import { Heart, Star, ShoppingCart, Sparkles, X, Filter, Sliders, Info, Package, Minus, Plus } from 'lucide-react';
 import type { Category, Product } from '../../types/marketTypes';
 import { fetchFilteredProducts } from '../../app/utlis/GetProductUtils';
 import { addItemToCart } from '../../app/utlis/addToCartUtil';
