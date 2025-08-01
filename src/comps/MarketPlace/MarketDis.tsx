@@ -119,12 +119,12 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
           {/* Badges */}
           <div className="absolute top-4 left-4 flex flex-col space-y-2">
             {discount > 0 && (
-              <div className="flex items-center gap-1 bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1.5 rounded-2xl text-xs font-bold">
+              <div className="flex items-center gap-1 bg-gradient-to-r bg-second text-white px-3 py-1.5 rounded-2xl text-xs font-bold">
                 <span>-{discount}%</span>
               </div>
             )}
             {product.is_featured && (
-              <div className="flex items-center gap-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1.5 rounded-2xl text-xs font-semibold">
+              <div className="flex items-center gap-1 bg-gradient-to-r bg-second text-white px-3 py-1.5 rounded-2xl text-xs font-semibold">
                 <Sparkles className="w-3 h-3" />
                 <span>Featured</span>
               </div>

@@ -88,7 +88,7 @@ const MainContent = ({
                                 <div className="h-[400px] lg:h-[500px] overflow-y-auto flex items-center justify-center">
                                     <div className="text-center space-y-3">
                                         <div className="relative">
-                                            <div className="w-12 h-12 bg-emerald-500 rounded-xl mx-auto flex items-center justify-center">
+                                            <div className="w-12 h-12 bg-second rounded-xl mx-auto flex items-center justify-center">
                                                 <Loader2 className="w-6 h-6 text-white animate-spin" />
                                             </div>
                                         </div>
@@ -112,7 +112,7 @@ const MainContent = ({
                                         {/* Badges */}
                                         <div className="absolute top-4 left-4 z-20 flex flex-col space-y-2">
                                             <div className="flex items-center space-x-1.5">
-                                                <span className="px-2.5 py-1 rounded-full bg-emerald-500 text-white text-xs font-medium flex items-center space-x-1">
+                                                <span className="px-2.5 py-1 rounded-full bg-second text-white text-xs font-medium flex items-center space-x-1">
                                                     <Zap className="w-2.5 h-2.5" />
                                                     <span>Featured</span>
                                                 </span>
@@ -177,7 +177,7 @@ const MainContent = ({
                                                         : 'bg-red-50 text-red-600 border-red-200'
                                                     }`}>
                                                     <div className="flex items-center space-x-1.5">
-                                                        <div className={`w-1.5 h-1.5 rounded-full ${currentProduct.stock > 0 ? 'bg-emerald-500' : 'bg-red-500'
+                                                        <div className={`w-1.5 h-1.5 rounded-full ${currentProduct.stock > 0 ? 'bg-second' : 'bg-red-500'
                                                             }`}></div>
                                                         <span>
                                                             {currentProduct.stock > 0 ? `${currentProduct.stock} in stock` : 'Out of stock'}
