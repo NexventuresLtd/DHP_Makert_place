@@ -60,7 +60,7 @@ export default function RecommendedItemsSection() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
       {/* Floating Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-3xl"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-emerald-200/20 to-green-200/20 rounded-full blur-3xl"></div>
         <div className="absolute top-1/2 -left-40 w-60 h-60 bg-gradient-to-br from-blue-200/20 to-cyan-200/20 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-40 right-1/3 w-96 h-96 bg-gradient-to-br from-emerald-200/20 to-teal-200/20 rounded-full blur-3xl"></div>
       </div>
@@ -71,10 +71,10 @@ export default function RecommendedItemsSection() {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 mb-8">
             <div className="space-y-4">
               <div className="flex items-center gap-2 mb-2">
-                <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
+                <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-emerald-500 to-green-500 rounded-lg">
                   <Sparkles className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-sm font-semibold text-purple-600 tracking-wide uppercase">Curated Selection</span>
+                <span className="text-sm font-semibold text-emerald-600 tracking-wide uppercase">Curated Selection</span>
               </div>
               <h1 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-slate-800 via-slate-700 to-slate-600 bg-clip-text text-transparent leading-tight">
                 Recommended
@@ -150,7 +150,7 @@ export default function RecommendedItemsSection() {
         {/* Enhanced Error State */}
         {error && (
           <div className="max-w-md mx-auto">
-            <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200/50 rounded-3xl p-8 text-center ">
+            <div className="bg-gradient-to-r from-red-50 to-green-50 border border-red-200/50 rounded-3xl p-8 text-center ">
               <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Eye className="w-8 h-8 text-red-500" />
               </div>
@@ -158,7 +158,7 @@ export default function RecommendedItemsSection() {
               <p className="text-red-700 mb-6">{error}</p>
               <button 
                 onClick={() => window.location.reload()} 
-                className="px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-medium rounded-2xl hover:from-red-600 hover:to-pink-600 transition-all duration-300  shadow-red-500/25"
+                className="px-6 py-3 bg-gradient-to-r from-red-500 to-green-500 text-white font-medium rounded-2xl hover:from-red-600 hover:to-green-600 transition-all duration-300  shadow-red-500/25"
               >
                 Try Again
               </button>
@@ -239,7 +239,7 @@ export default function RecommendedItemsSection() {
                       {/* New Badge for Featured Items */}
                       {product.is_featured && (
                         <div className="absolute top-4 right-4">
-                          <div className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-semibold rounded-2xl ">
+                          <div className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-emerald-500 to-green-500 text-white text-xs font-semibold rounded-2xl ">
                             <Sparkles className="w-3 h-3" />
                             Featured
                           </div>

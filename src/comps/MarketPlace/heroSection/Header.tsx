@@ -46,32 +46,32 @@ const Header = ({
     };
 
     return (
-        <header className="bg-primary-nohover sticky top-0 z-50">
+        <header className="bg-gray-50 sticky top-0 z-50">
             <div className="max-w-full md:max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo and Mobile Menu Button */}
                     <div className="flex items-center space-x-3">
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="lg:hidden p-2 text-white hover:text-primary transition-colors"
+                            className="lg:hidden p-2 text-primary hover:text-primary transition-colors"
                             aria-label="Toggle menu"
                         >
                             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                         </button>
                         <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-md">
-                                <div className="w-6 h-6  bg-primary rounded-md"></div>
+                            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                                <img src="logos/logo-circle.png" alt="Digital Heritage" className="w-8 h-8 rounded-full" />
                             </div>
                             <div className="hidden lg:block">
-                                <h1 className="text-xs md:text-xl  font-bold text-white">Digital Heritage</h1>
-                                <p className="text-xs text-emerald-100">Preservationists Platform</p>
+                                <h1 className="text-lg font-semibold text-gray-900">Digital Heritage</h1>
+                                <p className="text-xs text-gray-500">Preservationists Platform</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Search Bar - Hidden on mobile */}
                     <div className="hidden md:flex flex-1 max-w-2xl mx-4 lg:mx-8">
-                        <div className="flex w-full bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div className="flex w-full bg-white rounded-lg overflow-hidden">
                             <input
                                 type="text"
                                 placeholder="Search for heritage products..."
@@ -104,7 +104,7 @@ const Header = ({
                             </div>
                             <button
                                 onClick={handleSearch}
-                                className="bg-emerald-800 hover:bg-primary text-white px-4 lg:px-5 py-2 transition-colors duration-200"
+                                className="bg-primary text-white px-4 lg:px-5 py-2 transition-colors duration-200"
                                 aria-label="Search"
                             >
                                 <Search className="w-4 h-4 lg:w-5 lg:h-5" />
@@ -120,25 +120,25 @@ const Header = ({
                                     <div className="relative">
                                         <button
                                             onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                                            className="flex items-center space-x-2 text-white hover:text-primary transition-colors duration-200"
+                                            className="flex items-center space-x-2 text-primary hover:text-primary transition-colors duration-200"
                                             aria-label="User menu"
                                         >
                                             {user?.avatar ? (
-                                                <img 
-                                                    src={user.avatar} 
-                                                    alt={user.username} 
+                                                <img
+                                                    src={user.avatar}
+                                                    alt={user.username}
                                                     className="w-8 h-8 rounded-full object-cover"
                                                 />
                                             ) : (
                                                 <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center border border-white/20">
-                                                    <User className="w-4 h-4 text-white" />
+                                                    <User className="w-4 h-4 text-primary" />
                                                 </div>
                                             )}
                                             <span className="font-medium hidden lg:inline">{user?.username || 'Account'}</span>
                                             <ChevronDown className={`w-4 h-4 hidden lg:inline transition-transform ${isUserDropdownOpen ? 'rotate-180' : ''}`} />
                                         </button>
                                         {isUserDropdownOpen && (
-                                            <div 
+                                            <div
                                                 className="absolute right-0 mt-2 w-56 bg-white rounded-lg overflow-hidden shadow-xl z-50 border border-gray-100"
                                                 onMouseLeave={() => setIsUserDropdownOpen(false)}
                                             >
@@ -162,12 +162,12 @@ const Header = ({
                                         )}
                                     </div>
 
-                                    <button 
-                                        className="relative p-2 text-white hover:text-primary transition-colors"
+                                    <button
+                                        className="relative p-2 text-primary hover:text-primary transition-colors"
                                         aria-label="Shopping cart"
                                     >
                                         <ShoppingCart className="w-5 h-5 lg:w-6 lg:h-6" />
-                                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-white text-emerald-800 text-xs rounded-full flex items-center justify-center font-medium border border-emerald-100">
+                                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white text-xs rounded-full flex items-center justify-center font-medium border border-emerald-100">
                                             2
                                         </span>
                                     </button>
@@ -186,13 +186,13 @@ const Header = ({
                             <div className="flex space-x-3">
                                 <button
                                     onClick={() => window.location.href = '/login'}
-                                    className="bg-white text-emerald-800 hover:bg-gray-50 px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm lg:text-base shadow-sm"
+                                    className="bg-white text-emerald-800 hover:bg-gray-50 px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm lg:text-base"
                                 >
                                     Login
                                 </button>
                                 <button
                                     onClick={() => window.location.href = '/register'}
-                                    className="bg-emerald-800 hover:bg-emerald-900 text-white px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm lg:text-base shadow-sm"
+                                    className="bg-emerald-800 hover:bg-emerald-900 text-white px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm lg:text-base"
                                 >
                                     Register
                                 </button>

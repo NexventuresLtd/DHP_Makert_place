@@ -37,12 +37,15 @@ const MarketPlace = () => {
                         </div>
                     </div>
                 }
+                <div className="bg-[url('/images/research.png')] bg-center bg-repeat bg-blend-overlay bg-white/90 backdrop-blur-3xl">
+                    <RecommendedItemsSection />
+                </div>
                 {categories.map((data: any) => (
+                    
                     <RwandanEcommerceLayout data={data} />
                 ))}
                 <SupplierInquiryForm />
                 {/* <ProductCatalog /> */}
-                <RecommendedItemsSection />
                 <Footer />
             </div>
         </>
