@@ -181,7 +181,7 @@ export default function ProductSearch({ searchTerm, selectedCategory, onClose }:
                             setIsModalOpen(true);
                         }}
                         disabled={product.stock === 0}
-                        className="w-full bg-gradient-to-r from-blue-600 to-green-600 text-white py-3.5 rounded-xl font-semibold hover:from-blue-700 hover:to-green-700 transition-all duration-300 flex items-center justify-center gap-2 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed shadow-lg hover:shadow-xl disabled:shadow-none transform hover:scale-[1.02] disabled:transform-none"
+                        className="w-full bg-second text-white py-3.5 rounded-xl font-semibold hover:from-blue-700 hover:to-green-700 transition-all duration-300 flex items-center justify-center gap-2 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed shadow-lg hover:shadow-xl disabled:shadow-none transform hover:scale-[1.02] disabled:transform-none"
                     >
                         <ShoppingCart className="w-5 h-5" />
                         {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
@@ -277,7 +277,7 @@ export default function ProductSearch({ searchTerm, selectedCategory, onClose }:
                                         alert()
                                     }}
                                     disabled={product.stock === 0}
-                                    className="bg-gradient-to-r from-blue-600 to-green-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:from-blue-700 hover:to-green-700 transition-all duration-300 flex items-center gap-2 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed"
+                                    className="bg-second text-white px-6 py-2.5 rounded-xl font-semibold hover:from-blue-700 hover:to-green-700 transition-all duration-300 flex items-center gap-2 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed"
                                 >
                                     <ShoppingCart className="w-4 h-4" />
                                     {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
@@ -343,7 +343,7 @@ export default function ProductSearch({ searchTerm, selectedCategory, onClose }:
                                 <button
                                     onClick={() => setViewMode('grid')}
                                     className={`p-3 rounded-lg transition-all duration-300 ${viewMode === 'grid'
-                                        ? 'bg-gradient-to-r from-blue-600 to-green-600 text-white shadow-md'
+                                        ? 'bg-second text-white shadow-md'
                                         : 'text-gray-600 hover:text-gray-800'
                                         }`}
                                 >
@@ -352,7 +352,7 @@ export default function ProductSearch({ searchTerm, selectedCategory, onClose }:
                                 <button
                                     onClick={() => setViewMode('list')}
                                     className={`p-3 rounded-lg transition-all duration-300 ${viewMode === 'list'
-                                        ? 'bg-gradient-to-r from-blue-600 to-green-600 text-white shadow-md'
+                                        ? 'bg-second text-white shadow-md'
                                         : 'text-gray-600 hover:text-gray-800'
                                         }`}
                                 >
