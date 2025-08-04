@@ -11,3 +11,12 @@
 body{
     overflow-x: hidden;
 }
+.bg-second{
+    background: #804115;
+}
+.bg-second:hover{
+    background: #5a2703;
+}
+.text-second{
+    color: #804115;
+}

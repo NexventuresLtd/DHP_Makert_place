@@ -41,11 +41,11 @@ export async function fetchFilteredProducts(filters: ProductFilterOptions = {}) 
     const response = await mainAxios.get("/market/products/", { params });
 
     // Cache the new data with current timestamp
-    const newCache = {
-      timestamp: Date.now(),
-      data: response.data,
-    };
-    localStorage.setItem(cacheKey, JSON.stringify(newCache));
+    // const newCache = {
+    //   timestamp: Date.now(),
+    //   data: response.data,
+    // };
+    // localStorage.setItem(cacheKey, JSON.stringify(newCache));
 
     return response.data;
   } catch (error) {

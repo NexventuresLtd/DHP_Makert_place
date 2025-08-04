@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import {
     Star,
-    ChevronLeft,
-    Heart,
     Share2,
     ShoppingCart,
     Check,
@@ -10,13 +8,11 @@ import {
     Image as ImageIcon,
     Loader2,
     AlertCircle,
-    Coins,
-
 } from "lucide-react";
 import mainAxios from "../../Instance/mainAxios";
 import { getUserInfo, isLoggedIn } from "../../../app/Localstorage";
 import { addItemToCart } from "../../../app/utlis/addToCartUtil";
-
+import { WishlistHeart } from "../../sharedComps/WishListHeart";
 
 interface ProductImage {
     image: string;
@@ -55,16 +51,41 @@ interface ProductDetailModalProps {
     onClose: () => void;
 }
 
+const CustomAlert = ({ message, type, onClose }: { message: string, type: 'success' | 'error', onClose: () => void }) => {
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            onClose();
+        }, 3000);
+        return () => clearTimeout(timer);
+    }, [onClose]);
+
+    return (
+        <div className={`absolute top-4 right-4 z-50 p-4 rounded-md shadow-lg ${type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+            <div className="flex items-center">
+                {type === 'success' ? (
+                    <Check className="w-5 h-5 mr-2" />
+                ) : (
+                    <AlertCircle className="w-5 h-5 mr-2" />
+                )}
+                <span>{message}</span>
+                <button onClick={onClose} className="ml-4">
+                    <X className="w-4 h-4" />
+                </button>
+            </div>
+        </div>
+    );
+};
+
 export default function ProductDetailModal({ product, onClose }: ProductDetailModalProps) {
     const [selectedImage, setSelectedImage] = useState(0);
     const [quantity, setQuantity] = useState(1);
-    const [isWishlisted, setIsWishlisted] = useState(false);
     const [showShareOptions, setShowShareOptions] = useState(false);
     const [category, setCategory] = useState<Category | null>(null);
     const [isLoadingCategory, setIsLoadingCategory] = useState(false);
     const [categoryError, setCategoryError] = useState<string | null>(null);
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
+    const [alert, setAlert] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
 
-    // Fetch category information
     useEffect(() => {
         const fetchCategory = async () => {
             if (!product.category) return;
@@ -85,7 +106,6 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
         fetchCategory();
     }, [product.category]);
 
-    // Format price
     const formatPrice = (price: string) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
@@ -93,7 +113,6 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
         }).format(parseFloat(price));
     };
 
-    // Calculate discount percentage
     const discountPercentage = product.original_price
         ? Math.round(
             ((parseFloat(product.original_price) - parseFloat(product.price)) /
@@ -102,7 +121,6 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
         )
         : 0;
 
-    // Handle quantity changes
     const handleQuantityChange = (value: number) => {
         const newValue = quantity + value;
         if (newValue > 0 && newValue <= product.stock) {
@@ -110,7 +128,6 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
         }
     };
 
-    // Condition badge
     const conditionBadge = () => {
         switch (product.condition) {
             case "new":
@@ -137,24 +154,46 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
         }
     };
 
+    const handleAddToCart = async () => {
+        setIsAddingToCart(true);
+        try {
+            const result = await addItemToCart(product.id, quantity);
+            if (result.status) {
+                setAlert({ message: `${quantity} ${product.name} added to cart`, type: 'success' });
+            } else {
+                setAlert({ message: `Failed to add ${quantity} ${product.name} to cart`, type: 'error' });
+            }
+        } catch (error) {
+            setAlert({ message: 'An error occurred while adding to cart', type: 'error' });
+        } finally {
+            setIsAddingToCart(false);
+        }
+    };
+
     return (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
-                {/* Header */}
+
+            <div className="bg-white rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto relative">
+            {alert && (
+                <CustomAlert 
+                    message={alert.message} 
+                    type={alert.type} 
+                    onClose={() => setAlert(null)} 
+                />
+            )}
                 <div className="sticky top-0 bg-white z-10 p-4 border-b border-gray-200 flex justify-between items-center">
+                    <div className="w-6"></div>
+                    <h2 className="text-xl font-bold text-gray-900">Product Details</h2>
                     <button
                         onClick={onClose}
-                        className="text-gray-500 hover:text-gray-700"
+                        className="bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors duration-200"
                     >
-                        <ChevronLeft className="w-6 h-6" />
+                        <X className="w-6 h-6" />
                     </button>
-                    <h2 className="text-xl font-bold text-gray-900">Product Details</h2>
-                    <div className="w-6"></div> {/* Spacer for alignment */}
                 </div>
 
                 <div className="p-6">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        {/* Product Images */}
                         <div>
                             <div className="relative bg-gray-100 rounded-lg overflow-hidden mb-4 h-96">
                                 {product.images.length > 0 ? (
@@ -203,7 +242,6 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                             )}
                         </div>
 
-                        {/* Product Details */}
                         <div>
                             <div className="flex justify-between items-start">
                                 <div>
@@ -221,18 +259,7 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                                 </div>
 
                                 <div className="flex gap-2">
-                                    <button
-                                        onClick={() => setIsWishlisted(!isWishlisted)}
-                                        className={`p-2 rounded-full ${isWishlisted
-                                            ? "text-red-500 bg-red-50"
-                                            : "text-gray-500 hover:bg-gray-100"
-                                            }`}
-                                    >
-                                        <Heart
-                                            className={`w-5 h-5 ${isWishlisted ? "fill-current" : ""
-                                                }`}
-                                        />
-                                    </button>
+                                    <WishlistHeart productId={product.id} className="w-5 h-5" />
                                     <div className="relative">
                                         <button
                                             onClick={() => setShowShareOptions(!showShareOptions)}
@@ -257,7 +284,6 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                                 </div>
                             </div>
 
-                            {/* Rating */}
                             <div className="flex items-center mb-4">
                                 <div className="flex">
                                     {[1, 2, 3, 4, 5].map((star) => (
@@ -275,7 +301,6 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                                 </span>
                             </div>
 
-                            {/* Price */}
                             <div className="mb-6">
                                 <div className="flex items-center">
                                     <span className="text-3xl font-bold text-gray-900">
@@ -298,7 +323,6 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                                 )}
                             </div>
 
-                            {/* Stock Status */}
                             <div className="mb-6">
                                 {product.stock > 0 ? (
                                     <div className="flex items-center text-green-600">
@@ -315,7 +339,6 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                                 )}
                             </div>
 
-                            {/* Quantity Selector */}
                             <div className="mb-6">
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Quantity
@@ -341,46 +364,31 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                                 </div>
                             </div>
 
-                            {/* Actions */}
-                            {/** check if admin hide this */}
-                            {getUserInfo?.type !== "admin" && isLoggedIn  && (<>
+                            {getUserInfo?.type !== "admin" && isLoggedIn && (
                                 <div className="flex flex-col sm:flex-row gap-3 mb-8">
                                     <button
-                                        onClick={async () => {
-                                            // Add to cart logic here
-                                            console.log(`Added ${quantity} of ${product.name} to cart`);
-                                            if((await addItemToCart(product.id, quantity)).status) {
-                                                alert(`${quantity} ${product.name} added to cart`);
-                                            }else{
-                                                alert(`Failed to add ${quantity} ${product.name} to cart`);
-                                            }
-                                        }}
-                                        disabled={product.stock <= 0}
+                                        onClick={handleAddToCart}
+                                        disabled={product.stock <= 0 || isAddingToCart}
                                         className={`flex-1 flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white ${product.stock > 0
                                             ? "bg-primary hover:bg-primary/90"
                                             : "bg-gray-400 cursor-not-allowed"
                                             }`}
                                     >
-                                        <ShoppingCart className="w-5 h-5 mr-2" />
-                                        Add to Cart
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            window.open('https://wa.me/0788282962', '_blank');
-                                        }}
-
-                                        disabled={product.stock <= 0}
-                                        className={`flex-1 flex items-center justify-center px-6 py-3 border border-primary rounded-md shadow-sm text-base font-medium ${product.stock > 0
-                                            ? "text-primary bg-white hover:bg-gray-50"
-                                            : "text-gray-400 border-gray-400 cursor-not-allowed"
-                                            }`}
-                                    >
-                                        <Coins className="w-5 h-5 mr-2" />
-                                        Buy
+                                        {isAddingToCart ? (
+                                            <>
+                                                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                                                Adding...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <ShoppingCart className="w-5 h-5 mr-2" />
+                                                Add to Cart
+                                            </>
+                                        )}
                                     </button>
                                 </div>
-                            </>)}
-                            {/* Product Details */}
+                            )}
+
                             <div className="border-t border-gray-200 pt-6">
                                 <h3 className="text-lg font-medium text-gray-900 mb-4">
                                     Product Details

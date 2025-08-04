@@ -39,17 +39,17 @@ export default function SecureAdminLogin() {
       newErrors.username = "Username contains invalid characters";
     }
 
-    if (!password) {
-      newErrors.password = "Password is required";
-    } else if (password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-    } else if (!/[A-Z]/.test(password)) {
-      newErrors.password = "Password must contain at least one uppercase letter";
-    } else if (!/[0-9]/.test(password)) {
-      newErrors.password = "Password must contain at least one number";
-    } else if (!/[^A-Za-z0-9]/.test(password)) {
-      newErrors.password = "Password must contain at least one special character";
-    }
+    // if (!password) {
+    //   newErrors.password = "Password is required";
+    // } else if (password.length < 8) {
+    //   newErrors.password = "Password must be at least 8 characters";
+    // } else if (!/[A-Z]/.test(password)) {
+    //   newErrors.password = "Password must contain at least one uppercase letter";
+    // } else if (!/[0-9]/.test(password)) {
+    //   newErrors.password = "Password must contain at least one number";
+    // } else if (!/[^A-Za-z0-9]/.test(password)) {
+    //   newErrors.password = "Password must contain at least one special character";
+    // }
 
     if (!captchaVerified) {
       newErrors.captcha = "Please complete the CAPTCHA verification";
@@ -161,8 +161,8 @@ export default function SecureAdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <div className="w-full max-w-lg">
         {/* Security Badge */}
         <div className="flex justify-end mb-2">
           <div className="bg-green-100 text-green-600 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center">

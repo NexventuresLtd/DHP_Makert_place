@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import DHPLoginPage from "./pages/Login";
 import DHPRegisterPage from "./pages/Register";
@@ -12,6 +13,25 @@ import DHPDashboard from "./pages/Dashboard";
 import AdminLogin from "./pages/adminLoginPage";
 import { getUserInfo, isLoggedIn } from "./app/Localstorage";
 import NotFound from "./comps/sharedComps/NotFound";
+=======
+import { BrowserRouter, Route, Routes, } from "react-router-dom"
+import DHPLoginPage from "./pages/Login"
+import DHPRegisterPage from "./pages/Register"
+import DHPHeroSection from "./pages/AboutUs"
+import MarketPlace from "./pages/MarketPlace"
+import HomePage from "./pages/HomePage"
+import AboutUs from "./pages/AboutUs"
+import DigRepo from "./pages/DigRepo"
+import Elearning from './pages/Elearning';
+import DHPDashboard from "./pages/Dashboard"
+import AdminLogin from "./pages/adminLoginPage"
+import { getUserInfo, isLoggedIn } from "./app/Localstorage"
+import NotFound from "./comps/sharedComps/NotFound"
+import ShoppingCartViewer from "./comps/MarketPlace/shoppingCart"
+
+
+
+>>>>>>> 8e03e09883124aa20cdcbb6d23e54709f2416507
 
 function App() {
   const tokenUser = isLoggedIn;
@@ -28,7 +48,9 @@ function App() {
           <Route path="/resources" element={<DigRepo />} />
           <Route path="/library" element={<Library />} />
           <Route path="/market" element={<MarketPlace />} />
+          <Route path="/market/cart" element={tokenUser && !isAdmin ? <ShoppingCartViewer /> : <MarketPlace />} />
           <Route path="/about" element={<DHPHeroSection />} />
+<<<<<<< HEAD
           <Route
             path="/login"
             element={tokenUser && !isAdmin ? <HomePage /> : <DHPLoginPage />}
@@ -45,6 +67,13 @@ function App() {
             path="/register"
             element={tokenUser && !isAdmin ? <HomePage /> : <DHPRegisterPage />}
           />
+=======
+          <Route path="/login" element={tokenUser && !isAdmin ? <HomePage /> : <DHPLoginPage />} />
+          <Route path="/admin/dashboard" element={tokenUser && isAdmin ? <DHPDashboard /> : <AdminLogin />} />
+          <Route path="/dhp/admin/login" element={tokenUser && isAdmin ? <DHPDashboard /> : <AdminLogin />} />
+          <Route path="/register" element={tokenUser && !isAdmin ? <HomePage /> : <DHPRegisterPage />} />
+
+>>>>>>> 8e03e09883124aa20cdcbb6d23e54709f2416507
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
