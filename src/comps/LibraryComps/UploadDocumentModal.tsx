@@ -26,6 +26,7 @@ export default function UploadDocumentModal({
     authors: [] as string[],
     subjects: [] as string[],
     tags: "",
+    is_downloadable: true,
   });
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -288,6 +289,12 @@ export default function UploadDocumentModal({
         uploadFormData.append("tags", formData.tags.trim());
       }
 
+      // Add is_downloadable field
+      uploadFormData.append(
+        "is_downloadable",
+        formData.is_downloadable.toString()
+      );
+
       setUploadProgress(50);
 
       const document = await libraryApiService.createDocument(uploadFormData);
@@ -322,6 +329,7 @@ export default function UploadDocumentModal({
       authors: [],
       subjects: [],
       tags: "",
+      is_downloadable: true,
     });
     setSelectedFile(null);
     setCoverImage(null);
@@ -488,7 +496,7 @@ export default function UploadDocumentModal({
 
           {/* Document Type */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-4">
+            {/* <div className="flex items-center space-x-4">
               <label className="flex items-center">
                 <input
                   type="radio"
@@ -509,7 +517,7 @@ export default function UploadDocumentModal({
                 />
                 Create New Type
               </label>
-            </div>
+            </div> */}
 
             {!createNewDocumentType ? (
               <div>
@@ -605,6 +613,32 @@ export default function UploadDocumentModal({
                 disabled={isUploading}
               />
             </div>
+          </div>
+
+          {/* Download Settings */}
+          <div>
+            <label className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                name="is_downloadable"
+                checked={formData.is_downloadable}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    is_downloadable: e.target.checked,
+                  }))
+                }
+                className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                disabled={isUploading}
+              />
+              <span className="text-sm font-medium text-gray-700">
+                Allow users to download this document
+              </span>
+            </label>
+            <p className="text-xs text-gray-500 mt-1 ml-7">
+              When enabled, users will be able to download the document file
+              directly
+            </p>
           </div>
 
           {/* Authors */}
