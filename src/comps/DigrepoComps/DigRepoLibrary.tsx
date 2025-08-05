@@ -51,7 +51,7 @@ export default function LibraryGallery({
                 onClick={() => setSelectedType(type.name)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all duration-200 ${
                   selectedType === type.name
-                    ? `bg-gradient-to-r ${type.color} text-white shadow-lg`
+                    ? `bg-primary text-white shadow-lg`
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
@@ -76,7 +76,7 @@ export default function LibraryGallery({
                 const IconComponent = currentType.icon;
                 return (
                   <div
-                    className={`w-12 h-12 bg-gradient-to-r ${currentType.color} rounded-xl flex items-center justify-center`}
+                    className={`w-12 h-12 bg-primary rounded-xl flex items-center justify-center`}
                   >
                     <IconComponent className="w-6 h-6 text-white" />
                   </div>
@@ -96,7 +96,7 @@ export default function LibraryGallery({
         </div>
 
         {/* Library Documents Component */}
-        <LibraryDocuments />
+        <LibraryDocuments selectedType={selectedType} />
       </div>
     </div>
   );

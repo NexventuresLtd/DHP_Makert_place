@@ -14,7 +14,7 @@ import { libraryApiService } from "../../services/libraryApi";
 import type { LibraryDocument } from "../../types/libraryTypes";
 import UploadDocumentModal from "./UploadDocumentModal";
 
-export default function LibraryDocuments() {
+export default function LibraryDocuments({selectedType}: { selectedType?: string }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDocumentType, setSelectedDocumentType] = useState("All");
   const [selectedAccessLevel, setSelectedAccessLevel] = useState("All");
@@ -45,9 +45,9 @@ export default function LibraryDocuments() {
           ordering: "-created_at",
         };
 
-        if (selectedDocumentType !== "All") {
+        if (selectedType !== "All") {
           const docType = documentTypes?.results.find(
-            (dt) => dt.name === selectedDocumentType
+            (dt) => dt.name === selectedType
           );
           if (docType) {
             params.document_type = docType.id;
@@ -73,7 +73,7 @@ export default function LibraryDocuments() {
   }, [
     currentPage,
     searchTerm,
-    selectedDocumentType,
+    selectedType,
     selectedAccessLevel,
     selectedLanguage,
     documentTypes,
@@ -136,7 +136,7 @@ export default function LibraryDocuments() {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Search */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Search
             </label>
@@ -153,7 +153,7 @@ export default function LibraryDocuments() {
           </div>
 
           {/* Document Type */}
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Document Type
             </label>
@@ -169,7 +169,7 @@ export default function LibraryDocuments() {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           {/* Access Level */}
           <div>
@@ -278,7 +278,7 @@ export default function LibraryDocuments() {
                 <button className="flex-1 bg-green-500 hover:bg-green-600 text-white text-sm py-2 px-3 rounded-lg transition-colors">
                   View Details
                 </button>
-                {document.file && (
+                {document.document_file && (
                   <button
                     onClick={() => handleDownload(document)}
                     className="bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-lg transition-colors"

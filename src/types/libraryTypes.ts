@@ -48,7 +48,7 @@ export interface LibraryDocument {
   abstract: string;
   language: string;
   pages?: number;
-  file?: string;
+  document_file?: string;
   cover_image?: string;
   access_level: 'public' | 'restricted' | 'private';
   subjects_list: string[];

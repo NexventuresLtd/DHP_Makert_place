@@ -278,13 +278,13 @@ export default function PaintingsGallery() {
                     >
                       <div className="relative">
                         <img
-                          src={artwork.thumbnail || artwork.image}
+                          src={artwork.image || artwork.thumbnail}
                           alt={artwork.title}
                           className="w-full h-64 object-cover"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
                             target.src =
-                              "https://via.placeholder.com/400x300?text=No+Image";
+                              "https://www.svgrepo.com/show/508699/landscape-placeholder.svg";
                           }}
                         />
 

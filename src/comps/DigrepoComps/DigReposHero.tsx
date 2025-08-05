@@ -16,6 +16,32 @@ import {
 import PaintingsGallery from "./DigRepoPainting";
 import MuseumsGallery from "./DigRepoMesuasem";
 import LibraryGallery from "./DigRepoLibrary";
+import ArtCollectionsGallery from "./DigRepoArtCollections";
+import DigitalExhibitionsGallery from "./DigRepoDigitalExhibitions";
+import VirtualToursGallery from "./DigRepoVirtualTours";
+import FeaturedWorksGallery from "./DigRepoFeaturedWorks";
+import RecentAdditionsGallery from "./DigRepoRecentAdditions";
+import MyContentPage from "./MyContent";
+
+// Coming Soon Component for unimplemented features
+const ComingSoonGallery = ({ title }: { title: string }) => (
+  <div className="min-h-screen bg-gradientto-br from-gray-50 via-white to-blue-50 flex items-center justify-center">
+    <div className="text-center">
+      <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+        <Archive className="w-12 h-12 text-white" />
+      </div>
+      <h1 className="text-4xl font-bold text-gray-900 mb-4">{title}</h1>
+      <p className="text-xl text-gray-600 mb-8 max-w-md">
+        This section is currently under development. Check back soon for amazing
+        content!
+      </p>
+      <div className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg font-medium">
+        <Database className="w-5 h-5" />
+        Coming Soon
+      </div>
+    </div>
+  </div>
+);
 interface DigitalRepositoryProps {
   showThings: boolean;
   viewDig: string;
@@ -31,6 +57,7 @@ const DigitalRepository = ({
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showCreatorModal, setShowCreatorModal] = useState(true);
+  const [showMyContent, setShowMyContent] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const navigationItems = [
@@ -185,7 +212,7 @@ const DigitalRepository = ({
                   </button>
 
                   {activeDropdown === item.name && (
-                    <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 py-2 animate-in fade-in-0 zoom-in-95">
+                    <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 py-2 animate-in fade-in-0 zoom-in-95 z-50">
                       {item.items.map((subItem, index) => (
                         <a
                           key={index}
@@ -203,7 +230,14 @@ const DigitalRepository = ({
                 </div>
               ))}
             </div>
-            <button className="bg-orange-400 gap-2 flex text-white py-2 px-3 rounded-md cursor-pointer hover:bg-orange-500">
+            <button
+              onClick={() => {
+                setShowMyContent(true);
+                setShowThings(false);
+                setViewDig("");
+              }}
+              className="bg-orange-400 gap-2 flex text-white py-2 px-3 rounded-md cursor-pointer hover:bg-orange-500"
+            >
               <User2 /> My Content
             </button>
             {/* Mobile menu button */}
@@ -362,12 +396,40 @@ const DigitalRepository = ({
       {/** Change the Viepages Here */}
       {viewDig == "Paintings" && <PaintingsGallery />}
       {viewDig == "All Museums" && <MuseumsGallery />}
+      {viewDig == "Art Collections" && <ArtCollectionsGallery />}
+      {viewDig == "Digital Exhibitions" && <DigitalExhibitionsGallery />}
+      {viewDig == "Virtual Tours" && <VirtualToursGallery />}
+      {viewDig == "Featured Works" && <FeaturedWorksGallery />}
+      {viewDig == "Recent Additions" && <RecentAdditionsGallery />}
       {(viewDig == "Digital Books" ||
         viewDig == "Research Papers" ||
         viewDig == "Manuscripts" ||
         viewDig == "Journals" ||
         viewDig == "Special Collections" ||
         viewDig == "Open Access") && <LibraryGallery libraryType={viewDig} />}
+
+      {/* Archives Section - Coming Soon */}
+      {(viewDig == "Historical Documents" ||
+        viewDig == "Government Records" ||
+        viewDig == "Personal Papers" ||
+        viewDig == "Institutional Archives" ||
+        viewDig == "Media Archives" ||
+        viewDig == "Digital Preservation") && (
+        <ComingSoonGallery title={viewDig} />
+      )}
+
+      {/* Digital Content Section - Coming Soon */}
+      {(viewDig == "Datasets" ||
+        viewDig == "Multimedia" ||
+        viewDig == "Interactive Content" ||
+        viewDig == "Educational Resources" ||
+        viewDig == "3D Models" ||
+        viewDig == "Audio Collections") && (
+        <ComingSoonGallery title={viewDig} />
+      )}
+
+      {/* My Content Page */}
+      {showMyContent && <MyContentPage />}
       {}
     </div>
   );
