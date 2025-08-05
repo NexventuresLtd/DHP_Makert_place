@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Clock, Mail, MapPin, CheckCircle, Sparkles } from "lucide-react";
+import { Clock, Mail, MapPin, CheckCircle } from "lucide-react";
 
 const ComingSoon = () => {
     // Set launch date to 5 days from now
@@ -43,7 +43,9 @@ const ComingSoon = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-100 p-4">
+        <div className="min-h-screen  p-4 bg-blend-overlay bg-white/90 backdrop-blur-3xl" style={{
+
+        }}>
             {/* Animated background elements */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-20 left-10 w-20 h-20 bg-primary-100 rounded-full opacity-20 animate-pulse"></div>
@@ -51,11 +53,13 @@ const ComingSoon = () => {
                 <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-primary-100 rounded-full opacity-20 animate-pulse delay-2000"></div>
             </div>
 
-            <div className="max-w-6xl mx-auto relative">
+            <div className="max-w-7xl mx-auto relative bg-transparent p-8 pt-0 -mt-5">
                 {/* Header */}
-                <div className="text-center mb-12 pt-8">
-                    <div className="inline-flex items-center gap-2 bg-primary-100 text-primary-600 px-4 py-2 rounded-full text-sm font-medium mb-6">
-                        <Sparkles className="h-4 w-4" />
+                <div className="text-center mb-12 pt-8 max-w-7xl bg-white mx-auto">
+                    <div className="flex flex-col items-center gap-2 text-primary-600 px-4 py-2 rounded-full text-sm font-medium mb-6">
+                        <div className="w-24 h-24 bg-primary rounded-lg flex items-center justify-center">
+                            <img src="logos/logo-circle.png" alt="Digital Heritage" className="w-full h-full scale-150 rounded-full" />
+                        </div>
                         Something amazing is coming
                     </div>
                     <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-primary-600 via-secondary-600 to-primary-800 bg-clip-text text-transparent mb-6">
@@ -71,9 +75,9 @@ const ComingSoon = () => {
                     {/* Left side - Countdown and features */}
                     <div className="space-y-8">
                         {/* Countdown timer */}
-                        <div className="bg-white rounded-2xl p-8 border border-gray-100">
+                        <div className="bg-white rounded-2xl p-8 ">
                             <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-                                🚀 Launching in:
+                                Launching in:
                             </h2>
                             <div className="grid grid-cols-4 gap-4">
                                 {[
@@ -95,7 +99,7 @@ const ComingSoon = () => {
                         </div>
 
                         {/* Features preview */}
-                        <div className="bg-white rounded-2xl p-8 border border-gray-100">
+                        <div className="bg-white rounded-2xl p-8 ">
                             <h3 className="text-xl font-bold text-gray-800 mb-6">What's Coming:</h3>
                             <div className="space-y-4">
                                 {features.map((feature, index) => (
@@ -129,7 +133,7 @@ const ComingSoon = () => {
                         {/* Email subscription */}
 
                         {/* Contact info */}
-                        <div className="bg-white rounded-2xl p-8 border border-gray-100">
+                        <div className="bg-white rounded-2xl p-8 ">
                             <h3 className="text-lg font-bold text-gray-800 mb-6">Get in Touch</h3>
                             <div className="space-y-4">
                                 <div className="flex items-start gap-4 group">
@@ -157,7 +161,7 @@ const ComingSoon = () => {
                 </div>
 
                 {/* Footer */}
-                <div className="text-center mt-16 py-8 border-t border-gray-200">
+                <div className="text-center mt-16 py-8 ">
                     <p className="text-gray-500">
                         © {new Date().getFullYear()} DHP Platform. All rights reserved.
                     </p>
