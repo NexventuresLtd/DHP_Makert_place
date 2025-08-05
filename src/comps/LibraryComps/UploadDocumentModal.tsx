@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { X, Upload, FileText, AlertCircle, Check, Loader2 } from "lucide-react";
+import { X, Upload, FileText, AlertCircle, Loader2 } from "lucide-react";
 import { libraryApiService } from "../../services/libraryApi";
 import { useApi } from "../../hooks/useApi";
 

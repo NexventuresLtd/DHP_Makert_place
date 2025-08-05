@@ -46,8 +46,8 @@ export async function fetchFilteredProducts(filters: ProductFilterOptions = {}) 
     //   data: response.data,
     // };
     // localStorage.setItem(cacheKey, JSON.stringify(newCache));
-
-    return response.data;
+    // console.log("Fetched new data:", response.data);
+    return response.data.results;
   } catch (error) {
     console.error("Failed to fetch filtered products:", error);
     throw error;

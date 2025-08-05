@@ -24,6 +24,7 @@ export default function MuseumsGallery() {
   const [museumCategories, setMuseumCategories] = useState<MuseumCategory[]>(
     []
   );
+  console.log(museumCategories)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

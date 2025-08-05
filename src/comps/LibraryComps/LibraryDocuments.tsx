@@ -16,7 +16,7 @@ import UploadDocumentModal from "./UploadDocumentModal";
 
 export default function LibraryDocuments({selectedType}: { selectedType?: string }) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDocumentType, setSelectedDocumentType] = useState("All");
+
   const [selectedAccessLevel, setSelectedAccessLevel] = useState("All");
   const [selectedLanguage] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);

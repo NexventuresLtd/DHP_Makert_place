@@ -196,7 +196,7 @@ const Footer = () => {
               <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
                 <div className="flex items-start text-white/80">
                   <MapPin size={14} className="mr-2 sm:mr-3 flex-shrink-0 mt-0.5 sm:w-4 sm:h-4" />
-                  <span className="text-xs sm:text-sm">Rwanda, Kigali</span>
+                  <span className="text-xs sm:text-sm">Kn 78 st, Kigali,Rwanda</span>
                 </div>
                 <div className="flex items-center text-white/80">
                   <Phone size={14} className="mr-2 sm:mr-3 flex-shrink-0 sm:w-4 sm:h-4" />
@@ -204,7 +204,7 @@ const Footer = () => {
                 </div>
                 <div className="flex items-center text-white/80">
                   <Mail size={14} className="mr-2 sm:mr-3 flex-shrink-0 sm:w-4 sm:h-4" />
-                  <span className="text-xs sm:text-sm">hello@irage.com</span>
+                  <span className="text-xs sm:text-sm">thedhpplatform@gmail.com</span>
                 </div>
               </div>
 

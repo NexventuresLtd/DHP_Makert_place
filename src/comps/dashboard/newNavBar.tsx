@@ -48,7 +48,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <h1 className="text-2xl font-bold text-primary">Marketplace</h1>
-          <div className="relative">
+          <div className="relative hidden">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
@@ -61,7 +61,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
         </div>
         
         <div className="flex items-center space-x-4">
-          <button className="relative p-2 text-primary hover:bg-white/10 rounded-lg transition-colors">
+          <button className="relative p-2 hidden text-primary hover:bg-white/10 rounded-lg transition-colors">
             <Bell className="w-5 h-5" />
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
           </button>

@@ -53,10 +53,10 @@ export default function IrageServices() {
     ];
 
     const paymentIcons = [
-        { icon: CreditCard, label: "Cards" },
-        { icon: Smartphone, label: "Mobile Money" },
-        { icon: Banknote, label: "Cash" },
-        { icon: Phone, label: "USSD" }
+        { icon: CreditCard, label: "Cards" , bg: "bg-blue-500"},
+        { icon: Smartphone, label: "Mobile Money", bg: "bg-green-500"},
+        { icon: Banknote, label: "Cash", bg: "bg-yellow-500"},
+        { icon: Phone, label: "USSD", bg: "bg-red-500"}
     ];
 
     return (
@@ -128,7 +128,7 @@ export default function IrageServices() {
                             const IconComponent = payment.icon;
                             return (
                                 <div key={index} className="bg-white rounded-xl p-6 text-center transition-shadow duration-300">
-                                    <div className="w-12 h-12 bg-second rounded-lg flex items-center justify-center mx-auto mb-3">
+                                    <div className={`w-12 h-12 ${payment.bg} rounded-lg flex items-center justify-center mx-auto mb-3`}>
                                         <IconComponent className="w-6 h-6 text-white" />
                                     </div>
                                     <p className="text-sm font-medium text-gray-700">{payment.label}</p>
@@ -139,20 +139,20 @@ export default function IrageServices() {
 
                     {/* Contact Info */}
                     <div className="text-center">
-                        <div className="inline-flex items-center space-x-4 bg-white rounded-full px-6 py-3 shadow-md">
+                        <div className="block md:inline-flex items-center space-x-4 bg-white rounded-lg md:rounded-full px-6 py-3">
                             <div className="flex items-center space-x-2">
                                 <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                                     <MessageCircle className="w-4 h-4 text-white" />
                                 </div>
-                                <span className="font-semibold text-gray-900">WhatsApp:</span>
-                                <span className="text-green-600 font-medium">+250 788 123 456</span>
+                                <span className="max-sm:text-xs font-semibold text-gray-900">WhatsApp:</span>
+                                <span className="max-sm:text-xs text-green-600 font-medium">+250 788 123 456</span>
                             </div>
                             <div className="w-px h-6 bg-gray-300"></div>
                             <div className="flex items-center space-x-2">
                                 <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
                                     <Lock className="w-4 h-4 text-white" />
                                 </div>
-                                <span className="text-blue-600 font-medium">SSL Secured</span>
+                                <span className="max-sm:text-xs text-blue-600 font-medium">SSL Secured</span>
                             </div>
                         </div>
                     </div>

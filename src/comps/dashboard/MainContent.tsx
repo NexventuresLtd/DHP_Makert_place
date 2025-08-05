@@ -4,6 +4,7 @@ import { GenericContent } from './GenericContent';
 import CategoriesDashboard from './AdminCategories/ManageCategory';
 import ProductsDashboard from './AdminProduct/manageProduct';
 import CustomerManagement from './AdminCustomer.tsx/CustomerMange';
+import AdminCartsViewer from './AdminOrdersCarts/AllCarts';
 
 interface MainContentProps {
   activeItem: string;
@@ -13,7 +14,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeItem }) => {
   const renderContent = () => {
     switch (activeItem) {
       case 'dashboard':
-        return <DashboardContent />;
+        return <AdminCartsViewer />;
       case 'products':
         return <ProductsDashboard />;
       case 'categories':
@@ -23,7 +24,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeItem }) => {
       case 'orders':
         return <GenericContent title="orders" description="Analyze your sales and performance" />;
       case 'carts':
-        return <GenericContent title="carts" description="Analyze your sales and performance" />;
+        return <AdminCartsViewer />;
       case 'settings':
         return <GenericContent title="Settings" description="Configure your account and preferences" />;
       default:

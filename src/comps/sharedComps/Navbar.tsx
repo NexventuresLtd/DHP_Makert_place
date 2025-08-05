@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import { Home, BookOpen, ShoppingCart, GraduationCap, LogIn, UserPlus, Menu, X, User, UserCog2, LogOut } from 'lucide-react';
 import { isLoggedIn, getUserInfo } from '../../app/Localstorage';
 import type { UserInfo } from '../../types/marketTypes';
+import { Logout_action } from '../../app/utlis/SharedUtilities';
 
 
 interface NavItem {
@@ -15,7 +16,7 @@ export default function DigitalHeritagePlatform() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [user, setUser] = useState<UserInfo | null>(null);
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -32,10 +33,7 @@ export default function DigitalHeritagePlatform() {
 
   const handleLogout = () => {
     if (window.confirm("Are you sure you want to log out?")) {
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("redirectPath");
-      localStorage.removeItem("userInfo");
-      navigate("/login");
+      Logout_action()
     }
     setIsUserDropdownOpen(false);
     setIsMenuOpen(false);
@@ -100,7 +98,7 @@ export default function DigitalHeritagePlatform() {
               <img
                 src="logos/logo-circle.png"
                 alt="Digital Heritage"
-                className="w-8 h-8 rounded-full"
+                className="w-full h-full object-cover scale-150 rounded-full"
               />
             </div>
             <div className="hidden sm:block">
@@ -144,14 +142,14 @@ export default function DigitalHeritagePlatform() {
                 {isUserDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                     <button
-                      onClick={() => handleNavigation("profile")}
+                      onClick={() => handleNavigation("/dhp/user/profile")}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       aria-label="View profile"
                     >
                       Profile
                     </button>
                     <button
-                      onClick={() => handleNavigation("orders")}
+                      onClick={() => handleNavigation("market/cart")}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       aria-label="View orders"
                     >

@@ -1,6 +1,6 @@
 // types.ts
 // types.ts
-import { BarChart3, ListOrdered, Package, ShoppingBag, ShoppingCart, Users } from 'lucide-react';
+import { BarChart3, Package, ShoppingBag, ShoppingCart, Users } from 'lucide-react';
 import type { ComponentType } from 'react';
 
 export interface ProductImage {
@@ -81,7 +81,7 @@ export const sidebarItems: SidebarItem[] = [
   { id: 'categories', label: 'Categories', icon: ShoppingCart, },
   { id: 'products', label: 'Products', icon: Package, },
   { id: 'customers', label: 'Customers', icon: Users },
-  { id: 'orders', label: 'orders', icon: ListOrdered },
+  // { id: 'orders', label: 'orders', icon: ListOrdered },
   { id: 'carts', label: 'carts', icon: ShoppingBag },
 //   { id: 'settings', label: 'Settings', icon: Settings ,badge: 3 }
 ];

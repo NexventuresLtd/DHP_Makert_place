@@ -25,7 +25,8 @@ export default function CustomerManagement() {
     setError(null);
     try {
       const response = await mainAxios.get("/users/");
-      setCustomers(response.data);
+      console.log(response.data);
+      setCustomers(response.data.results || []);
       setTotalPages(Math.ceil(response.data.length / itemsPerPage));
     } catch (err) {
       console.error("Failed to fetch customers:", err);
@@ -45,7 +46,7 @@ export default function CustomerManagement() {
     
     try {
       await mainAxios.delete(`/users/${id}/`);
-      setCustomers(customers.filter(customer => customer.id !== id));
+      setCustomers(customers?.filter(customer => customer.id !== id));
       fetchCustomers(); // Refresh the list
     } catch (err) {
       console.error("Failed to delete customer:", err);
@@ -68,8 +69,9 @@ export default function CustomerManagement() {
     }
   };
 
+
   // Filter customers by search term
-  const filteredCustomers = customers.filter(customer => 
+  const filteredCustomers = customers?.filter(customer => 
     customer.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
     customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     `${customer.first_name} ${customer.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())

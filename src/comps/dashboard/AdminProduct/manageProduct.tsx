@@ -36,8 +36,8 @@ export default function ProductsDashboard() {
             if (isFeaturedFilter !== null) params.append("is_featured", String(isFeaturedFilter));
 
             const response = await mainAxios.get(`/market/products/?${params.toString()}`);
-            // console.log("Fetched products:", response.data);
-            setProducts(response.data);
+            console.log("Fetched products:", response.data);
+            setProducts(response.data.results || []);
             setTotalPages(Math.ceil(response.data.length / itemsPerPage));
         } catch (err) {
             console.error("Failed to fetch products:", err);
