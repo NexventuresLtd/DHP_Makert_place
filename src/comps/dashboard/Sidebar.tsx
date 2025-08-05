@@ -1,6 +1,6 @@
 // components/Sidebar.tsx
 import { sidebarItems } from '../../types/marketTypes';
-import { Package, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface SidebarProps {
   activeItem: string;
