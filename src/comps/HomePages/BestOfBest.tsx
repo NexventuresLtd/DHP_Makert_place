@@ -1,114 +1,185 @@
-import { ShoppingCart, } from 'lucide-react';
+import { useState, useCallback, useEffect } from 'react';
+import { ShoppingCart, ArrowRight } from 'lucide-react';
+import type { Product } from '../../types/marketTypes';
+import { fetchFilteredProducts } from '../../app/utlis/GetProductUtils';
+import { Link } from 'react-router-dom';
 
-const BooksProductView = () => {
-    const books = [
-        {
-            id: 1,
-            title: "Port Set",
-            author: "Sarah Johnson",
-            price: "$29.99",
-            rating: 4.8,
-            image: "logos/img1.png",
-            description: "Master the fundamentals of writing maintainable, readable, and efficient code with practical examples and best practices."
-        },
-        {
-            id: 2,
-            title: "Woven-material plates",
-            author: "Alex Chen",
-            price: "$34.99",
-            rating: 4.9,
-            image: "logos/img2.png",
-            description: "A comprehensive guide to building responsive, fast, and scalable web applications using the latest technologies."
-        },
-        {
-            id: 3,
-            title: "imigongo",
-            author: "Maria Rodriguez",
-            price: "$27.99",
-            rating: 4.7,
-            image: "logos/img3.png",
-            description: "Learn how to create and maintain consistent, scalable design systems that enhance user experience across products."
-        }
-    ];
 
+const ProductView = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchProducts = useCallback(async () => {
+    try {
+      setLoading(true);
+      const fetchedProducts = await fetchFilteredProducts({
+        is_featured: true,
+      });
+      setProducts(fetchedProducts);
+    } catch (err) {
+      setError('Failed to fetch products. Please try again later.');
+      console.error('Fetch error:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  if (loading) {
     return (
-        <div className="bg-primary py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-full md:max-w-11/12 mx-auto max-sm:w-full">
-                {/* Header Section */}
-                <div className="text-center flex justify-between items-center py-3 mb-3">
-                    <h1 className="text-4xl max-md:text-xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-                        The Best Of Best
-                    </h1>
-                    <button className='border-2 border-white text-white px-6 font-bold py-2 rounded-md'>Sign Up Now</button>
+      <div className="bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-full md:max-w-11/12 mx-auto">
+          <div className="animate-pulse space-y-8">
+            <div className="h-10 bg-gray-200 rounded w-1/3 mx-auto"></div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="bg-white rounded-lg shadow p-6 space-y-4">
+                  <div className="h-48 bg-gray-200 rounded"></div>
+                  <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-full"></div>
+                  <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                  <div className="h-10 bg-gray-200 rounded w-full mt-4"></div>
                 </div>
-
-                {/* Books Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {books.map((book) => (
-                        <div
-                            key={book.id}
-                            className="group bg-white rounded-md shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"
-                        >
-                            {/* Book Image */}
-                            <div className="relative overflow-hidden bg-gray-50">
-                                <img
-                                    src={book.image}
-                                    alt={book.title}
-                                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            </div>
-
-                            {/* Book Content */}
-                            <div className="p-6 space-y-4">
-                                {/* Rating */}
-                                {/* <div className="flex items-center space-x-1">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            className={`w-4 h-4 ${i < Math.floor(book.rating)
-                                                    ? 'text-yellow-400 fill-current'
-                                                    : 'text-gray-300'
-                                                }`}
-                                        />
-                                    ))}
-                                    <span className="text-sm text-gray-600 ml-2">
-                                        {book.rating}
-                                    </span>
-                                </div> */}
-
-                                {/* Title and Author */}
-                                <div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors duration-200">
-                                        {book.title}
-                                    </h3>
-                                    {/* <p className="text-gray-600 font-medium">
-                                        by {book.author}
-                                    </p> */}
-                                </div>
-
-                                {/* Description */}
-                                <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                                    {book.description}
-                                </p>
-
-                                {/* Price and Purchase Button */}
-                                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                                    <div className="text-2xl font-bold text-primary">
-                                        {book.price}
-                                    </div>
-                                    <button className="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-full font-semibold flex items-center space-x-2 transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg">
-                                        <ShoppingCart className="w-4 h-4" />
-                                        <span>Purchase</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+              ))}
             </div>
+          </div>
         </div>
+      </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto text-center">
+          <p className="text-red-500">{error}</p>
+          <button 
+            onClick={fetchProducts}
+            className="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-gradient-to-r from-primary to-primary-dark py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-full md:max-w-11/12 mx-auto">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-4">
+          <div className="text-center md:text-left">
+            <h2 className="text-3xl md:text-4xl font-bold text-black mb-2">
+             The Best Of Best
+            </h2>
+            <p className="text-black/80 max-w-lg">
+              Our curated selection of top-rated products, showcasing the best of the best in quality and craftsmanship. Discover unique items that stand out for their excellence and innovation.
+            </p>
+          </div>
+          
+          <div className="flex gap-4">
+            <Link 
+              to="/market" 
+              className="flex items-center gap-2 px-6 py-3 bg-white text-primary font-medium rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              View All Products
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Products Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {products.map((product) => {
+            const primaryImage = product.images.find(img => img.is_primary) || product.images[0];
+            const imageUrl = primaryImage?.image || '/placeholder-product.jpg';
+            const price = parseFloat(product.price) || 0;
+            const originalPrice = parseFloat(product.original_price) || 0;
+            const hasDiscount = originalPrice > price;
+
+            return (
+              <div
+                key={product.id}
+                className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
+              >
+                {/* Product Image */}
+                <div className="relative overflow-hidden h-64">
+                  <img
+                    src={imageUrl}
+                    alt={product.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  
+                  {/* Product Badges */}
+                  <div className="absolute top-2 left-2 flex gap-2">
+                    {product.is_featured && (
+                      <span className="bg-primary text-white text-xs font-bold px-2 py-1 rounded">
+                        Featured
+                      </span>
+                    )}
+                    {product.condition !== 'new' && (
+                      <span className="bg-gray-800 text-white text-xs font-bold px-2 py-1 rounded">
+                        {product.condition.charAt(0).toUpperCase() + product.condition.slice(1)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Product Content */}
+                <div className="p-6 space-y-4">
+                  {/* Title */}
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors duration-200 line-clamp-1">
+                      {product.name}
+                    </h3>
+                    <div className="flex items-center gap-1">
+                      <span className="text-yellow-500">★</span>
+                      <span className="text-sm text-gray-600">
+                        {product.rating} ({product.review_count} reviews)
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
+                    {product.description}
+                  </p>
+
+                  {/* Price and Purchase Button */}
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div className="flex flex-col">
+                      <div className="text-2xl font-bold text-primary">
+                        ${price.toFixed(2)}
+                      </div>
+                      {hasDiscount && (
+                        <div className="text-sm text-gray-500 line-through">
+                          ${originalPrice.toFixed(2)}
+                        </div>
+                      )}
+                    </div>
+                    <button 
+                      className="flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-lg font-medium transition-all duration-200 hover:scale-[1.02] active:scale-95 shadow-md hover:shadow-lg"
+                      aria-label={`Add ${product.name} to cart`}
+                      disabled={product.stock <= 0}
+                    >
+                      <ShoppingCart className="w-4 h-4" />
+                      <span>{product.stock <= 0 ? 'Out of Stock' : 'Add to Cart'}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
 };
 
-export default BooksProductView;
+export default ProductView;

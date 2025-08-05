@@ -15,6 +15,7 @@ import ProfilePage from "./comps/sharedComps/Profile"
 import { getUserInfo, isLoggedIn } from "./app/Localstorage"
 import NotFound from "./comps/sharedComps/NotFound"
 import ComingSoon from "./pages/CommingSoon"
+import GetInvolvedPage from "./pages/GetInvolved"
 
 function App() {
   const tokenUser = isLoggedIn;
@@ -30,6 +31,7 @@ function App() {
           <Route path="/about" element={<AboutUs />} />
           <Route path="/elearning" element={<Elearning />} />
           <Route path="/resources" element={<DigRepo />} />
+          <Route path="/involved" element={<GetInvolvedPage />} />
           <Route path="/library" element={<Library />} />
           <Route path="/market" element={<MarketPlace />} />
           <Route path="/market/cart" element={tokenUser && !isAdmin ? <ShoppingCartViewer /> : <MarketPlace />} />

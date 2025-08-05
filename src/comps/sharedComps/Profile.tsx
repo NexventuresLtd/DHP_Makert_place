@@ -124,15 +124,15 @@ const ProfilePage = ({ ShowNav }: ProfilePageProps) => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className=" bg-gray-50">
             {ShowNav ? <DigitalHeritagePlatform /> : ""}
 
-            <div className="container mx-auto px-4 py-8">
+            <div className="mx-auto px-4 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                     {/* Profile Card */}
                     <div className="lg:col-span-1 ">
                         <div className=" rounded-xl border border-gray-100  sticky top-6 bg-[url('/images/research.png')] bg-center bg-repeat bg-blend-overlay bg-white/90 backdrop-blur-3xl">
-                            <div className="text-center mb-6 p-6">
+                            <div className="text-center mb-6">
                                 <div className="relative inline-block mb-4">
                                     <div className="bg-blue-50 p-6 rounded-xl inline-block">
                                         <User2 className="h-16 w-16 text-blue-500" />
@@ -147,9 +147,9 @@ const ProfilePage = ({ ShowNav }: ProfilePageProps) => {
                                         {user.first_name} {user.last_name}
                                     </h3>
                                     <p className="text-blue-500 font-medium">@{user.username}</p>
-                                    <p className="text-gray-500">{user.email}</p>
-                                    <p className="text-sm font-bold capitalize text-gray-400">Membership Type: {" "}
-                                        <span className={`${getUserInfo?.type === 'user' ? 'bg-blue-100 text-blue-500' : 'bg-gray-100 text-gray-500'} px-2 py-1 rounded`}>
+                                    <p className="text-gray-500 text-xs">{user.email}</p>
+                                    <p className="text-xs font-bold capitalize text-gray-400">Membership Type: {" "}
+                                        <span className={`${getUserInfo?.type === 'creator' ? 'bg-blue-100 text-blue-500' : getUserInfo?.type === 'admin' ? 'bg-green-100 text-green-500' : 'bg-gray-100 text-gray-500'   } px-2 py-1 rounded`}>
                                             {getUserInfo?.type}
                                         </span>
                                     </p>

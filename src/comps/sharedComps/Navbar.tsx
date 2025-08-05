@@ -224,7 +224,7 @@ export default function DigitalHeritagePlatform() {
                 {isLoggedIn ? (
                   <>
                     <button
-                      onClick={() => handleNavigation("profile")}
+                      onClick={() => handleNavigation("dhp/user/profile")}
                       className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:text-green-900 hover:bg-gray-50 transition-colors duration-200"
                       aria-label="View profile"
                     >
@@ -234,7 +234,7 @@ export default function DigitalHeritagePlatform() {
                       </span>
                     </button>
                     <button
-                      onClick={() => handleNavigation("orders")}
+                      onClick={() => handleNavigation("/market/cart")}
                       className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:text-green-900 hover:bg-gray-50 transition-colors duration-200"
                       aria-label="View orders"
                     >
