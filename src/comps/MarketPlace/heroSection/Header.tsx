@@ -230,11 +230,11 @@ const Header = ({
                             {/* Mobile Navigation */}
                             {isLoggedIn ? (
                                 <div className="flex flex-col space-y-3 pt-4 border-t border-gray-100">
-                                    <button className="flex items-center space-x-3 text-gray-700 hover:text-emerald-800 py-2 px-2 rounded-lg hover:bg-gray-50">
+                                    <button onClick={() => window.location.href = '/dhp/user/profile'} className="flex items-center space-x-3 text-gray-700 hover:text-emerald-800 py-2 px-2 rounded-lg hover:bg-gray-50">
                                         <User className="w-5 h-5" />
                                         <span>Profile</span>
                                     </button>
-                                    <button className="flex items-center space-x-3 text-gray-700 hover:text-emerald-800 py-2 px-2 rounded-lg hover:bg-gray-50">
+                                    <button onClick={() => window.location.href = '/market/cart'} className="flex items-center space-x-3 text-gray-700 hover:text-emerald-800 py-2 px-2 rounded-lg hover:bg-gray-50">
                                         <ShoppingCart className="w-5 h-5" />
                                         <span>Cart</span>
                                     </button>

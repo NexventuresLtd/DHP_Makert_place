@@ -3,7 +3,7 @@ import { refreshToken, token} from "../../app/Localstorage";
 
 // Create Axios instance
 const mainAxios = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
   withCredentials: false,
   headers: {
     "Content-Type": "application/json",

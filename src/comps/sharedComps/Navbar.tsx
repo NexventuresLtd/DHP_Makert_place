@@ -43,7 +43,7 @@ export default function DigitalHeritagePlatform() {
     { name: "Home", path: "home", icon: <Home className="h-4 w-4" /> },
     { name: "About Us", path: "about", icon: <BookOpen className="h-4 w-4" /> },
     {
-      name: "Resources",
+      name: "DRaas",
       path: "resources",
       icon: <GraduationCap className="h-4 w-4" />,
     },
@@ -96,7 +96,7 @@ export default function DigitalHeritagePlatform() {
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
               <img
-                src="logos/logo-circle.png"
+                src="/logos/logo-circle.png"
                 alt="Digital Heritage"
                 className="w-full h-full object-cover scale-150 rounded-full"
               />
@@ -142,7 +142,7 @@ export default function DigitalHeritagePlatform() {
                 {isUserDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                     <button
-                      onClick={() => handleNavigation("/dhp/user/profile")}
+                      onClick={() => handleNavigation("dhp/user/profile")}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       aria-label="View profile"
                     >

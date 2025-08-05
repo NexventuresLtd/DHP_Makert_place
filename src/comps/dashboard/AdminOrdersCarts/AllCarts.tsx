@@ -2,27 +2,21 @@ import React, { useState, useEffect } from 'react';
 import {
     ShoppingCart,
     Search,
-
     Eye,
     Trash2,
     Users,
-
     Package,
     AlertCircle,
     Loader2,
-
     DollarSign,
-
     RefreshCw,
     X,
     Star,
     ChevronDown,
     ChevronUp,
-
 } from 'lucide-react';
 import type { Cart, ProductImage } from '../../../types/marketTypes';
 import mainAxios from '../../Instance/mainAxios';
-
 
 interface AdminCart extends Cart {
     user?: {
@@ -51,7 +45,6 @@ const AdminCartsViewer: React.FC = () => {
             setLoading(true);
             setError(null);
             const response = await mainAxios.get('/market/cart/');
-
             setCarts(response.data.results || []);
         } catch (err) {
             setError('Failed to load carts. Please try again.');
@@ -65,7 +58,7 @@ const AdminCartsViewer: React.FC = () => {
         try {
             setDeleteLoading(cartId);
             await mainAxios.delete(`/market/cart/${cartId}/`);
-            await fetchCarts();
+            setCarts(prevCarts => prevCarts.filter(cart => cart.id !== cartId));
             setShowDeleteConfirm(null);
         } catch (err) {
             setError('Failed to delete cart. Please try again.');
@@ -112,7 +105,6 @@ const AdminCartsViewer: React.FC = () => {
         return username || `User #${cart.user.id}`;
     };
 
-    // Filter and sort carts
     const filteredAndSortedCarts = React.useMemo(() => {
         let filtered = carts.filter(cart => {
             const matchesSearch = !searchTerm ||
@@ -150,7 +142,6 @@ const AdminCartsViewer: React.FC = () => {
         return filtered;
     }, [carts, searchTerm, filterStatus, sortBy, sortOrder]);
 
-    // Statistics
     const stats = React.useMemo(() => {
         const totalCarts = carts.length;
         const activeCarts = carts.filter(cart => cart.items.length > 0).length;
@@ -180,7 +171,7 @@ const AdminCartsViewer: React.FC = () => {
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-                <div className="bg-white rounded-2xl p-8 text-center max-w-md w-full ">
+                <div className="bg-white rounded-2xl p-8 text-center max-w-md w-full">
                     <div className="relative mb-6">
                         <div className="w-14 h-14 mx-auto relative">
                             <div className="absolute inset-0 bg-primary rounded-full animate-spin opacity-20"></div>
@@ -199,7 +190,7 @@ const AdminCartsViewer: React.FC = () => {
     if (error) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-                <div className="bg-white rounded-2xl p-8 text-center max-w-md w-full ">
+                <div className="bg-white rounded-2xl p-8 text-center max-w-md w-full">
                     <div className="w-14 h-14 mx-auto mb-6 bg-red-50 rounded-full flex items-center justify-center">
                         <AlertCircle className="w-6 h-6 text-red-500" />
                     </div>
@@ -244,7 +235,7 @@ const AdminCartsViewer: React.FC = () => {
 
                 {/* Statistics Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                    <div className="bg-white rounded-xl p-6 ">
+                    <div className="bg-white rounded-xl p-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-500">Total Carts</p>
@@ -256,7 +247,7 @@ const AdminCartsViewer: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-xl p-6 ">
+                    <div className="bg-white rounded-xl p-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-500">Active Carts</p>
@@ -268,7 +259,7 @@ const AdminCartsViewer: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-xl p-6 ">
+                    <div className="bg-white rounded-xl p-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-500">Total Value</p>
@@ -280,7 +271,7 @@ const AdminCartsViewer: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-xl p-6 ">
+                    <div className="bg-white rounded-xl p-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-500">Total Items</p>
@@ -294,7 +285,7 @@ const AdminCartsViewer: React.FC = () => {
                 </div>
 
                 {/* Filters and Search */}
-                <div className="bg-white rounded-xl p-6 mb-6 ">
+                <div className="bg-white rounded-xl p-6 mb-6">
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                         <div className="relative flex-1 max-w-md">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -339,7 +330,7 @@ const AdminCartsViewer: React.FC = () => {
                 </div>
 
                 {/* Carts List */}
-                <div className="bg-white rounded-xl  overflow-hidden">
+                <div className="bg-white rounded-xl overflow-hidden">
                     {filteredAndSortedCarts.length === 0 ? (
                         <div className="p-12 text-center">
                             <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
@@ -427,7 +418,7 @@ const AdminCartsViewer: React.FC = () => {
                                             )}
                                         </div>
 
-                                        <div className="flex items-center space-x-2">
+                                        <div className="flex items-center space-x-2 min-h-72">
                                             <button
                                                 onClick={() => setSelectedCart(cart)}
                                                 className="px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg font-medium transition-colors inline-flex items-center"
@@ -446,7 +437,7 @@ const AdminCartsViewer: React.FC = () => {
                                                 </button>
 
                                                 {showDeleteConfirm === cart.id && (
-                                                    <div className="absolute right-0 top-12 bg-white rounded-lg shadow-lg p-4 z-10 w-56 border border-gray-100">
+                                                    <div className="absolute right-0 top-12 bg-white rounded-lg p-4 z-10 w-56 border border-gray-200">
                                                         <p className="text-sm text-gray-700 mb-3">Delete this cart permanently?</p>
                                                         <div className="flex space-x-2">
                                                             <button
@@ -479,7 +470,7 @@ const AdminCartsViewer: React.FC = () => {
 
             {/* Cart Details Modal */}
             {selectedCart && (
-                <div className="fixed inset-0 bg-black/20 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
+                <div className="fixed inset-0 bg-black/20 flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                         <div className="p-6">
                             <div className="flex justify-between items-start mb-6">

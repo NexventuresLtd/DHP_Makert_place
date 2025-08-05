@@ -1,200 +1,160 @@
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, LogIn } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import mainAxios from "../comps/Instance/mainAxios";
-import { Logout_action } from "../app/utlis/SharedUtilities";
-
-type FormErrors = {
-  email?: string;
-  password?: string;
-};
 
 export default function DHPLoginPage() {
   const nav = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<FormErrors>({});
-
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-
-    if (!email.trim()) {
-      newErrors.email = "Email or username is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length < 3) {
-      // Accept either email format or username with at least 3 chars
-      newErrors.email = "Please enter a valid email or username (min 3 characters)";
-    }
-
-    if (!password) {
-      newErrors.password = "Password is required";
-    } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = () => {
-    if (validateForm()) {
-      console.log("Login attempted", { email, password, rememberMe });
-      mainAxios.post("login/", {
-        "username": email,
-        "password": password,
-      })
-        .then(response => {
-          Logout_action(); // Clear any previous session
-          // Handle successful login
-          const token = response.data.access
-          const refresh = response.data.refresh;
-          localStorage.setItem("authToken", token);
-          localStorage.setItem("refresh", refresh);
-          localStorage.setItem("userInfo", JSON.stringify({
-            "username": email,
-            "type": "user",
-          }));
-          nav("/");
-          window.location.reload(); // Reload the page to reflect changes
-        })
-        .catch(error => {
-          console.error("Login failed", error);
-          setErrors({ email: "Invalid Username or password", password: "Invalid Username or password" });
-        });
-    } else {
-      console.log("Form has validation errors");
-    }
-  };
-
-  const handleInputChange = (
-    field: keyof FormErrors,
-    value: string,
-    setter: React.Dispatch<React.SetStateAction<string>>
-  ) => {
-    setter(value);
-    if (errors[field]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[field];
-        return newErrors;
-      });
-    }
+    setIsLoading(true);
+    setError("");
+    
+    mainAxios.post("login/", {
+      "username": email,
+      "password": password,
+    })
+    .then(response => {
+      localStorage.setItem("authToken", response.data.access);
+      localStorage.setItem("refresh", response.data.refresh);
+      localStorage.setItem("userInfo", JSON.stringify({
+        "username": response.data.username,
+        "email": response.data.email,
+        "first_name": response.data.first_name,
+        "last_name": response.data.last_name || '',
+        "id": response.data.id,
+        "type": response.data.user_type === 'public' ? 'user' : response.data.user_type,
+      }));
+      window.location.href = "/";
+    })
+    .catch(err => {
+      setError("Invalid username or password");
+      console.error("Login failed", err);
+    })
+    .finally(() => setIsLoading(false));
   };
 
   return (
-    <div className="flex h-screen w-full">
-      {/* Left side - Background image and logo */}
-      <div className="hidden md:flex md:w-1/2 bg-gray-900 flex-col items-center justify-center relative">
-        <div className="absolute inset-0 bg-repeat w-full h-full">
-          <img src="logos/big-login.png" alt="" className="w-full h-full object-cover" />
+    <div className="flex h-screen w-full bg-gray-50">
+      {/* Left side - Background */}
+      <div className="hidden md:flex md:w-1/2 items-center justify-center bg-[url('https://64.media.tumblr.com/ef0f77e9dadd07d7c0afdd31569c6c1d/tumblr_inline_pk1sznOLUk1slghul_500.gif')] bg-cover bg-no-repeat bg-blend-overlay bg-white/60 backdrop-blur-3xl">
+        <div className="max-w-md p-8">
+          <h2 className="text-3xl font-extrabold text-gray-600 mb-4">Digital Heritage Platform</h2>
+          <p className="text-gray-500 font-medium">
+            Preserving cultural heritage through digital innovation and community collaboration.
+          </p>
         </div>
       </div>
 
       {/* Right side - Login form */}
-      <div className="w-full md:w-1/2 flex flex-col items-center justify-start p-8 overflow-auto">
+      <div className="w-full md:w-1/2 flex items-center justify-center p-6 bg-[url('/images/research.png')] bg-cover bg-no-repeat bg-blend-overlay bg-white/95 backdrop-blur-3xl">
         <div className="w-full max-w-md">
-          {/* Logo and header */}
-          <div className="flex items-center justify-center mb-6 cursor-pointer" onClick={() => window.location.href = "/"}>
-            <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mr-3">
-              <img src="logos/logo-circle.png" alt="" className="w-full h-full object-cover" />
-            </div>
-            <div>
-              <p className="text-sm font-medium">Digital Heritage</p>
-              <p className="text-xs text-gray-500 font-medium">Preservationists platform</p>
-            </div>
+          {/* Logo */}
+          <div className="flex justify-center mb-0">
+            <img 
+              src="/logos/logo-circle.png" 
+              alt="Logo" 
+              className="h-64 w-64"
+            />
           </div>
 
-          <h1 className="text-3xl font-bold text-center mb-10">Welcome back to the DHP Community</h1>
-
-          {/* Google sign in button */}
-          {/* <button
-            className="flex items-center justify-center w-full border border-gray-300 rounded-full py-4 px-4 mb-6 cursor-pointer hover:bg-gray-100"
-            onClick={() => console.log("Google sign-in")}
-          >
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png" alt="Google logo" className="w-5 h-5 mr-2" />
-            <span className="text-sm text-gray-500">Sign up with Google</span>
-          </button> */}
-
-          {/* Login form */}
+          {/* Form */}
           <div className="space-y-6">
             <div>
-              <label htmlFor="email" className="text-gray-500 text-xs">username</label>
-              <input
-                id="text"
-                type="text"
-                placeholder="johndadev"
-                className={`w-full px-3 py-4 border-b focus:outline-none ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-green-500'
-                  }`}
-                value={email}
-                onChange={(e) => handleInputChange('email', e.target.value, setEmail)}
-              />
-              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-            </div>
+              <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">Welcome Back</h1>
+              <p className="text-center text-gray-500 mb-6">Sign in to your account</p>
+              
+              {error && (
+                <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm mb-4">
+                  {error}
+                </div>
+              )}
 
-            <div>
-              <label htmlFor="password" className="text-gray-500 text-xs">Password</label>
-              <div className="relative">
-                <input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  className={`w-full px-3 py-4 border-b focus:outline-none ${errors.password ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-green-500'
-                    }`}
-                  value={password}
-                  onChange={(e) => handleInputChange('password', e.target.value, setPassword)}
-                />
-                <button
-                  type="button"
-                  className="absolute right-2 top-4"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ?
-                    <EyeOff size={20} className="text-gray-400" /> :
-                    <Eye size={20} className="text-gray-400" />
-                  }
-                </button>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Username or Email</label>
+                  <input
+                    type="text"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your username or email"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Enter your password"
+                    />
+                    <button 
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
+                </div>
               </div>
-              {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
             </div>
-
-            <button
-              className="text-sm text-gray-600 hover:text-green-900 ml-auto block"
-              onClick={() => console.log("Forgot password")}
-            >
-              Forgot password?
-            </button>
 
             <div className="flex items-center justify-between">
-              <div className="flex items-center w-full">
+              <div className="flex items-center">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-green-500"
-                  checked={rememberMe}
-                  onChange={() => setRememberMe(!rememberMe)}
-                  id="remember-me"
+                  id="remember"
+                  className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                 />
-                <label htmlFor="remember-me" className="ml-2 text-sm text-gray-600">Remember me</label>
+                <label htmlFor="remember" className="ml-2 text-sm text-gray-600">
+                  Remember me
+                </label>
               </div>
-              <button
-                onClick={handleLogin}
-                className="w-full bg-primary text-white py-4 px-4 rounded-full hover:bg-green-900 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-900 focus:ring-offset-2"
+              <button className="text-sm text-primary hover:text-primary/80">
+                Forgot password?
+              </button>
+            </div>
+            <p className="p-2 w-full text-sm text-gray-600 font-medium cursor-pointer hover:underline text-center" onClick={() => window.location.href = "/"}>Back to Home</p>
+            <button
+              onClick={handleLogin}
+              disabled={isLoading}
+              className="w-full bg-primary text-white py-3 px-4 rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Signing in...
+                </>
+              ) : (
+                <>
+                  <LogIn size={16} />
+                  Sign In
+                </>
+              )}
+            </button>
+
+            <div className="text-center text-sm text-gray-500 pt-4 border-t border-gray-200 mt-4">
+              Don't have an account?{' '}
+              <button 
+                className="text-primary font-medium hover:text-primary/80"
+                onClick={() => nav("/register")}
               >
-                LOG IN
+                Create account
               </button>
             </div>
           </div>
-
-          {/* Register link */}
-          <div className="mt-6 text-center">
-            <span className="text-sm text-gray-600">No Account yet? </span>
-            <button
-              className="text-sm cursor-pointer font-medium text-primary hover:text-green-800"
-              onClick={() => nav("/register")}
-            >
-              Sign up
-            </button>
-          </div>
-          <a href="/" className="text-sm w-fit bg-white absolute p-2 cursor-pointer text-primary font-medium text-center block">Back To Home</a>
         </div>
       </div>
     </div>

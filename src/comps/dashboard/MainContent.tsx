@@ -1,10 +1,11 @@
 // components/MainContent.tsx
-import { DashboardContent } from './DashboardContent';
+import  DashboardContent  from './DashboardContent';
 import { GenericContent } from './GenericContent';
 import CategoriesDashboard from './AdminCategories/ManageCategory';
 import ProductsDashboard from './AdminProduct/manageProduct';
 import CustomerManagement from './AdminCustomer.tsx/CustomerMange';
 import AdminCartsViewer from './AdminOrdersCarts/AllCarts';
+import ProfilePage from '../sharedComps/Profile';
 
 interface MainContentProps {
   activeItem: string;
@@ -14,15 +15,17 @@ export const MainContent: React.FC<MainContentProps> = ({ activeItem }) => {
   const renderContent = () => {
     switch (activeItem) {
       case 'dashboard':
-        return <AdminCartsViewer />;
+        return <DashboardContent />;;
+      case 'creator_dashboard':
+        return <ProfilePage ShowNav={false} />;
       case 'products':
         return <ProductsDashboard />;
       case 'categories':
         return <CategoriesDashboard />;
       case 'customers':
         return <CustomerManagement />;
-      case 'orders':
-        return <GenericContent title="orders" description="Analyze your sales and performance" />;
+      case 'analytics':
+        return <DashboardContent />;;
       case 'carts':
         return <AdminCartsViewer />;
       case 'settings':

@@ -1,4 +1,4 @@
-const API_BASE_URL = `${import.meta.env.BASE_URL}/api/digital-repo`;
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api/digital-repo`;
 
 export interface UserContentItem {
   id: string;

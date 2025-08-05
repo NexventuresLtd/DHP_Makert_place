@@ -74,67 +74,81 @@ export default function SecureAdminLogin() {
       setErrors({});
 
       console.log("Login attempted", { username, password, rememberMe });
-      
+
       mainAxios.post("login/", {
         "username": username,
         "password": password,
       })
-      .then(response => {
-        // Reset attempts on success
-        setLoginAttempts(0);
-        setLockoutTime(null);
-        
-        // Handle successful login
-        const token = response.data.access;
-        const refresh = response.data.refresh;
-        // console.log("Login successful", token);
-        Logout_action_admin()
-        // Store token and user info
-        if (rememberMe) {
-          localStorage.setItem("authToken", token);
-          localStorage.setItem("refresh", refresh);
-          localStorage.setItem("userInfo", JSON.stringify({
-            "username": username,
-            "type": "admin",
-          }));
-        } else {
-          // Use sessionStorage if "Remember me" is not checked
-          sessionStorage.setItem("authToken", token);
-          sessionStorage.setItem("refresh", refresh);
-          sessionStorage.setItem("userInfo", JSON.stringify({
-            "username": username,
-            "type": "admin",
-          }));
-        }
-        window.location.href = "/admin/dashboard"; // Reload the page to reflect changes
-      })
-      .catch(error => {
-        console.error("Login failed", error);
-        
-        // Handle login failure
-        const attemptsRemaining = MAX_LOGIN_ATTEMPTS - (loginAttempts + 1);
-        
-        if (attemptsRemaining > 0) {
-          setErrors({
-            general: `Invalid credentials. ${attemptsRemaining} attempt${attemptsRemaining > 1 ? 's' : ''} remaining.`
-          });
-        } else {
-          // Lock the account
-          const lockoutEnd = Date.now() + LOCKOUT_DURATION;
-          setLockoutTime(lockoutEnd);
-          setErrors({
-            general: `Too many failed attempts. Account locked for 5 minutes.`
-          });
-        }
-        
-        setLoginAttempts(prev => prev + 1);
-        // Reset CAPTCHA on failed login
-        setResetCaptcha(prev => !prev);
-        setCaptchaVerified(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(response => {
+          // Reset attempts on success
+          setLoginAttempts(0);
+          setLockoutTime(null);
+
+          // Handle successful login
+          const token = response.data.access;
+          const refresh = response.data.refresh;
+          // console.log("Login successful", token);
+          Logout_action_admin()
+          // Store token and user info
+          if (response.data.user_type !== 'public') {
+            if (rememberMe) {
+              localStorage.setItem("authToken", token);
+              localStorage.setItem("refresh", refresh);
+              localStorage.setItem("userInfo", JSON.stringify({
+                "username": response.data.username,
+                "email": response.data.email,
+                "first_name": response.data.first_name,
+                "last_name": response.data.last_name || '',
+                "id": response.data.id,
+                "type": response.data.user_type == 'public' ? 'user' : response.data.user_type,
+              }));
+            } else {
+              // Use sessionStorage if "Remember me" is not checked
+              sessionStorage.setItem("authToken", token);
+              sessionStorage.setItem("refresh", refresh);
+              sessionStorage.setItem("userInfo", JSON.stringify({
+                "username": response.data.username,
+                "email": response.data.email,
+                "first_name": response.data.first_name,
+                "last_name": response.data.last_name || '',
+                "id": response.data.id,
+                "type": response.data.user_type == 'public' ? 'user' : response.data.user_type,
+              }));
+            }
+            window.location.href = "/admin/dashboard"; // Reload the page to reflect changes
+          } else {
+            setErrors({ general: "You do not have admin access." });
+            window.location.href = "/"; // Redirect to user side
+            return;
+          }
+        })
+        .catch(error => {
+          console.error("Login failed", error);
+
+          // Handle login failure
+          const attemptsRemaining = MAX_LOGIN_ATTEMPTS - (loginAttempts + 1);
+
+          if (attemptsRemaining > 0) {
+            setErrors({
+              general: `Invalid credentials. ${attemptsRemaining} attempt${attemptsRemaining > 1 ? 's' : ''} remaining.`
+            });
+          } else {
+            // Lock the account
+            const lockoutEnd = Date.now() + LOCKOUT_DURATION;
+            setLockoutTime(lockoutEnd);
+            setErrors({
+              general: `Too many failed attempts. Account locked for 5 minutes.`
+            });
+          }
+
+          setLoginAttempts(prev => prev + 1);
+          // Reset CAPTCHA on failed login
+          setResetCaptcha(prev => !prev);
+          setCaptchaVerified(false);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
   };
 
@@ -178,10 +192,10 @@ export default function SecureAdminLogin() {
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <Shield className="w-5 h-5 mr-2 text-green-400" />
-                <span className="font-medium">DHP Admin Portal</span>
+                <span className="font-medium">DHP - Portal</span>
               </div>
-              <span 
-                onClick={() => window.location.href = "/"} 
+              <span
+                onClick={() => window.location.href = "/"}
                 className="text-xs cursor-pointer hover:underline opacity-80"
               >
                 Users Side
@@ -209,11 +223,10 @@ export default function SecureAdminLogin() {
                   type="text"
                   autoComplete="username"
                   placeholder="Enter admin username"
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
-                    errors.username
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors.username
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                       : 'border-gray-300 focus:border-green-500 focus:ring-green-500/20'
-                  }`}
+                    }`}
                   value={username}
                   onChange={(e) => handleInputChange('username', e.target.value, setUsername)}
                   onKeyPress={handleKeyPress}
@@ -239,11 +252,10 @@ export default function SecureAdminLogin() {
                     type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
                     placeholder="Enter your password"
-                    className={`w-full px-4 py-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
-                      errors.password
+                    className={`w-full px-4 py-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors.password
                         ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                         : 'border-gray-300 focus:border-green-500 focus:ring-green-500/20'
-                    }`}
+                      }`}
                     value={password}
                     onChange={(e) => handleInputChange('password', e.target.value, setPassword)}
                     onKeyPress={handleKeyPress}
@@ -271,8 +283,8 @@ export default function SecureAdminLogin() {
 
               {/* CAPTCHA Verification */}
               <div>
-                <DragCaptcha 
-                  onVerify={setCaptchaVerified} 
+                <DragCaptcha
+                  onVerify={setCaptchaVerified}
                   resetTrigger={resetCaptcha}
                 />
                 {errors.captcha && (

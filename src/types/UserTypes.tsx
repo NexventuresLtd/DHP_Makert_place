@@ -13,3 +13,11 @@ export interface UserUpdate {
   email: string;
   password: string;
 }
+export interface Customer {
+  id: number;
+  first_name: string;
+  last_name: string;
+  username: string;
+  email: string;
+  user_type: string;
+}

@@ -22,6 +22,7 @@ import VirtualToursGallery from "./DigRepoVirtualTours";
 import FeaturedWorksGallery from "./DigRepoFeaturedWorks";
 import RecentAdditionsGallery from "./DigRepoRecentAdditions";
 import MyContentPage from "./MyContent";
+import { getUserInfo, isLoggedIn } from "../../app/Localstorage";
 
 // Coming Soon Component for unimplemented features
 const ComingSoonGallery = ({ title }: { title: string }) => (
@@ -138,18 +139,16 @@ const DigitalRepository = ({
   return (
     <div
       style={{
-        backgroundImage: `${
-          showThings &&
+        backgroundImage: `${showThings &&
           `url('https://visitrwanda.com/wp-content/uploads/fly-images/2029/Visit-Rwanda_-Nyanza-Traditional-Intore-Dancers-1650x1100.jpg')`
-        }`,
+          }`,
       }}
-      className={`${
-        showThings &&
+      className={`${showThings &&
         `min-h-screen bg-cover bg-gradient-to-br from-slate-50 via-white to-blue-50`
-      }`}
+        }`}
     >
       {/* Creator Modal */}
-      {showCreatorModal && showThings && (
+      {showCreatorModal && showThings && !isLoggedIn && (
         <div className="absolute inset-0 bg-black/0 backdrop-blur-none z-46 flex items-center justify-center p-4 w-fit h-fit top-23 ml-auto">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform animate-in fade-in-50 zoom-in-95">
             <div className="flex items-center gap-3 mb-4">
@@ -205,9 +204,8 @@ const DigitalRepository = ({
                     <item.icon className="w-4 h-4" />
                     {item.name}
                     <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 ${
-                        activeDropdown === item.name ? "rotate-180" : ""
-                      }`}
+                      className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === item.name ? "rotate-180" : ""
+                        }`}
                     />
                   </button>
 
@@ -230,16 +228,18 @@ const DigitalRepository = ({
                 </div>
               ))}
             </div>
-            <button
-              onClick={() => {
-                setShowMyContent(true);
-                setShowThings(false);
-                setViewDig("");
-              }}
-              className="bg-orange-400 gap-2 flex text-white py-2 px-3 rounded-md cursor-pointer hover:bg-orange-500"
-            >
-              <User2 /> My Content
-            </button>
+            {((getUserInfo.type === "creator" || getUserInfo.type === "admin") && isLoggedIn) &&
+              <button
+                onClick={() => {
+                  setShowMyContent(true);
+                  setShowThings(false);
+                  setViewDig("");
+                }}
+                className="bg-orange-400 gap-2 flex text-white py-2 px-3 rounded-md cursor-pointer hover:bg-orange-500"
+              >
+                <User2 /> My Content
+              </button>
+            }
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -267,9 +267,8 @@ const DigitalRepository = ({
                       {item.name}
                     </div>
                     <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 ${
-                        activeDropdown === item.name ? "rotate-180" : ""
-                      }`}
+                      className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === item.name ? "rotate-180" : ""
+                        }`}
                     />
                   </button>
 
@@ -323,15 +322,19 @@ const DigitalRepository = ({
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <button className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-400 to-orange-400 text-white font-semibold rounded-xl hover:from-amber-500 hover:to-orange-500 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105">
-                      <Users className="w-5 h-5" />
-                      Become A Creator
-                    </button>
+                    {!isLoggedIn && (
+                      <>
+                        <button onClick={() => { window.location.href = "/register" }} className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-400 to-orange-400 text-white font-semibold rounded-xl hover:from-amber-500 hover:to-orange-500 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105">
+                          <Users className="w-5 h-5" />
+                          Become A Creator
+                        </button>
 
-                    <button className="inline-flex items-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all duration-300">
-                      <Download className="w-5 h-5" />
-                      Explore Content
-                    </button>
+                        <button className="inline-flex items-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all duration-300">
+                          <Download className="w-5 h-5" />
+                          Explore Content
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -415,8 +418,8 @@ const DigitalRepository = ({
         viewDig == "Institutional Archives" ||
         viewDig == "Media Archives" ||
         viewDig == "Digital Preservation") && (
-        <ComingSoonGallery title={viewDig} />
-      )}
+          <ComingSoonGallery title={viewDig} />
+        )}
 
       {/* Digital Content Section - Coming Soon */}
       {(viewDig == "Datasets" ||
@@ -425,12 +428,12 @@ const DigitalRepository = ({
         viewDig == "Educational Resources" ||
         viewDig == "3D Models" ||
         viewDig == "Audio Collections") && (
-        <ComingSoonGallery title={viewDig} />
-      )}
+          <ComingSoonGallery title={viewDig} />
+        )}
 
       {/* My Content Page */}
       {showMyContent && <MyContentPage />}
-      {}
+      { }
     </div>
   );
 };

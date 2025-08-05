@@ -1,7 +1,8 @@
 // types.ts
 // types.ts
-import { BarChart3, Package, ShoppingBag, ShoppingCart, Users } from 'lucide-react';
+import { BarChart3, Package, Settings, ShoppingBag, ShoppingCart, Users } from 'lucide-react';
 import type { ComponentType } from 'react';
+import { getUserInfo } from '../app/Localstorage';
 
 export interface ProductImage {
     image: string;
@@ -76,12 +77,21 @@ export interface Cart {
   created_at: string;
   updated_at: string;
 }
-export const sidebarItems: SidebarItem[] = [
+export const sidebarItems: SidebarItem[] = 
+getUserInfo?.type === 'admin' ?
+[
   { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
   { id: 'categories', label: 'Categories', icon: ShoppingCart, },
   { id: 'products', label: 'Products', icon: Package, },
   { id: 'customers', label: 'Customers', icon: Users },
   // { id: 'orders', label: 'orders', icon: ListOrdered },
+  //   { id: 'settings', label: 'Settings', icon: Settings ,badge: 3 }
   { id: 'carts', label: 'carts', icon: ShoppingBag },
-//   { id: 'settings', label: 'Settings', icon: Settings ,badge: 3 }
+  { id: 'creator_dashboard', label: 'Settings', icon: Settings },
+  { id: 'analytics', label: 'Analytics', icon: BarChart3 }
+]:
+[
+  { id: 'creator_dashboard', label: 'Dashboard', icon: BarChart3 },
+  { id: 'products', label: 'Products', icon: Package, },
 ];
+;

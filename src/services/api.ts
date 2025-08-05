@@ -1,5 +1,5 @@
 import type { Category, Collection, Exhibition, Artist, Artwork, PaginatedResponse } from '../types';
-const API_BASE_URL =  `${import.meta.env.BASE_URL}/api/digital-repo`;
+const API_BASE_URL =  `${import.meta.env.VITE_API_BASE_URL}/api/digital-repo`;
 
 class ApiService {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
