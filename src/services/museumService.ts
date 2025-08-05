@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base URL for the API - adjust this based on your Django server configuration
-const API_BASE_URL = 'http://localhost:8000/api/digital-repo';
+const API_BASE_URL = `${import.meta.env.BASE_URL}/api/digital-repo`;
 
 // Create axios instance with default config
 const apiClient = axios.create({

@@ -13,7 +13,7 @@ import type {
   PaginatedResponse 
 } from '../types/libraryTypes';
 
-const API_BASE_URL = 'http://localhost:8000/api/digital-repo/library';
+const API_BASE_URL = `${import.meta.env.BASE_URL}/api/digital-repo/library`;
 
 class LibraryApiService {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {

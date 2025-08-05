@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8000/api/digital-repo';
+const API_BASE_URL = `${import.meta.env.BASE_URL}/api/digital-repo`;
 
 export interface UserContentItem {
   id: string;
