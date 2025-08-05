@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {  Star, ShoppingCart, Sparkles, X, Filter, Sliders, Info, Package, Minus, Plus } from 'lucide-react';
+import { Star, ShoppingCart, Sparkles, X, Filter, Sliders, Info, Package, Minus, Plus } from 'lucide-react';
 import type { Category, Product } from '../../types/marketTypes';
 import { fetchFilteredProducts } from '../../app/utlis/GetProductUtils';
 import { addItemToCart } from '../../app/utlis/addToCartUtil';
 import { WishlistHeart } from '../sharedComps/WishListHeart';
+import { isLoggedIn } from '../../app/Localstorage';
 
 interface ProductsShowcaseProps {
     data: Category;
@@ -346,27 +347,29 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
                                 </div>
 
                                 {/* Actions */}
-                                <div className="mt-4 grid grid-cols-2 gap-2">
+                                <div className="mt-4 flex flex-col md:flex-row gap-2">
                                     <button
-                                        className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded transition-colors"
+                                        className="text-xs w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded transition-colors"
                                         onClick={() => setSelectedProduct(product)}
                                     >
                                         Details
                                     </button>
-                                    <button
-                                        className="text-xs bg-primary hover:bg-primary/90 text-white py-2 rounded transition-colors flex items-center justify-center"
-                                        disabled={product.stock <= 0 || cartLoading}
-                                        onClick={() => handleAddToCart(product, 1)}
-                                    >
-                                        {cartLoading ? (
-                                            <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                        ) : (
-                                            <>
-                                                <ShoppingCart className="w-3 h-3 mr-1" />
-                                                Add to Cart
-                                            </>
-                                        )}
-                                    </button>
+                                    {isLoggedIn &&
+                                        <button
+                                            className="text-xs w-full bg-primary hover:bg-primary/90 text-white py-2 rounded transition-colors flex items-center justify-center"
+                                            disabled={product.stock <= 0 || cartLoading}
+                                            onClick={() => handleAddToCart(product, 1)}
+                                        >
+                                            {cartLoading ? (
+                                                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                            ) : (
+                                                <>
+                                                    <ShoppingCart className="w-3 h-3 mr-1" />
+                                                    Add to Cart
+                                                </>
+                                            )}
+                                        </button>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -531,20 +534,22 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
                                 </div>
 
                                 <div className="flex space-x-4">
-                                    <button
-                                        onClick={() => handleAddToCart(selectedProduct, quantity)}
-                                        disabled={selectedProduct.stock <= 0 || cartLoading}
-                                        className="flex-1 bg-primary hover:bg-primary/90 text-white py-3 px-6 rounded-lg flex items-center justify-center space-x-2 transition-colors"
-                                    >
-                                        {cartLoading ? (
-                                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                        ) : (
-                                            <>
-                                                <ShoppingCart className="w-5 h-5" />
-                                                <span>Add to Cart ({quantity})</span>
-                                            </>
-                                        )}
-                                    </button>
+                                    {isLoggedIn &&
+                                        <button
+                                            onClick={() => handleAddToCart(selectedProduct, quantity)}
+                                            disabled={selectedProduct.stock <= 0 || cartLoading}
+                                            className="flex-1 bg-primary hover:bg-primary/90 text-white py-3 px-6 rounded-lg flex items-center justify-center space-x-2 transition-colors"
+                                        >
+                                            {cartLoading ? (
+                                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                            ) : (
+                                                <>
+                                                    <ShoppingCart className="w-5 h-5" />
+                                                    <span>Add to Cart ({quantity})</span>
+                                                </>
+                                            )}
+                                        </button>
+                                    }
                                 </div>
                             </div>
                         </div>

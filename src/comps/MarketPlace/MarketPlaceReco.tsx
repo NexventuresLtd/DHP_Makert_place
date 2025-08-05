@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import {  ShoppingCart, Eye, Star, Filter, Grid, List, Sparkles, ArrowRight } from 'lucide-react';
+import { ShoppingCart, Eye, Star, Filter, Grid, List, Sparkles, ArrowRight } from 'lucide-react';
 import type { Product } from '../../types/marketTypes';
 import { fetchFilteredProducts } from '../../app/utlis/GetProductUtils';
 import ProductDetailModal from '../dashboard/AdminProduct/ViewMoreDetails';
 import { WishlistHeart } from '../sharedComps/WishListHeart';
+import { isLoggedIn } from '../../app/Localstorage';
 
 export default function RecommendedItemsSection() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -289,14 +290,16 @@ export default function RecommendedItemsSection() {
 
                             <div className="flex items-center gap-4">
                               <WishlistHeart productId={product.id} className="w-5 h-5" />
-                              <button
-                                onClick={() => { setSelectedProduct(product); setIsModalOpen(true); }}
-                                className="flex-1 px-8 py-4 bg-primary text-white font-semibold rounded-2xl transition-all duration-300 flex items-center justify-center gap-3  shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105"
-                              >
-                                <ShoppingCart className="w-5 h-5" />
-                                Add to Cart
-                                <ArrowRight className="w-4 h-4" />
-                              </button>
+                              {isLoggedIn &&
+                                <button
+                                  onClick={() => { setSelectedProduct(product); setIsModalOpen(true); }}
+                                  className="flex-1 px-8 py-4 bg-primary text-white font-semibold rounded-2xl transition-all duration-300 flex items-center justify-center gap-3  shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105"
+                                >
+                                  <ShoppingCart className="w-5 h-5" />
+                                  Add to Cart
+                                  <ArrowRight className="w-4 h-4" />
+                                </button>
+                              }
                             </div>
                           </div>
                         ) : (
@@ -332,6 +335,7 @@ export default function RecommendedItemsSection() {
                                   </span>
                                 )}
                               </div>
+                              
                               <button
                                 onClick={() => { setSelectedProduct(product); setIsModalOpen(true); }}
                                 className="px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-2xl hover:from-emerald-600 hover:to-teal-600 transition-all duration-300 flex items-center gap-2  shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105"
