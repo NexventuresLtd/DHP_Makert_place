@@ -7,12 +7,11 @@ import {
     GraduationCap,
     CalendarDays,
     X,
-    ChevronRight,
     Loader2,
     MessageCircle,
     ArrowRight,
     Check,
-    Sparkles
+
 } from 'lucide-react';
 import DigitalHeritagePlatform from '../comps/sharedComps/Navbar';
 import Footer from '../comps/sharedComps/Footer';
