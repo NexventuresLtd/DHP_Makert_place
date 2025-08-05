@@ -55,7 +55,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch, onMenuToggle, isSideba
           >
             {isSidebarOpen ? '✕' : '☰'}
           </button>
-          <h1 className="text-2xl font-bold text-primary">Marketplace</h1>
+          {/* <h1 className="text-2xl font-bold text-primary">Control Panel</h1> */}
           <div className="relative hidden">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
