@@ -14,6 +14,7 @@ import { libraryApiService } from "../../services/libraryApi";
 import type { LibraryDocument } from "../../types/libraryTypes";
 import UploadDocumentModal from "./UploadDocumentModal";
 import PDFViewer from "./PDFViewer";
+import { getUserInfo } from "../../app/Localstorage";
 
 export default function LibraryDocuments({
   selectedType,
@@ -148,13 +149,15 @@ export default function LibraryDocuments({
             documents
           </p>
         </div>
-        <button
-          onClick={() => setIsUploadModalOpen(true)}
-          className="mt-4 sm:mt-0 bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors inline-flex items-center gap-2"
-        >
-          <Upload className="h-4 w-4" />
-          Upload Document
-        </button>
+        {(getUserInfo?.type === "creator" || getUserInfo?.type === "admin") && (
+          <button
+            onClick={() => setIsUploadModalOpen(true)}
+            className="mt-4 sm:mt-0 bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors inline-flex items-center gap-2"
+          >
+            <Upload className="h-4 w-4" />
+            Upload Document
+          </button>
+        )}
       </div>
 
       {/* Filters */}

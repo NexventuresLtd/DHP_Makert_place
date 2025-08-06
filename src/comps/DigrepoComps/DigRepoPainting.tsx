@@ -13,6 +13,7 @@ import { apiService } from "../../services/api";
 import { useApi } from "../../hooks/useApi";
 import type { Artwork } from "../../types";
 import UploadArtworkModal from "./UploadArtworkModal";
+import { getUserInfo } from "../../app/Localstorage";
 
 export default function PaintingsGallery() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -145,13 +146,15 @@ export default function PaintingsGallery() {
                   className="pl-10 pr-4 py-2 w-full outline-none sm:w-80 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
-
-              <button
-                onClick={() => setIsUploadModalOpen(true)}
-                className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-              >
-                Upload
-              </button>
+              {(getUserInfo?.type === "creator" ||
+                getUserInfo?.type === "admin") && (
+                <button
+                  onClick={() => setIsUploadModalOpen(true)}
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                >
+                  Upload
+                </button>
+              )}
             </div>
           </div>
 
