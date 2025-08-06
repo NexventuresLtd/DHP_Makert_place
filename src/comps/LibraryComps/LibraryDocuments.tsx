@@ -13,8 +13,13 @@ import { useApi } from "../../hooks/useApi";
 import { libraryApiService } from "../../services/libraryApi";
 import type { LibraryDocument } from "../../types/libraryTypes";
 import UploadDocumentModal from "./UploadDocumentModal";
+import PDFViewer from "./PDFViewer";
 
-export default function LibraryDocuments({selectedType}: { selectedType?: string }) {
+export default function LibraryDocuments({
+  selectedType,
+}: {
+  selectedType?: string;
+}) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [selectedAccessLevel, setSelectedAccessLevel] = useState("All");
@@ -25,6 +30,11 @@ export default function LibraryDocuments({selectedType}: { selectedType?: string
   const [documentsLoading, setDocumentsLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [hasMore, setHasMore] = useState(false);
+
+  // PDF Viewer state
+  const [isPDFViewerOpen, setIsPDFViewerOpen] = useState(false);
+  const [currentPDFUrl, setCurrentPDFUrl] = useState("");
+  const [currentPDFTitle, setCurrentPDFTitle] = useState("");
 
   // Fetch document types
   const { data: documentTypes, loading: documentTypesLoading } = useApi(() =>
@@ -85,7 +95,22 @@ export default function LibraryDocuments({selectedType}: { selectedType?: string
     }
   };
 
+  const handleViewPDF = (doc: LibraryDocument) => {
+    console.log("Viewing PDF for document:", doc.title, doc.document_file);
+    if (doc.document_file) {
+      setCurrentPDFUrl(doc.document_file);
+      setCurrentPDFTitle(doc.title);
+      setIsPDFViewerOpen(true);
+    }
+  };
+
   const handleDownload = async (doc: LibraryDocument) => {
+    // Only allow download if the document is marked as downloadable
+    if (!doc.is_downloadable) {
+      alert("This document is not available for download.");
+      return;
+    }
+
     try {
       const blob = await libraryApiService.downloadDocument(doc.slug);
       const url = window.URL.createObjectURL(blob);
@@ -275,13 +300,18 @@ export default function LibraryDocuments({selectedType}: { selectedType?: string
 
               {/* Actions */}
               <div className="flex gap-2">
-                <button className="flex-1 bg-green-500 hover:bg-green-600 text-white text-sm py-2 px-3 rounded-lg transition-colors">
-                  View Details
+                <button
+                  onClick={() => handleViewPDF(document)}
+                  className="flex-1 bg-green-500 hover:bg-green-600 text-white text-sm py-2 px-3 rounded-lg transition-colors inline-flex items-center justify-center gap-2"
+                >
+                  <Eye className="h-4 w-4" />
+                  View Document
                 </button>
-                {document.document_file && (
+                {document.document_file && document.is_downloadable && (
                   <button
                     onClick={() => handleDownload(document)}
                     className="bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-lg transition-colors"
+                    title="Download Document"
                   >
                     <Download className="h-4 w-4" />
                   </button>
@@ -325,6 +355,14 @@ export default function LibraryDocuments({selectedType}: { selectedType?: string
           setTotalCount((prev) => prev + 1);
           // Show success message or refresh the list
         }}
+      />
+
+      {/* PDF Viewer */}
+      <PDFViewer
+        isOpen={isPDFViewerOpen}
+        onClose={() => setIsPDFViewerOpen(false)}
+        pdfUrl={currentPDFUrl}
+        documentTitle={currentPDFTitle}
       />
     </div>
   );

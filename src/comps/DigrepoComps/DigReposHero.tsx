@@ -21,6 +21,8 @@ import DigitalExhibitionsGallery from "./DigRepoDigitalExhibitions";
 import VirtualToursGallery from "./DigRepoVirtualTours";
 import FeaturedWorksGallery from "./DigRepoFeaturedWorks";
 import RecentAdditionsGallery from "./DigRepoRecentAdditions";
+import ArchiveGallery from "./DigRepoArchive";
+import DigitalContentGallery from "./DigRepoDigitalContent";
 import MyContentPage from "./MyContent";
 import { getUserInfo, isLoggedIn } from "../../app/Localstorage";
 
@@ -139,13 +141,15 @@ const DigitalRepository = ({
   return (
     <div
       style={{
-        backgroundImage: `${showThings &&
+        backgroundImage: `${
+          showThings &&
           `url('https://visitrwanda.com/wp-content/uploads/fly-images/2029/Visit-Rwanda_-Nyanza-Traditional-Intore-Dancers-1650x1100.jpg')`
-          }`,
+        }`,
       }}
-      className={`${showThings &&
+      className={`${
+        showThings &&
         `min-h-screen bg-cover bg-gradient-to-br from-slate-50 via-white to-blue-50`
-        }`}
+      }`}
     >
       {/* Creator Modal */}
       {showCreatorModal && showThings && !isLoggedIn && (
@@ -204,8 +208,9 @@ const DigitalRepository = ({
                     <item.icon className="w-4 h-4" />
                     {item.name}
                     <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === item.name ? "rotate-180" : ""
-                        }`}
+                      className={`w-4 h-4 transition-transform duration-200 ${
+                        activeDropdown === item.name ? "rotate-180" : ""
+                      }`}
                     />
                   </button>
 
@@ -228,18 +233,19 @@ const DigitalRepository = ({
                 </div>
               ))}
             </div>
-            {((getUserInfo.type === "creator" || getUserInfo.type === "admin") && isLoggedIn) &&
-              <button
-                onClick={() => {
-                  setShowMyContent(true);
-                  setShowThings(false);
-                  setViewDig("");
-                }}
-                className="bg-orange-400 gap-2 flex text-white py-2 px-3 rounded-md cursor-pointer hover:bg-orange-500"
-              >
-                <User2 /> My Content
-              </button>
-            }
+            {(getUserInfo.type === "creator" || getUserInfo.type === "admin") &&
+              isLoggedIn && (
+                <button
+                  onClick={() => {
+                    setShowMyContent(true);
+                    setShowThings(false);
+                    setViewDig("");
+                  }}
+                  className="bg-orange-400 gap-2 flex text-white py-2 px-3 rounded-md cursor-pointer hover:bg-orange-500"
+                >
+                  <User2 /> My Content
+                </button>
+              )}
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -267,8 +273,9 @@ const DigitalRepository = ({
                       {item.name}
                     </div>
                     <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === item.name ? "rotate-180" : ""
-                        }`}
+                      className={`w-4 h-4 transition-transform duration-200 ${
+                        activeDropdown === item.name ? "rotate-180" : ""
+                      }`}
                     />
                   </button>
 
@@ -324,7 +331,12 @@ const DigitalRepository = ({
                   <div className="flex flex-col sm:flex-row gap-4">
                     {!isLoggedIn && (
                       <>
-                        <button onClick={() => { window.location.href = "/register" }} className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-400 to-orange-400 text-white font-semibold rounded-xl hover:from-amber-500 hover:to-orange-500 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105">
+                        <button
+                          onClick={() => {
+                            window.location.href = "/register";
+                          }}
+                          className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-400 to-orange-400 text-white font-semibold rounded-xl hover:from-amber-500 hover:to-orange-500 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105"
+                        >
                           <Users className="w-5 h-5" />
                           Become A Creator
                         </button>
@@ -411,29 +423,29 @@ const DigitalRepository = ({
         viewDig == "Special Collections" ||
         viewDig == "Open Access") && <LibraryGallery libraryType={viewDig} />}
 
-      {/* Archives Section - Coming Soon */}
+      {/* Archives Section */}
       {(viewDig == "Historical Documents" ||
         viewDig == "Government Records" ||
         viewDig == "Personal Papers" ||
         viewDig == "Institutional Archives" ||
         viewDig == "Media Archives" ||
         viewDig == "Digital Preservation") && (
-          <ComingSoonGallery title={viewDig} />
-        )}
+        <ArchiveGallery archiveType={viewDig} />
+      )}
 
-      {/* Digital Content Section - Coming Soon */}
+      {/* Digital Content Section */}
       {(viewDig == "Datasets" ||
         viewDig == "Multimedia" ||
         viewDig == "Interactive Content" ||
         viewDig == "Educational Resources" ||
         viewDig == "3D Models" ||
         viewDig == "Audio Collections") && (
-          <ComingSoonGallery title={viewDig} />
-        )}
+        <DigitalContentGallery contentType={viewDig} />
+      )}
 
       {/* My Content Page */}
       {showMyContent && <MyContentPage />}
-      { }
+      {}
     </div>
   );
 };

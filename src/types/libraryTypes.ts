@@ -51,11 +51,11 @@ export interface LibraryDocument {
   document_file?: string;
   cover_image?: string;
   access_level: 'public' | 'restricted' | 'private';
+  is_downloadable: boolean;
   subjects_list: string[];
   uploaded_by_name: string;
   created_at: string;
   is_featured: boolean;
-  is_downloadable?: boolean;
   view_count: number;
   download_count: number;
   file_size?: number;
