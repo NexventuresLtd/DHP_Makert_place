@@ -4,7 +4,7 @@ import {
   ExternalLink,
   Eye,
   Search,
-  Filter,
+  // Filter,
   Building2,
   Globe,
   Tag,
@@ -26,7 +26,7 @@ interface DigitalContentGalleryProps {
 const DigitalContentGallery = ({ contentType }: DigitalContentGalleryProps) => {
   const [contents, setContents] = useState<DigitalContent[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedOrganization, setSelectedOrganization] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");

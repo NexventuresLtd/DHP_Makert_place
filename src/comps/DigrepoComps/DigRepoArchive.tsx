@@ -4,12 +4,12 @@ import {
   ExternalLink,
   Eye,
   Search,
-  Filter,
+  // Filter,
   Calendar,
   Building2,
   Globe,
   Tag,
-  ArrowLeft,
+  // ArrowLeft,
   Plus,
   X,
   Save,
@@ -32,7 +32,7 @@ const ArchiveGallery = ({ archiveType }: ArchiveGalleryProps) => {
     PaginatedResponse<ArchiveType>
   >({ count: 0, results: [] });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [_, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedInstitution, setSelectedInstitution] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("");

@@ -27,24 +27,24 @@ import MyContentPage from "./MyContent";
 import { getUserInfo, isLoggedIn } from "../../app/Localstorage";
 
 // Coming Soon Component for unimplemented features
-const ComingSoonGallery = ({ title }: { title: string }) => (
-  <div className="min-h-screen bg-gradientto-br from-gray-50 via-white to-blue-50 flex items-center justify-center">
-    <div className="text-center">
-      <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-        <Archive className="w-12 h-12 text-white" />
-      </div>
-      <h1 className="text-4xl font-bold text-gray-900 mb-4">{title}</h1>
-      <p className="text-xl text-gray-600 mb-8 max-w-md">
-        This section is currently under development. Check back soon for amazing
-        content!
-      </p>
-      <div className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg font-medium">
-        <Database className="w-5 h-5" />
-        Coming Soon
-      </div>
-    </div>
-  </div>
-);
+// const ComingSoonGallery = ({ title }: { title: string }) => (
+//   <div className="min-h-screen bg-gradientto-br from-gray-50 via-white to-blue-50 flex items-center justify-center">
+//     <div className="text-center">
+//       <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+//         <Archive className="w-12 h-12 text-white" />
+//       </div>
+//       <h1 className="text-4xl font-bold text-gray-900 mb-4">{title}</h1>
+//       <p className="text-xl text-gray-600 mb-8 max-w-md">
+//         This section is currently under development. Check back soon for amazing
+//         content!
+//       </p>
+//       <div className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg font-medium">
+//         <Database className="w-5 h-5" />
+//         Coming Soon
+//       </div>
+//     </div>
+//   </div>
+// );
 interface DigitalRepositoryProps {
   showThings: boolean;
   viewDig: string;
