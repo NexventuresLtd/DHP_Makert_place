@@ -364,7 +364,7 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
                                 </div>
                             </div>
 
-                            {getUserInfo?.type !== "admin" && isLoggedIn && (
+                            {getUserInfo && getUserInfo?.type !== "admin" && isLoggedIn && (
                                 <div className="flex flex-col sm:flex-row gap-3 mb-8">
                                     <button
                                         onClick={handleAddToCart}
