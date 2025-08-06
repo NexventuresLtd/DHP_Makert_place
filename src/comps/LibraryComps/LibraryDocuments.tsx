@@ -13,6 +13,7 @@ import { useApi } from "../../hooks/useApi";
 import { libraryApiService } from "../../services/libraryApi";
 import type { LibraryDocument } from "../../types/libraryTypes";
 import UploadDocumentModal from "./UploadDocumentModal";
+// import SimplePDFViewer from "./SimplePDFViewer";
 import PDFViewer from "./PDFViewer";
 import { getUserInfo } from "../../app/Localstorage";
 
@@ -96,8 +97,26 @@ export default function LibraryDocuments({
     }
   };
 
-  const handleViewPDF = (doc: LibraryDocument) => {
+  const handleViewPDF = async (doc: LibraryDocument) => {
     console.log("Viewing PDF for document:", doc.title, doc.document_file);
+
+    // Increment view count
+    try {
+      await libraryApiService.incrementView(doc.slug);
+
+      // Update the local view count in the documents array
+      setDocuments((prevDocs) =>
+        prevDocs.map((document) =>
+          document.id === doc.id
+            ? { ...document, view_count: document.view_count + 1 }
+            : document
+        )
+      );
+    } catch (error) {
+      console.error("Failed to increment view count:", error);
+      // Continue with opening PDF even if view count fails
+    }
+
     if (doc.document_file) {
       setCurrentPDFUrl(doc.document_file);
       setCurrentPDFTitle(doc.title);

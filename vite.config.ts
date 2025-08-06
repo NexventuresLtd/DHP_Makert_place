@@ -11,5 +11,8 @@ export default defineConfig({
   server: {
     host: '0.0.0.0', // allows access from network
   },
+  optimizeDeps: {
+    include: ['pdfjs-dist/build/pdf.worker'],
+  },
 
 })

@@ -353,6 +353,13 @@ class LibraryApiService {
       body: JSON.stringify(reviewData),
     });
   }
+
+  // Document actions
+  async incrementView(documentSlug: string): Promise<{ success: boolean; view_count: number; message: string }> {
+    return this.request<{ success: boolean; view_count: number; message: string }>(`/documents/${documentSlug}/increment_view/`, {
+      method: 'POST',
+    });
+  }
 }
 
 export const libraryApiService = new LibraryApiService();
