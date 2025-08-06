@@ -233,7 +233,7 @@ const DigitalRepository = ({
                 </div>
               ))}
             </div>
-            {(getUserInfo.type === "creator" || getUserInfo.type === "admin") &&
+            {(getUserInfo && getUserInfo?.type === "creator" || getUserInfo?.type === "admin") &&
               isLoggedIn && (
                 <button
                   onClick={() => {
