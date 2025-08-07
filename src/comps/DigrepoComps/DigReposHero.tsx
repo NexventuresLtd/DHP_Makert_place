@@ -25,6 +25,7 @@ import ArchiveGallery from "./DigRepoArchive";
 import DigitalContentGallery from "./DigRepoDigitalContent";
 
 import { getUserInfo, isLoggedIn } from "../../app/Localstorage";
+import MyContentPage from "./MyContent";
 
 // Coming Soon Component for unimplemented features
 // const ComingSoonGallery = ({ title }: { title: string }) => (
@@ -444,7 +445,7 @@ const DigitalRepository = ({
       )}
 
       {/* My Content Page */}
-      {showMyContent && <PaintingsGallery />}
+      {showMyContent && <MyContentPage />}
       {}
     </div>
   );

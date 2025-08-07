@@ -23,6 +23,11 @@ import type {
   UserContentStats,
 } from "../../services/userContentService";
 
+// Import existing upload modals
+import UploadDocumentModal from "../LibraryComps/UploadDocumentModal";
+import UploadArtworkModal from "./UploadArtworkModal";
+import CreateMuseumModal from "./CreateMuseumModal";
+
 // Mock data - in real app, this would come from API
 const mockUserContent: UserContentItem[] = [
   {
@@ -129,6 +134,10 @@ const MyContentPage = () => {
     sortBy: "newest",
   });
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showDocumentModal, setShowDocumentModal] = useState(false);
+  const [showArtworkModal, setShowArtworkModal] = useState(false);
+  const [showMuseumModal, setShowMuseumModal] = useState(false);
+  const [showCollectionModal, setShowCollectionModal] = useState(false);
 
   // Load user content on component mount
   useEffect(() => {
@@ -232,6 +241,74 @@ const MyContentPage = () => {
 
     setFilteredContent(filtered);
   }, [content, filter]);
+
+  // Handle upload type selection
+  const handleUploadTypeSelect = (type: string) => {
+    setShowUploadModal(false);
+
+    switch (type) {
+      case "document":
+        setShowDocumentModal(true);
+        break;
+      case "artwork":
+        setShowArtworkModal(true);
+        break;
+      case "museum":
+        setShowMuseumModal(true);
+        break;
+      case "collection":
+        setShowCollectionModal(true);
+        break;
+      default:
+        console.log("Unknown upload type:", type);
+    }
+  };
+
+  // Handle successful uploads
+  const handleUploadSuccess = (
+    newItem: any,
+    type: "artwork" | "document" | "museum" | "collection"
+  ) => {
+    // Convert the uploaded item to UserContentItem format
+    const userContentItem: UserContentItem = {
+      id: newItem.id || Date.now().toString(),
+      title: newItem.title || newItem.name,
+      type: type,
+      thumbnail: newItem.image || newItem.cover_image || newItem.main_image,
+      description: newItem.description || newItem.abstract,
+      created_at: newItem.created_at || new Date().toISOString(),
+      updated_at: newItem.updated_at || new Date().toISOString(),
+      status: "published",
+      views: newItem.view_count || 0,
+      downloads: newItem.download_count || 0,
+      likes: 0,
+      comments: 0,
+      category: newItem.category || type,
+      tags: newItem.tags_list || newItem.tags || [],
+      access_level: newItem.access_level || "public",
+      file_size: newItem.file_size,
+    };
+
+    // Add to content list
+    setContent((prev) => [userContentItem, ...prev]);
+
+    // Update stats
+    setUserStats((prev) => ({
+      ...prev,
+      total_items: prev.total_items + 1,
+      by_type: {
+        ...prev.by_type,
+        [type + "s"]:
+          prev.by_type[(type + "s") as keyof typeof prev.by_type] + 1,
+      },
+    }));
+
+    // Close modals
+    setShowDocumentModal(false);
+    setShowArtworkModal(false);
+    setShowMuseumModal(false);
+    setShowCollectionModal(false);
+  };
 
   const formatFileSize = (bytes?: number) => {
     if (!bytes) return "";
@@ -671,21 +748,45 @@ const MyContentPage = () => {
               repository.
             </p>
             <div className="grid grid-cols-2 gap-3 mb-6">
-              <button className="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                <ImageIcon className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+              <button
+                onClick={() => handleUploadTypeSelect("artwork")}
+                className="p-4 border border-gray-300 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors group"
+              >
+                <ImageIcon className="w-8 h-8 text-blue-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-sm font-medium">Artwork</span>
+                <p className="text-xs text-gray-500 mt-1">
+                  Images, paintings, digital art
+                </p>
               </button>
-              <button className="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                <FileText className="w-8 h-8 text-green-500 mx-auto mb-2" />
+              <button
+                onClick={() => handleUploadTypeSelect("document")}
+                className="p-4 border border-gray-300 rounded-lg hover:bg-green-50 hover:border-green-300 transition-colors group"
+              >
+                <FileText className="w-8 h-8 text-green-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-sm font-medium">Document</span>
+                <p className="text-xs text-gray-500 mt-1">
+                  PDFs, research papers, books
+                </p>
               </button>
-              <button className="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                <Building2 className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+              <button
+                onClick={() => handleUploadTypeSelect("museum")}
+                className="p-4 border border-gray-300 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors group"
+              >
+                <Building2 className="w-8 h-8 text-purple-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-sm font-medium">Museum</span>
+                <p className="text-xs text-gray-500 mt-1">
+                  Museum profiles, exhibitions
+                </p>
               </button>
-              <button className="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                <Archive className="w-8 h-8 text-orange-500 mx-auto mb-2" />
+              <button
+                onClick={() => handleUploadTypeSelect("collection")}
+                className="p-4 border border-gray-300 rounded-lg hover:bg-orange-50 hover:border-orange-300 transition-colors group"
+              >
+                <Archive className="w-8 h-8 text-orange-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-sm font-medium">Collection</span>
+                <p className="text-xs text-gray-500 mt-1">
+                  Curated content collections
+                </p>
               </button>
             </div>
             <div className="flex gap-3">
@@ -695,10 +796,47 @@ const MyContentPage = () => {
               >
                 Cancel
               </button>
-              <button className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                Continue
-              </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Upload Modals */}
+      <UploadDocumentModal
+        isOpen={showDocumentModal}
+        onClose={() => setShowDocumentModal(false)}
+        onSuccess={(document) => handleUploadSuccess(document, "document")}
+      />
+
+      <UploadArtworkModal
+        isOpen={showArtworkModal}
+        onClose={() => setShowArtworkModal(false)}
+        onSuccess={(artwork) => handleUploadSuccess(artwork, "artwork")}
+      />
+
+      <CreateMuseumModal
+        isOpen={showMuseumModal}
+        onClose={() => setShowMuseumModal(false)}
+        onSuccess={(museum) => handleUploadSuccess(museum, "museum")}
+      />
+
+      {/* Collection Creation Modal - temporary simple modal */}
+      {showCollectionModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Create Collection
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Collection creation is coming soon! This feature will allow you to
+              create curated collections of content.
+            </p>
+            <button
+              onClick={() => setShowCollectionModal(false)}
+              className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            >
+              OK
+            </button>
           </div>
         </div>
       )}

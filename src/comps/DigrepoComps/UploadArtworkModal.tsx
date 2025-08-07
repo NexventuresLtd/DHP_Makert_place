@@ -6,7 +6,7 @@ import { useApi } from "../../hooks/useApi";
 interface UploadArtworkModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (artwork: any) => void;
 }
 
 export default function UploadArtworkModal({
@@ -172,7 +172,7 @@ export default function UploadArtworkModal({
         uploadData.append("tags", JSON.stringify(tagsArray));
       }
 
-      await apiService.createArtwork(uploadData);
+      const response = await apiService.createArtwork(uploadData);
 
       // Reset form
       setFormData({
@@ -197,7 +197,7 @@ export default function UploadArtworkModal({
 
       // Reset body overflow
       document.body.style.overflow = "unset";
-      onSuccess();
+      onSuccess(response);
       onClose();
     } catch (error) {
       console.error("Upload failed:", error);

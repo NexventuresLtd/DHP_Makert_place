@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
-import { Home, MapPin, ArrowRight, Search, Filter } from "lucide-react";
+import {
+  Home,
+  MapPin,
+  ArrowRight,
+  Search,
+  Filter,
+  Edit,
+  Trash2,
+} from "lucide-react";
 import MuseumDetailView from "./DigMuseumDetails";
 import museumService from "../../services/museumService";
-import type {
-  Museum,
-  MuseumCategory,
-} from "../../services/museumService";
+import { getUserInfo } from "../../app/Localstorage";
+import CreateMuseumModal from "./CreateMuseumModal";
+import type { Museum, MuseumCategory } from "../../services/museumService";
 
 const categories = [
   "All",
@@ -24,9 +31,13 @@ export default function MuseumsGallery() {
   const [museumCategories, setMuseumCategories] = useState<MuseumCategory[]>(
     []
   );
-  console.log(museumCategories)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [editingMuseum, setEditingMuseum] = useState<Museum | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  // Get user info to check if admin
+  const userInfo = getUserInfo;
 
   // Fetch data on component mount
   useEffect(() => {
@@ -76,6 +87,49 @@ export default function MuseumsGallery() {
       setSelectedMuseum(museum);
     }
   };
+
+  // Handle edit museum
+  const handleEditMuseum = (museum: Museum, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the museum visit
+    setEditingMuseum(museum);
+    setShowEditModal(true);
+  };
+
+  // Handle delete museum
+  const handleDeleteMuseum = async (museum: Museum, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the museum visit
+
+    if (
+      window.confirm(
+        `Are you sure you want to delete "${museum.name}"? This action cannot be undone.`
+      )
+    ) {
+      try {
+        await museumService.deleteMuseum(museum.slug);
+        // Remove from local state
+        setMuseums((prevMuseums) =>
+          prevMuseums.filter((m) => m.id !== museum.id)
+        );
+        alert("Museum deleted successfully");
+      } catch (err) {
+        console.error("Error deleting museum:", err);
+        alert("Failed to delete museum. Please try again.");
+      }
+    }
+  };
+
+  // Handle successful museum update
+  const handleUpdateSuccess = (updatedMuseum: Museum) => {
+    // Update the museum in the local state
+    setMuseums((prevMuseums) =>
+      prevMuseums.map((m) => (m.id === updatedMuseum.id ? updatedMuseum : m))
+    );
+    setShowEditModal(false);
+    setEditingMuseum(null);
+  };
+
+  // Check if user is admin
+  const isAdmin = userInfo?.type === "admin";
 
   if (loading) {
     return (
@@ -262,8 +316,8 @@ export default function MuseumsGallery() {
                         </div>
                       </div>
 
-                      {/* Visit Button */}
-                      <div className="flex justify-start">
+                      {/* Action Buttons */}
+                      <div className="flex justify-start gap-3">
                         <button
                           onClick={() => handleMuseumSelect(museum)}
                           className="bg-primary hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors group"
@@ -271,6 +325,25 @@ export default function MuseumsGallery() {
                           Visit
                           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </button>
+
+                        {isAdmin && (
+                          <>
+                            <button
+                              onClick={(e) => handleEditMuseum(museum, e)}
+                              className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
+                            >
+                              <Edit className="w-4 h-4" />
+                              Edit
+                            </button>
+                            <button
+                              onClick={(e) => handleDeleteMuseum(museum, e)}
+                              className="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              Delete
+                            </button>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -283,6 +356,16 @@ export default function MuseumsGallery() {
         <MuseumDetailView
           museum={selectedMuseum}
           onBack={() => setSelectedMuseum(null)}
+        />
+      )}
+
+      {/* Edit Museum Modal */}
+      {showEditModal && editingMuseum && (
+        <CreateMuseumModal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          onSuccess={handleUpdateSuccess}
+          initialData={editingMuseum}
         />
       )}
     </>

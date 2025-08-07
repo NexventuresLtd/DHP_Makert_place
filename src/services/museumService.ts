@@ -187,6 +187,27 @@ class MuseumService {
     await apiClient.post(`/museums/${slug}/visit/`);
   }
 
+  // Museum CRUD operations for admin
+  async createMuseum(museumData: FormData | Partial<Museum>): Promise<Museum> {
+    const config = museumData instanceof FormData ? 
+      { headers: { 'Content-Type': 'multipart/form-data' } } : 
+      {};
+    const response = await apiClient.post<Museum>('/museums/', museumData, config);
+    return response.data;
+  }
+
+  async updateMuseum(slug: string, museumData: FormData | Partial<Museum>): Promise<Museum> {
+    const config = museumData instanceof FormData ? 
+      { headers: { 'Content-Type': 'multipart/form-data' } } : 
+      {};
+    const response = await apiClient.put<Museum>(`/museums/${slug}/`, museumData, config);
+    return response.data;
+  }
+
+  async deleteMuseum(slug: string): Promise<void> {
+    await apiClient.delete(`/museums/${slug}/`);
+  }
+
   // Museum Exhibitions
   async getExhibitions(params?: {
     museum?: string;
@@ -274,6 +295,9 @@ export const {
   getPopularMuseums,
   getRecentMuseums,
   recordVisit,
+  createMuseum,
+  updateMuseum,
+  deleteMuseum,
   getExhibitions,
   getExhibition,
   getCurrentExhibitions,
