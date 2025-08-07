@@ -18,7 +18,7 @@ const SecondaryNav = ({ selectedCountry, setSelectedCountry }: SecondaryNavProps
                             <Home className="w-4 h-4" />
                             <span className="font-medium text-sm lg:text-base">Home</span>
                         </button>
-                        <button className="flex items-center space-x-2 text-gray-600 hover:text-emerald-600 transition-colors whitespace-nowrap">
+                        <button onClick={()=>window.location.href = "/market/cart"} className="flex items-center space-x-2 text-gray-600 hover:text-emerald-600 transition-colors whitespace-nowrap">
                             <ShoppingCart className="w-4 h-4" />
                             <span className="font-medium text-sm lg:text-base">Cart</span>
                         </button>

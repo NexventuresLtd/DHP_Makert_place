@@ -34,7 +34,7 @@ function App() {
           <Route path="/involved" element={<GetInvolvedPage />} />
           <Route path="/library" element={<Library />} />
           <Route path="/market" element={<MarketPlace />} />
-          <Route path="/market/cart" element={tokenUser && !isAdmin ? <ShoppingCartViewer /> : <MarketPlace />} />
+          <Route path="/market/cart" element={tokenUser ? <ShoppingCartViewer /> : <MarketPlace />} />
           <Route path="/dhp/user/profile" element={tokenUser ? <ProfilePage /> : <HomePage />} />
           <Route path="/about" element={<DHPHeroSection />} />
           <Route path="/login" element={tokenUser && !isAdmin ? <HomePage /> : <DHPLoginPage />} />

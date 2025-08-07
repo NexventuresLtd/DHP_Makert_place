@@ -92,7 +92,7 @@ const ProfilePage = ({ ShowNav }: ProfilePageProps) => {
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-50">
-                {ShowNav ? <DigitalHeritagePlatform /> : ""}
+                {!ShowNav ? <DigitalHeritagePlatform /> : ""}
                 <div className="flex justify-center items-center h-screen">
                     <div className="flex flex-col items-center gap-6 bg-white p-8 rounded-xl border border-gray-100">
                         <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
@@ -109,7 +109,7 @@ const ProfilePage = ({ ShowNav }: ProfilePageProps) => {
     if (!user) {
         return (
             <div className="min-h-screen bg-gray-50">
-                {ShowNav ? <DigitalHeritagePlatform /> : ""}
+                {!ShowNav ? <DigitalHeritagePlatform /> : ""}
                 <div className="flex justify-center items-center h-screen">
                     <div className="flex items-center gap-4 text-red-500 bg-white p-6 rounded-xl border border-gray-100">
                         <Info className="h-6 w-6" />
@@ -125,7 +125,7 @@ const ProfilePage = ({ ShowNav }: ProfilePageProps) => {
 
     return (
         <div className=" bg-gray-50">
-            {ShowNav ? <DigitalHeritagePlatform /> : ""}
+            {!ShowNav ? <DigitalHeritagePlatform /> : ""}
 
             <div className="mx-auto px-4 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

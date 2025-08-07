@@ -19,7 +19,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeItem }) => {
       case 'dashboard':
         return <DashboardContent />;;
       case 'creator_dashboard':
-        return <ProfilePage ShowNav={false} />;
+        return <ProfilePage ShowNav={true} />;
       case 'products':
         return <ProductsDashboard />;
       case 'categories':
