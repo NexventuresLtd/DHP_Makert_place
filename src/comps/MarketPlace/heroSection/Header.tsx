@@ -60,7 +60,7 @@ const Header = ({
                             >
                                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                             </button>
-                            <div className="flex items-center space-x-3">
+                            <div className="flex items-center space-x-3 cursor-pointer" onClick={()=>window.location.href = "/"}>
                                 <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                                     <img src="logos/logo-circle.png" alt="Digital Heritage" className="scale-150 rounded-full" />
                                 </div>

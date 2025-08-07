@@ -71,7 +71,7 @@ export default function DigitalHeritagePlatform() {
       <div className="max-w-full md:max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo Section */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 cursor-pointer"  onClick={()=>window.location.href = "/"}>
             <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
               <img
                 src="/logos/logo-circle.png"
