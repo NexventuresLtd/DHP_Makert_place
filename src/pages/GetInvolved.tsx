@@ -201,7 +201,7 @@ export default function GetInvolvedPage() {
                                     >
                                         Learn More
                                     </button>
-                                    <a
+                                    {/* <a
                                         href={getWhatsAppLink(option.whatsappMessage)}
                                         target="_blank"
                                         rel="noopener noreferrer"
@@ -209,7 +209,7 @@ export default function GetInvolvedPage() {
                                     >
                                         <MessageCircle className="h-4 w-4 mr-2" />
                                         {option.cta}
-                                    </a>
+                                    </a> */}
                                 </div>
                             </div>
                         </div>
@@ -287,7 +287,7 @@ export default function GetInvolvedPage() {
                                 href={getWhatsAppLink(involvementOptions[selectedOption].whatsappMessage)}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-full block text-center px-4 py-3 text-sm font-medium rounded-lg text-white bg-primary hover:bg-primary-dark transition-colors flex items-center justify-center"
+                                className="w-full text-center px-4 py-3 text-sm font-medium rounded-lg text-white bg-primary hover:bg-primary-dark transition-colors flex items-center justify-center"
                             >
                                 <MessageCircle className="h-4 w-4 mr-2" />
                                 {involvementOptions[selectedOption].cta}
