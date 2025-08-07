@@ -1,6 +1,6 @@
 // types.ts
 // types.ts
-import { BarChart3, Package, Settings, ShoppingBag, ShoppingCart, Users } from 'lucide-react';
+import { BarChart3, GalleryVerticalIcon, Package, Settings, ShoppingBag, ShoppingCart, Users } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { getUserInfo } from '../app/Localstorage';
 
@@ -88,7 +88,8 @@ getUserInfo?.type === 'admin' ?
   //   { id: 'settings', label: 'Settings', icon: Settings ,badge: 3 }
   { id: 'carts', label: 'carts', icon: ShoppingBag },
   { id: 'creator_dashboard', label: 'Settings', icon: Settings },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3 }
+  { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+  { id: 'gallery', label: 'Gallery', icon: GalleryVerticalIcon },
 ]:
 [
   { id: 'creator_dashboard', label: 'Dashboard', icon: BarChart3 },

@@ -1,11 +1,13 @@
 // components/MainContent.tsx
-import  DashboardContent  from './DashboardContent';
+import DashboardContent from './DashboardContent';
 import { GenericContent } from './GenericContent';
 import CategoriesDashboard from './AdminCategories/ManageCategory';
 import ProductsDashboard from './AdminProduct/manageProduct';
 import CustomerManagement from './AdminCustomer.tsx/CustomerMange';
 import AdminCartsViewer from './AdminOrdersCarts/AllCarts';
 import ProfilePage from '../sharedComps/Profile';
+import UploadArtworkModal from '../DigrepoComps/UploadArtworkModal';
+import PaintingsGallery from '../DigrepoComps/DigRepoPainting';
 
 interface MainContentProps {
   activeItem: string;
@@ -27,9 +29,11 @@ export const MainContent: React.FC<MainContentProps> = ({ activeItem }) => {
       case 'analytics':
         return <DashboardContent />;;
       case 'carts':
-        return <AdminCartsViewer />;
+        return <AdminCartsViewer />; 
       case 'settings':
         return <GenericContent title="Settings" description="Configure your account and preferences" />;
+      case 'gallery':
+        return <PaintingsGallery/>;
       default:
         return <DashboardContent />;
     }

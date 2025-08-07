@@ -88,7 +88,7 @@ export default function RecommendedItemsSection() {
                   </div>
                   <span className="text-sm font-semibold text-emerald-600 tracking-wide uppercase">Curated Selection</span>
                 </div>
-                <h1 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-slate-800 via-slate-700 to-slate-600 bg-clip-text text-transparent leading-tight">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-slate-800 via-slate-700 to-slate-600 bg-clip-text text-transparent leading-tight">
                   Recommended
                   <span className="block text-4xl lg:text-5xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                     Items
