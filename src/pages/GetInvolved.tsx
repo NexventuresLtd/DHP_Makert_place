@@ -151,10 +151,11 @@ export default function GetInvolvedPage() {
                 {/* Header */}
                 <div className="text-center mb-16">
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                        Get Involved with <span className="text-primary cursor-pointer hover:underline underline-offset-8" onClick={()=>window.location.href="/"}>irage.rw DHP</span>
+                        Get Involved with <span className="text-primary cursor-pointer hover:underline underline-offset-8" onClick={() => window.location.href = "/"}>irage.rw DHP</span>
                     </h1>
                     <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Join our community of innovators shaping Rwanda's digital health future.
+                        It's all about Digital Heritage bringing people together to protect and celebrate our culture.
+                        Through innovation and technology, we keep heritage alive for future generations.
                     </p>
                 </div>
 

@@ -53,10 +53,10 @@ export default function IrageServices() {
     ];
 
     const paymentIcons = [
-        { icon: CreditCard, label: "Cards" , bg: "bg-blue-500"},
-        { icon: Smartphone, label: "Mobile Money", bg: "bg-green-500"},
-        { icon: Banknote, label: "Cash", bg: "bg-yellow-500"},
-        { icon: Phone, label: "USSD", bg: "bg-red-500"}
+        { icon: CreditCard, label: "Cards", bg: "bg-blue-500" },
+        { icon: Smartphone, label: "Mobile Money", bg: "bg-green-500" },
+        { icon: Banknote, label: "Cash", bg: "bg-yellow-500" },
+        { icon: Phone, label: "USSD", bg: "bg-red-500" }
     ];
 
     return (
@@ -160,17 +160,21 @@ export default function IrageServices() {
 
                 {/* Trust Indicators */}
                 <div className="mt-12 text-center">
-                    <div className="inline-flex items-center space-x-6 text-sm text-gray-500">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-center gap-4 sm:gap-6 text-sm text-gray-500">
                         <div className="flex items-center space-x-2">
                             <Shield className="w-4 h-4 text-green-500" />
                             <span>256-bit SSL Encryption</span>
                         </div>
-                        <div className="w-px h-4 bg-gray-300"></div>
+
+                        <div className="hidden sm:block w-px h-4 bg-gray-300"></div>
+
                         <div className="flex items-center space-x-2">
                             <Lock className="w-4 h-4 text-blue-500" />
                             <span>PCI DSS Compliant</span>
                         </div>
-                        <div className="w-px h-4 bg-gray-300"></div>
+
+                        <div className="hidden sm:block w-px h-4 bg-gray-300"></div>
+
                         <div className="flex items-center space-x-2">
                             <Truck className="w-4 h-4 text-purple-500" />
                             <span>Nationwide Delivery</span>

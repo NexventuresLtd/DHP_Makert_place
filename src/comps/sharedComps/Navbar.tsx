@@ -42,7 +42,7 @@ export default function DigitalHeritagePlatform() {
   const navItems: NavItem[] = [
     { name: "Home", path: "home", icon: <Home className="h-4 w-4" /> },
     { name: "About Us", path: "about", icon: <BookOpen className="h-4 w-4" /> },
-    { name: "DRaas", path: "resources", icon: <GraduationCap className="h-4 w-4" /> },
+    { name: "Heritage Hub", path: "resources", icon: <GraduationCap className="h-4 w-4" /> },
     { name: "Marketplace", path: "market", icon: <ShoppingCart className="h-4 w-4" /> },
     { name: "E-Learning", path: "elearning", icon: <GraduationCap className="h-4 w-4" /> },
     { name: "Get involved", path: "involved", icon: <User className="h-4 w-4" /> },

@@ -81,7 +81,7 @@ const MainContent = ({
                     </aside>
 
                     {/* Main Hero Section - Clean Card Layout */}
-                    <div className="flex-1 flex flex-col lg:flex-row gap-4 md:gap-6 h-[550px] ">
+                    <div className="flex-1 flex flex-col lg:flex-row gap-4 md:gap-6 h-[580px] ">
 
                         {/* Product Showcase - Equal Height Container */}
                         <div className="flex-1 bg-white rounded-xl overflow-hidden border border-gray-200">
