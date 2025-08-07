@@ -56,7 +56,7 @@ const Footer = () => {
               <ul className="space-y-2 sm:space-y-3">
                 {['Galleries', 'Libraries', 'Museums', 'Archives', 'Digital Content'].map((item) => (
                   <li key={item}>
-                    <a href="#" className="text-white/80 hover:text-white transition-colors duration-200 flex items-center group text-sm sm:text-base">
+                    <a href="/resources" className="text-white/80 hover:text-white transition-colors duration-200 flex items-center group text-sm sm:text-base">
                       <ArrowRight size={12} className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 sm:w-3.5 sm:h-3.5" />
                       {item}
                     </a>
@@ -74,7 +74,7 @@ const Footer = () => {
               <ul className="space-y-2 sm:space-y-3">
                 {['Artifacts', 'Clothes', 'Paintings', 'More'].map((item) => (
                   <li key={item}>
-                    <a href="#" className="text-white/80 hover:text-white transition-colors duration-200 flex items-center group text-sm sm:text-base">
+                    <a href="/market" className="text-white/80 hover:text-white transition-colors duration-200 flex items-center group text-sm sm:text-base">
                       <ArrowRight size={12} className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 sm:w-3.5 sm:h-3.5" />
                       {item}
                     </a>
@@ -107,13 +107,13 @@ const Footer = () => {
                 {/* Resources */}
                 <div>
                   <h3 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 relative">
-                    Resources
+                    DRaas
                     <div className="absolute -bottom-2 left-0 w-12 h-0.5 bg-white/30"></div>
                   </h3>
                   <ul className="space-y-2 sm:space-y-3">
                     {['Help Center', 'Blog', 'Tutorials', 'FAQs'].map((item) => (
                       <li key={item}>
-                        <a href="#" className="text-white/80 hover:text-white transition-colors duration-200 flex items-center group text-sm sm:text-base">
+                        <a href="/resources" className="text-white/80 hover:text-white transition-colors duration-200 flex items-center group text-sm sm:text-base">
                           <ArrowRight size={12} className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 sm:w-3.5 sm:h-3.5" />
                           {item}
                         </a>

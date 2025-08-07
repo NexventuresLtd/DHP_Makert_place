@@ -151,7 +151,7 @@ export default function GetInvolvedPage() {
                 {/* Header */}
                 <div className="text-center mb-16">
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                        Get Involved with <span className="text-primary">irage.rw DHP</span>
+                        Get Involved with <span className="text-primary cursor-pointer hover:underline underline-offset-8" onClick={()=>window.location.href="/"}>irage.rw DHP</span>
                     </h1>
                     <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                         Join our community of innovators shaping Rwanda's digital health future.
@@ -197,7 +197,7 @@ export default function GetInvolvedPage() {
                                 <div className="flex space-x-3">
                                     <button
                                         onClick={() => openModal(index)}
-                                        className="flex-1 text-center px-4 py-2.5 text-sm font-medium rounded-lg text-primary hover:bg-primary/10 transition-colors"
+                                        className="flex-1 cursor-pointer text-center px-4 py-2.5 text-sm font-medium rounded-lg text-primary hover:bg-primary/10 transition-colors"
                                     >
                                         Learn More
                                     </button>

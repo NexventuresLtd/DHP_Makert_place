@@ -62,7 +62,7 @@ const Header = ({
                             </button>
                             <div className="flex items-center space-x-3">
                                 <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                                    <img src="logos/logo-circle.png" alt="Digital Heritage" className="w-8 h-8 rounded-full" />
+                                    <img src="logos/logo-circle.png" alt="Digital Heritage" className="scale-150 rounded-full" />
                                 </div>
                                 <div className="hidden lg:block">
                                     <h1 className="text-lg font-semibold text-gray-900">Digital Heritage</h1>
