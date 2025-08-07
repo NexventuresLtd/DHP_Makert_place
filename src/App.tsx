@@ -35,7 +35,7 @@ function App() {
           <Route path="/library" element={<Library />} />
           <Route path="/market" element={<MarketPlace />} />
           <Route path="/market/cart" element={tokenUser && !isAdmin ? <ShoppingCartViewer /> : <MarketPlace />} />
-          <Route path="/dhp/user/profile" element={tokenUser && !isAdmin ? <ProfilePage /> : <HomePage />} />
+          <Route path="/dhp/user/profile" element={tokenUser ? <ProfilePage /> : <HomePage />} />
           <Route path="/about" element={<DHPHeroSection />} />
           <Route path="/login" element={tokenUser && !isAdmin ? <HomePage /> : <DHPLoginPage />} />
           <Route path="/admin/dashboard" element={tokenUser && isAdmin ? <DHPDashboard /> : <AdminLogin />} />
