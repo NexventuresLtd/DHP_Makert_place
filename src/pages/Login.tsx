@@ -145,7 +145,7 @@ export default function DHPLoginPage() {
               )}
             </button>
 
-            <div className="text-center text-sm text-gray-500 pt-4 border-t border-gray-200 mt-4">
+            <div className="text-center text-sm text-gray-500 pt-4 mb-20 border-t border-gray-200 mt-4">
               Don't have an account?{' '}
               <button 
                 className="text-primary font-medium hover:text-primary/80"
