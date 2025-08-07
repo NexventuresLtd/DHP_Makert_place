@@ -19,7 +19,7 @@ import Footer from '../comps/sharedComps/Footer';
 // Online placeholder images (replace with your actual image URLs)
 const cardImages = [
     'https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://images.ctfassets.net/wp1lcwdav1p1/3gcLNpuEYnRSnLYL5L7H8X/b142a45375cb39c19874de921383be6a/GettyImages-1986193967.jpg?w=1500&h=680&q=60&fit=fill&f=faces&fm=jpg&fl=progressive&auto=format%2Ccompress&dpr=1&w=1000', // Creator
-    'https://hermosalifetourism.com/wp-content/uploads/2021/07/RWANDA-MUSEUMS-2-scaled.jpg', // Vendor
+    'https://turkanawildlifesafaris.com/wp-content/uploads/2025/04/kigali-craft-souvenirs.jpg', // Vendor
     'https://www.newtimes.co.rw/thenewtimes/uploads/images/2024/01/27/thumbs/1200x700/39597.jpg', // Teach
     'https://www.vsointernational.org/sites/default/files/styles/600x400/public/2024-03/Rwanda%20Health%20Make%20Way%20youth%20volunteers.jpg?h=40323ee2&itok=CP8uvx0s', // Volunteer
     'https://rwandadispatch.com/wp-content/uploads/2025/01/Kagame_in_Turkey.jpg', // Fellowships
