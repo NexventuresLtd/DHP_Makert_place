@@ -10,18 +10,25 @@ export default function CustomerManagement() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
   const itemsPerPage = 8;
 
-  // Fetch customers from API
+  // Fetch customers from API with pagination and search
   const fetchCustomers = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await mainAxios.get("/users/");
-      console.log(response.data);
+      const response = await mainAxios.get("/users/", {
+        params: {
+          page: currentPage,
+          page_size: itemsPerPage,
+          search: searchTerm
+        }
+      });
       setCustomers(response.data.results || []);
-      setTotalPages(Math.ceil(response.data.length / itemsPerPage));
+      setTotalPages(Math.ceil(response.data.count / itemsPerPage));
+      setTotalCount(response.data.count);
     } catch (err) {
       console.error("Failed to fetch customers:", err);
       setError("Failed to load customers. Please try again later.");
@@ -32,7 +39,8 @@ export default function CustomerManagement() {
 
   useEffect(() => {
     fetchCustomers();
-  }, []);
+  }, [currentPage, searchTerm]);
+
   const handleUserTypeChange = async (userId: number, newUserType: string) => {
     try {
       await mainAxios.post(`/users/${userId}/assign_user_type/`, {
@@ -44,13 +52,12 @@ export default function CustomerManagement() {
       setError("Failed to update user type. Please try again.");
     }
   };
-  // Handle customer deletion
+
   const handleDelete = async (id: number) => {
     if (!window.confirm("Are you sure you want to delete this customer?")) return;
 
     try {
       await mainAxios.delete(`/users/${id}/`);
-      setCustomers(customers?.filter(customer => customer.id !== id));
       fetchCustomers(); // Refresh the list
     } catch (err) {
       console.error("Failed to delete customer:", err);
@@ -58,7 +65,6 @@ export default function CustomerManagement() {
     }
   };
 
-  // Handle customer update
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingCustomer) return;
@@ -72,20 +78,6 @@ export default function CustomerManagement() {
       setError("Failed to update customer. Please try again.");
     }
   };
-
-
-  // Filter customers by search term
-  const filteredCustomers = customers?.filter(customer =>
-    customer.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    `${customer.first_name} ${customer.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  // Pagination logic
-  const paginatedCustomers = filteredCustomers.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -148,8 +140,8 @@ export default function CustomerManagement() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {paginatedCustomers.length > 0 ? (
-                    paginatedCustomers.map((customer) => (
+                  {customers.length > 0 ? (
+                    customers.map((customer) => (
                       <tr key={customer.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
@@ -234,9 +226,9 @@ export default function CustomerManagement() {
                     <p className="text-sm text-gray-700">
                       Showing <span className="font-medium">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
                       <span className="font-medium">
-                        {Math.min(currentPage * itemsPerPage, filteredCustomers.length)}
+                        {Math.min(currentPage * itemsPerPage, totalCount)}
                       </span>{' '}
-                      of <span className="font-medium">{filteredCustomers.length}</span> results
+                      of <span className="font-medium">{totalCount}</span> results
                     </p>
                   </div>
                   <div>
