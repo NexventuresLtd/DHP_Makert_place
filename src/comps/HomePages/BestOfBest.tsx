@@ -98,7 +98,7 @@ const ProductView = () => {
 
                     {/* Products Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {products.map((product) => {
+                        {products?.map((product) => {
                             const primaryImage = product.images.find(img => img.is_primary) || product.images[0];
                             const imageUrl = primaryImage?.image || '/placeholder-product.jpg';
                             const price = parseFloat(product.price) || 0;
