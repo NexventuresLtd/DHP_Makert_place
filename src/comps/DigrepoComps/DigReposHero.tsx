@@ -72,7 +72,6 @@ const DigitalRepository = ({
         "Art Collections",
         "Paintings",
         "Digital Exhibitions",
-        "Virtual Tours",
         "Featured Works",
         "Recent Additions",
       ],
@@ -80,7 +79,7 @@ const DigitalRepository = ({
     {
       name: "Museums",
       icon: Building2,
-      items: ["All Museums"],
+      items: ["All Museums", "Virtual Tours"],
       // items: ['National Museum', 'Cultural Heritage', 'History Museum', 'Science Museum', 'Art Museum', 'Local Museums']
     },
     {
@@ -234,7 +233,8 @@ const DigitalRepository = ({
                 </div>
               ))}
             </div>
-            {(getUserInfo && getUserInfo?.type === "creator" || getUserInfo?.type === "admin") &&
+            {((getUserInfo && getUserInfo?.type === "creator") ||
+              getUserInfo?.type === "admin") &&
               isLoggedIn && (
                 <button
                   onClick={() => {
