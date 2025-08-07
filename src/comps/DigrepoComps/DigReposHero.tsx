@@ -23,7 +23,7 @@ import FeaturedWorksGallery from "./DigRepoFeaturedWorks";
 import RecentAdditionsGallery from "./DigRepoRecentAdditions";
 import ArchiveGallery from "./DigRepoArchive";
 import DigitalContentGallery from "./DigRepoDigitalContent";
-import MyContentPage from "./MyContent";
+
 import { getUserInfo, isLoggedIn } from "../../app/Localstorage";
 
 // Coming Soon Component for unimplemented features
@@ -444,7 +444,7 @@ const DigitalRepository = ({
       )}
 
       {/* My Content Page */}
-      {showMyContent && <MyContentPage />}
+      {showMyContent && <PaintingsGallery />}
       {}
     </div>
   );
