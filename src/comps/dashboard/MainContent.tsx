@@ -6,7 +6,7 @@ import ProductsDashboard from './AdminProduct/manageProduct';
 import CustomerManagement from './AdminCustomer.tsx/CustomerMange';
 import AdminCartsViewer from './AdminOrdersCarts/AllCarts';
 import ProfilePage from '../sharedComps/Profile';
-import UploadArtworkModal from '../DigrepoComps/UploadArtworkModal';
+// import UploadArtworkModal from '../DigrepoComps/UploadArtworkModal';
 import PaintingsGallery from '../DigrepoComps/DigRepoPainting';
 
 interface MainContentProps {
