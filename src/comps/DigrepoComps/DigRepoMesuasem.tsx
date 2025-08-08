@@ -28,7 +28,7 @@ export default function MuseumsGallery() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [museums, setMuseums] = useState<Museum[]>([]);
-  const [museumCategories, setMuseumCategories] = useState<MuseumCategory[]>(
+  const [_, setMuseumCategories] = useState<MuseumCategory[]>(
     []
   );
   const [loading, setLoading] = useState(true);
