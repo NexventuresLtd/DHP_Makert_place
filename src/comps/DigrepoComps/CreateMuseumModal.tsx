@@ -111,7 +111,7 @@ export default function CreateMuseumModal({
       let response;
       if (initialData) {
         // Editing existing museum
-        response = await updateMuseum(initialData.id.toString(), museumData);
+        response = await updateMuseum(initialData.slug.toString(), museumData);
       } else {
         // Creating new museum
         response = await createMuseum(museumData);
