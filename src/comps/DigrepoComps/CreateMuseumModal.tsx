@@ -110,6 +110,7 @@ export default function CreateMuseumModal({
 
       let response;
       if (initialData) {
+        museumData.append("category", initialData.category.toString());
         // Editing existing museum
         response = await updateMuseum(initialData.slug.toString(), museumData);
       } else {
