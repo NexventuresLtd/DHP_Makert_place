@@ -25,6 +25,7 @@ export default function DigitalHeritagePlatform() {
   }, []);
 
   const handleNavigation = (path: string) => {
+     localStorage.removeItem("viewDig")
     localStorage.setItem("ViewPage", path);
     setIsMenuOpen(false);
     setIsUserDropdownOpen(false);
@@ -68,10 +69,10 @@ export default function DigitalHeritagePlatform() {
 
   return (
     <nav className="bg-white/70 backdrop-blur-md sticky top-0 z-50 shadow-sm">
-      <div className="max-w-full md:max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-full xl:max-w-11/12 mx-auto px-4 sm:px-6 xl:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo Section */}
-          <div className="flex items-center space-x-3 cursor-pointer"  onClick={()=>window.location.href = "/"}>
+          <div className="flex items-center space-x-3 cursor-pointer"  onClick={()=>handleNavigation("home")}>
             <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
               <img
                 src="/logos/logo-circle.png"
@@ -79,14 +80,14 @@ export default function DigitalHeritagePlatform() {
                 className="w-full h-full object-cover scale-150 rounded-full"
               />
             </div>
-            <div className="hidden sm:block">
+            <div className="hidden xl:block">
               <h1 className="text-lg font-semibold text-gray-900">Digital Heritage</h1>
               <p className="text-xs text-gray-500">Preservationists Platform</p>
             </div>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-6">
+          <div className="hidden xl:flex items-center space-x-6">
             {navItems.map((item) => (
               <button
                 key={item.path}
@@ -101,7 +102,7 @@ export default function DigitalHeritagePlatform() {
           </div>
 
           {/* Desktop Auth/User Section */}
-          <div className="hidden lg:flex items-center space-x-3">
+          <div className="hidden xl:flex items-center space-x-3">
             {isLoggedIn ? (
               <div className="relative">
                 <button
@@ -140,14 +141,14 @@ export default function DigitalHeritagePlatform() {
             ) : (
               <>
                 <a
-                  href="/login"
+                  onClick={()=>handleNavigation("login")}
                   className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-green-900"
                 >
                   <LogIn className="h-4 w-4" />
                   <span className="font-bold max-2xl:text-sm">Log In</span>
                 </a>
                 <a
-                  href="/register"
+                  onClick={()=>handleNavigation("register")}
                   className="flex items-center space-x-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700"
                 >
                   <UserPlus className="h-4 w-4" />
@@ -160,7 +161,7 @@ export default function DigitalHeritagePlatform() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden p-2 rounded-lg text-gray-700 hover:text-green-900 hover:bg-gray-50"
+            className="xl:hidden p-2 rounded-lg text-gray-700 hover:text-green-900 hover:bg-gray-50"
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
           >
@@ -170,7 +171,7 @@ export default function DigitalHeritagePlatform() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden border-t border-gray-100 bg-white">
+          <div className="xl:hidden border-t border-gray-100 bg-white">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navItems.map((item) => (
                 <button
@@ -195,7 +196,7 @@ export default function DigitalHeritagePlatform() {
                       <span className="font-medium">Profile ({user?.username || "Account"})</span>
                     </button>
                     <button
-                      onClick={() => handleNavigation("/market/cart")}
+                      onClick={() => handleNavigation("market/cart")}
                       className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:text-green-900 hover:bg-gray-50"
                     >
                       <ShoppingCart className="h-4 w-4" />
@@ -212,14 +213,14 @@ export default function DigitalHeritagePlatform() {
                 ) : (
                   <>
                     <a
-                      href="/login"
+                      onClick={()=>handleNavigation("login")}
                       className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:text-green-900 hover:bg-gray-50"
                     >
                       <LogIn className="h-4 w-4" />
                       <span className="font-medium">Log In</span>
                     </a>
                     <a
-                      href="/register"
+                      onClick={()=>handleNavigation("register")}
                       className="flex items-center space-x-2 px-3 py-2 bg-primary text-white rounded-lg hover:bg-blue-700"
                     >
                       <UserPlus className="h-4 w-4" />
