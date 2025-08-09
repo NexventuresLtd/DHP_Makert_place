@@ -90,7 +90,8 @@ export default function PaintingsGallery() {
 
   // Check if user can edit/delete artwork
   const canModifyArtwork = (artwork: Artwork) => {
-    return userInfo?.type === "admin" || artwork.uploaded_by === currentUserId;
+    console.log(userInfo?.type, userInfo);
+    return userInfo?.type === "admin" || artwork.uploaded_by_name === `${userInfo?.first_name} ${userInfo?.last_name}`;
   };
 
   // Get artworks that user can modify from selected ones

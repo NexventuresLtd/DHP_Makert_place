@@ -28,6 +28,8 @@ export default function MuseumContentManager({
   const [editingItem, setEditingItem] = useState<any>(null);
   const [showForm, setShowForm] = useState(false);
 
+  
+
   const tabs = [
     { id: "sections", label: "Sections" },
     { id: "gallery", label: "Gallery" },

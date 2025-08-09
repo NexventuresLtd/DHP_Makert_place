@@ -212,6 +212,7 @@ export default function MuseumsGallery() {
 
   // Handle content update from content manager
   const handleContentUpdate = (updatedMuseum: MuseumWithContent) => {
+    if (!isAdmin) return;
     setManagingContent(updatedMuseum);
     // Also update the selected museum if it's the same one
     if (selectedMuseum && selectedMuseum.id === updatedMuseum.id) {
@@ -226,7 +227,7 @@ export default function MuseumsGallery() {
   };
 
   // Check if user is admin
-  const isAdmin = true;
+  const isAdmin = userInfo?.type === "admin";
 
   if (loading) {
     return (
