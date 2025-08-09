@@ -40,7 +40,7 @@ export default function MuseumsGallery() {
   const [error, setError] = useState<string | null>(null);
   const [editingMuseum, setEditingMuseum] = useState<Museum | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [loadingMuseumDetail, setLoadingMuseumDetail] = useState(false);
+  const [, setLoadingMuseumDetail] = useState(false);
   const [managingContent, setManagingContent] =
     useState<MuseumWithContent | null>(null);
 

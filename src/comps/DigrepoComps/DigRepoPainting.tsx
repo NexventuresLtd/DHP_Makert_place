@@ -29,7 +29,7 @@ export default function PaintingsGallery() {
 
   // Get user info
   const userInfo = getUserInfo;
-  const currentUserId = userInfo?.id;
+  // const currentUserId = userInfo?.id;
 
   // Fetch categories
   const { data: categories, loading: categoriesLoading } = useApi(() =>
