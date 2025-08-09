@@ -1,8 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import {
   Search,
-  Download,
-  Share2,
   Edit,
   Trash2,
   Home,
@@ -13,6 +11,8 @@ import { apiService } from "../../services/api";
 import { useApi } from "../../hooks/useApi";
 import type { Artwork } from "../../types";
 import UploadArtworkModal from "./UploadArtworkModal";
+import EditArtworkModal from "./EditArtworkModal";
+import ArtworkDetailModal from "./ArtworkDetailModal";
 import { getUserInfo } from "../../app/Localstorage";
 
 export default function PaintingsGallery() {
@@ -21,6 +21,15 @@ export default function PaintingsGallery() {
   const [selectedPaintings, setSelectedPaintings] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingArtwork, setEditingArtwork] = useState<Artwork | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [detailArtwork, setDetailArtwork] = useState<Artwork | null>(null);
+
+  // Get user info
+  const userInfo = getUserInfo;
+  const currentUserId = userInfo?.id;
 
   // Fetch categories
   const { data: categories, loading: categoriesLoading } = useApi(() =>
@@ -79,9 +88,88 @@ export default function PaintingsGallery() {
     );
   };
 
+  // Check if user can edit/delete artwork
+  const canModifyArtwork = (artwork: Artwork) => {
+    return userInfo?.type === "admin" || artwork.uploaded_by === currentUserId;
+  };
+
+  // Get artworks that user can modify from selected ones
+  const getModifiableSelectedArtworks = () => {
+    return artworks.filter(
+      (artwork) =>
+        selectedPaintings.includes(artwork.id) && canModifyArtwork(artwork)
+    );
+  };
+
+  const handleBulkEdit = () => {
+    const modifiableArtworks = getModifiableSelectedArtworks();
+
+    if (modifiableArtworks.length === 0) {
+      alert("You don't have permission to edit any of the selected artworks.");
+      return;
+    }
+
+    if (modifiableArtworks.length > 1) {
+      alert("Please select only one artwork to edit at a time.");
+      return;
+    }
+
+    setEditingArtwork(modifiableArtworks[0]);
+    setIsEditModalOpen(true);
+  };
+
+  const handleBulkDelete = async () => {
+    const modifiableArtworks = getModifiableSelectedArtworks();
+
+    if (modifiableArtworks.length === 0) {
+      alert(
+        "You don't have permission to delete any of the selected artworks."
+      );
+      return;
+    }
+
+    const artworkTitles = modifiableArtworks.map((a) => a.title).join(", ");
+    const confirmMessage =
+      modifiableArtworks.length === 1
+        ? `Are you sure you want to delete "${artworkTitles}"? This action cannot be undone.`
+        : `Are you sure you want to delete ${modifiableArtworks.length} artworks (${artworkTitles})? This action cannot be undone.`;
+
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const slugs = modifiableArtworks.map((artwork) => artwork.slug);
+      await apiService.bulkDeleteArtworks(slugs);
+
+      // Remove deleted artworks from state
+      setArtworks((prev) =>
+        prev.filter((artwork) => !slugs.includes(artwork.slug))
+      );
+      setSelectedPaintings([]);
+
+      alert(`Successfully deleted ${modifiableArtworks.length} artwork(s).`);
+    } catch (error: any) {
+      console.error("Bulk delete failed:", error);
+      alert(error.message || "Failed to delete artworks. Please try again.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const handleBulkAction = (action: string) => {
-    console.log(`${action} paintings:`, selectedPaintings);
-    setSelectedPaintings([]);
+    switch (action) {
+      case "edit":
+        handleBulkEdit();
+        break;
+      case "delete":
+        handleBulkDelete();
+        break;
+      default:
+        console.log(`${action} paintings:`, selectedPaintings);
+        setSelectedPaintings([]);
+    }
   };
 
   const loadMore = () => {
@@ -95,6 +183,41 @@ export default function PaintingsGallery() {
     setCurrentPage(1);
     setArtworks([]);
     // This will trigger the useEffect to fetch fresh data
+  };
+
+  const handleEditSuccess = (updatedArtwork: Artwork) => {
+    // Update the artwork in the current state
+    setArtworks((prev) =>
+      prev.map((artwork) =>
+        artwork.id === updatedArtwork.id ? updatedArtwork : artwork
+      )
+    );
+    setSelectedPaintings([]);
+    setEditingArtwork(null);
+  };
+
+  const handleEditModalClose = () => {
+    setIsEditModalOpen(false);
+    setEditingArtwork(null);
+  };
+
+  const handleArtworkClick = (artwork: Artwork) => {
+    setDetailArtwork(artwork);
+    setIsDetailModalOpen(true);
+  };
+
+  const handleDetailModalClose = () => {
+    setIsDetailModalOpen(false);
+    setDetailArtwork(null);
+  };
+
+  const handleViewIncrement = (updatedArtwork: Artwork) => {
+    // Update the view count in the artworks list
+    setArtworks((prev) =>
+      prev.map((artwork) =>
+        artwork.id === updatedArtwork.id ? updatedArtwork : artwork
+      )
+    );
   };
 
   if (categoriesLoading) {
@@ -161,26 +284,50 @@ export default function PaintingsGallery() {
           {/* Action Bar */}
           {selectedPaintings.length > 0 && (
             <div className="flex items-center justify-between py-3 px-4 bg-blue-50 border border-blue-200 rounded-lg mb-4">
-              <span className="text-sm font-medium text-blue-900">
-                {selectedPaintings.length} item
-                {selectedPaintings.length > 1 ? "s" : ""} selected
-              </span>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-blue-900">
+                  {selectedPaintings.length} item
+                  {selectedPaintings.length > 1 ? "s" : ""} selected
+                </span>
+                {(() => {
+                  const modifiableCount =
+                    getModifiableSelectedArtworks().length;
+                  const totalSelected = selectedPaintings.length;
+                  if (modifiableCount < totalSelected && modifiableCount > 0) {
+                    return (
+                      <span className="text-xs text-blue-700">
+                        {modifiableCount} can be modified
+                      </span>
+                    );
+                  }
+                  return null;
+                })()}
+              </div>
               <div className="flex items-center gap-2">
-                <button
-                  onClick={() => handleBulkAction("delete")}
-                  className="flex items-center gap-1 px-3 py-1 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  Delete
-                </button>
-                <button
-                  onClick={() => handleBulkAction("edit")}
-                  className="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 hover:text-gray-700 hover:bg-gray-100 rounded"
-                >
-                  <Edit className="w-4 h-4" />
-                  Edit
-                </button>
-                <button
+                {getModifiableSelectedArtworks().length > 0 && (
+                  <>
+                    <button
+                      onClick={() => handleBulkAction("delete")}
+                      disabled={isDeleting}
+                      className="flex items-center gap-1 px-3 py-1 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isDeleting ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
+                      {isDeleting ? "Deleting..." : "Delete"}
+                    </button>
+                    <button
+                      onClick={() => handleBulkAction("edit")}
+                      className="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 hover:text-gray-700 hover:bg-gray-100 rounded"
+                    >
+                      <Edit className="w-4 h-4" />
+                      Edit
+                    </button>
+                  </>
+                )}
+                {/* <button
                   onClick={() => handleBulkAction("download")}
                   className="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 hover:text-gray-700 hover:bg-gray-100 rounded"
                 >
@@ -193,7 +340,7 @@ export default function PaintingsGallery() {
                 >
                   <Share2 className="w-4 h-4" />
                   Share
-                </button>
+                </button> */}
               </div>
             </div>
           )}
@@ -278,6 +425,7 @@ export default function PaintingsGallery() {
                     <div
                       key={artwork.id}
                       className="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+                      onClick={() => handleArtworkClick(artwork)}
                     >
                       <div className="relative">
                         <img
@@ -293,21 +441,24 @@ export default function PaintingsGallery() {
 
                         {/* Selection Overlay */}
                         <div className="absolute inset-0 bg-black/20 bg-opacity-0 group-hover:bg-opacity-20 transition-all">
-                          <div className="absolute top-3 left-3">
-                            <input
-                              type="checkbox"
-                              checked={selectedPaintings.includes(artwork.id)}
-                              onChange={() =>
-                                togglePaintingSelection(artwork.id)
-                              }
-                              className="w-5 h-5 rounded border-2 border-white text-orange-500 focus:ring-orange-500 focus:ring-offset-0"
-                              onClick={(e) => e.stopPropagation()}
-                            />
-                          </div>
+                          {/* Only show checkbox if user can modify this artwork */}
+                          {canModifyArtwork(artwork) && (
+                            <div className="absolute top-3 left-3">
+                              <input
+                                type="checkbox"
+                                checked={selectedPaintings.includes(artwork.id)}
+                                onChange={() =>
+                                  togglePaintingSelection(artwork.id)
+                                }
+                                className="w-5 h-5 rounded border-2 border-white text-orange-500 focus:ring-orange-500 focus:ring-offset-0"
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </div>
+                          )}
 
                           {/* Category Badge */}
                           <div className="absolute top-3 right-3">
-                            <span className="bg-white bg-opacity-90 text-gray-700 px-2 py-1 rounded-full text-xs font-medium">
+                            <span className="bg-white/90 text-gray-700 px-2 py-1 rounded-full text-xs font-medium">
                               {artwork.category_name}
                             </span>
                           </div>
@@ -394,6 +545,26 @@ export default function PaintingsGallery() {
         onClose={() => setIsUploadModalOpen(false)}
         onSuccess={handleUploadSuccess}
       />
+
+      {/* Edit Modal */}
+      {editingArtwork && (
+        <EditArtworkModal
+          isOpen={isEditModalOpen}
+          onClose={handleEditModalClose}
+          onSuccess={handleEditSuccess}
+          artwork={editingArtwork}
+        />
+      )}
+
+      {/* Artwork Detail Modal */}
+      {detailArtwork && (
+        <ArtworkDetailModal
+          isOpen={isDetailModalOpen}
+          onClose={handleDetailModalClose}
+          artwork={detailArtwork}
+          onViewIncrement={handleViewIncrement}
+        />
+      )}
     </div>
   );
 }

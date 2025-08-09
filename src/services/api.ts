@@ -88,6 +88,12 @@ class ApiService {
     return this.request<Artwork>(`/artworks/${slug}/`);
   }
 
+  async incrementArtworkView(slug: string): Promise<void> {
+    await this.request(`/artworks/${slug}/view/`, {
+      method: 'POST',
+    });
+  }
+
   async getFeaturedArtworks(): Promise<Artwork[]> {
     return this.request<Artwork[]>('/artworks/featured/');
   }
@@ -133,6 +139,81 @@ class ApiService {
       console.error('API request failed:', error);
       throw error;
     }
+  }
+
+  async updateArtwork(slug: string, formData: FormData): Promise<Artwork> {
+    const url = `${API_BASE_URL}/artworks/${slug}/`;
+    
+    // Get auth token from localStorage
+    const token = localStorage.getItem('authToken');
+    const headers: HeadersInit = {};
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    const config: RequestInit = {
+      method: 'PATCH', // Use PATCH instead of PUT for partial updates
+      headers,
+      body: formData,
+    };
+
+    try {
+      const response = await fetch(url, config);
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('You must be logged in to update artworks');
+        } else if (response.status === 403) {
+          throw new Error('You do not have permission to update this artwork');
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('API request failed:', error);
+      throw error;
+    }
+  }
+
+  async deleteArtwork(slug: string): Promise<void> {
+    const url = `${API_BASE_URL}/artworks/${slug}/`;
+    
+    // Get auth token from localStorage
+    const token = localStorage.getItem('authToken');
+    const headers: HeadersInit = {};
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    const config: RequestInit = {
+      method: 'DELETE',
+      headers,
+    };
+
+    try {
+      const response = await fetch(url, config);
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('You must be logged in to delete artworks');
+        } else if (response.status === 403) {
+          throw new Error('You do not have permission to delete this artwork');
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('API request failed:', error);
+      throw error;
+    }
+  }
+
+  async bulkDeleteArtworks(slugs: string[]): Promise<void> {
+    // For bulk delete, we'll delete each artwork individually
+    const deletePromises = slugs.map(slug => this.deleteArtwork(slug));
+    await Promise.all(deletePromises);
   }
 
   async searchArtworks(params: {

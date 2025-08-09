@@ -8,9 +8,19 @@ const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': localStorage.getItem('authToken') ? `Bearer ${localStorage.getItem('authToken')}` : '',
   },
   timeout: 10000,
+});
+
+// Add request interceptor to include fresh auth token
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
 });
 
 // Types based on the Django models
@@ -124,6 +134,101 @@ export interface MuseumCollection {
   updated_at: string;
 }
 
+// New interfaces for museum content
+export interface MuseumSection {
+  id: number;
+  museum: number;
+  section_type: string;
+  title: string;
+  content: string[];
+  subsections: any[];
+  order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MuseumGalleryItem {
+  id: number;
+  museum: number;
+  title: string;
+  description: string;
+  image: string;
+  image_url: string;
+  order: number;
+  is_featured: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MuseumArtifact {
+  id: number;
+  museum: number;
+  name: string;
+  description: string;
+  category: string;
+  category_display: string;
+  historical_period: string;
+  origin: string;
+  materials: string;
+  dimensions: string;
+  image: string;
+  image_url: string;
+  is_on_display: boolean;
+  acquisition_date: string;
+  acquisition_method: string;
+  order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MuseumVirtualExhibition {
+  id: number;
+  museum: number;
+  title: string;
+  description: string;
+  exhibition_type: string;
+  exhibition_type_display: string;
+  url: string;
+  thumbnail_image: string;
+  thumbnail_url: string;
+  duration: string;
+  is_featured: boolean;
+  is_active: boolean;
+  requires_registration: boolean;
+  access_instructions: string;
+  technical_requirements: string;
+  order: number;
+  view_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MuseumInfo {
+  id: number;
+  museum: number;
+  hours: string;
+  contact: string;
+  admission: string;
+  facilities: string[];
+  directions: string;
+  parking_info: string;
+  accessibility_info: string;
+  group_booking_info: string;
+  special_programs: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+// Enhanced Museum interface with all content
+export interface MuseumWithContent extends Museum {
+  sections: MuseumSection[];
+  gallery_items: MuseumGalleryItem[];
+  artifacts: MuseumArtifact[];
+  virtual_exhibitions: MuseumVirtualExhibition[];
+  additional_info: MuseumInfo;
+}
+
 // API Response types
 export interface ApiResponse<T> {
   count: number;
@@ -159,8 +264,8 @@ class MuseumService {
     return response.data;
   }
 
-  async getMuseum(slug: string): Promise<Museum> {
-    const response = await apiClient.get<Museum>(`/museums/${slug}/`);
+  async getMuseum(slug: string): Promise<MuseumWithContent> {
+    const response = await apiClient.get<MuseumWithContent>(`/museums/${slug}/`);
     return response.data;
   }
 
@@ -279,6 +384,125 @@ class MuseumService {
     const response = await apiClient.get<MuseumCollection>(`/museums/collections/${slug}/`);
     return response.data;
   }
+
+  // Museum Content Management Methods
+  async getMuseumSections(museumSlug: string): Promise<MuseumSection[]> {
+    const response = await apiClient.get<MuseumSection[]>(`/museums/sections/?museum=${museumSlug}`);
+    return response.data;
+  }
+
+  async createMuseumSection(sectionData: Partial<MuseumSection>): Promise<MuseumSection> {
+    const response = await apiClient.post<MuseumSection>('/museums/sections/', sectionData);
+    return response.data;
+  }
+
+  async updateMuseumSection(id: number, sectionData: Partial<MuseumSection>): Promise<MuseumSection> {
+    const response = await apiClient.put<MuseumSection>(`/museums/sections/${id}/`, sectionData);
+    return response.data;
+  }
+
+  async deleteMuseumSection(id: number): Promise<void> {
+    await apiClient.delete(`/museums/sections/${id}/`);
+  }
+
+  async getMuseumGallery(museumSlug: string): Promise<MuseumGalleryItem[]> {
+    const response = await apiClient.get<MuseumGalleryItem[]>(`/museums/gallery/?museum=${museumSlug}`);
+    return response.data;
+  }
+
+  async createGalleryItem(galleryData: FormData | Partial<MuseumGalleryItem>): Promise<MuseumGalleryItem> {
+    const config = galleryData instanceof FormData ? 
+      { headers: { 'Content-Type': 'multipart/form-data' } } : 
+      {};
+    const response = await apiClient.post<MuseumGalleryItem>('/museums/gallery/', galleryData, config);
+    return response.data;
+  }
+
+  async updateGalleryItem(id: number, galleryData: FormData | Partial<MuseumGalleryItem>): Promise<MuseumGalleryItem> {
+    const config = galleryData instanceof FormData ? 
+      { headers: { 'Content-Type': 'multipart/form-data' } } : 
+      {};
+    const response = await apiClient.put<MuseumGalleryItem>(`/museums/gallery/${id}/`, galleryData, config);
+    return response.data;
+  }
+
+  async deleteGalleryItem(id: number): Promise<void> {
+    await apiClient.delete(`/museums/gallery/${id}/`);
+  }
+
+  async getMuseumArtifacts(museumSlug: string): Promise<MuseumArtifact[]> {
+    const response = await apiClient.get<MuseumArtifact[]>(`/museums/artifacts/?museum=${museumSlug}`);
+    return response.data;
+  }
+
+  async createArtifact(artifactData: FormData | Partial<MuseumArtifact>): Promise<MuseumArtifact> {
+    const config = artifactData instanceof FormData ? 
+      { headers: { 'Content-Type': 'multipart/form-data' } } : 
+      {};
+    const response = await apiClient.post<MuseumArtifact>('/museums/artifacts/', artifactData, config);
+    return response.data;
+  }
+
+  async updateArtifact(id: number, artifactData: FormData | Partial<MuseumArtifact>): Promise<MuseumArtifact> {
+    const config = artifactData instanceof FormData ? 
+      { headers: { 'Content-Type': 'multipart/form-data' } } : 
+      {};
+    const response = await apiClient.put<MuseumArtifact>(`/museums/artifacts/${id}/`, artifactData, config);
+    return response.data;
+  }
+
+  async deleteArtifact(id: number): Promise<void> {
+    await apiClient.delete(`/museums/artifacts/${id}/`);
+  }
+
+  async getMuseumVirtualExhibitions(museumSlug: string): Promise<MuseumVirtualExhibition[]> {
+    const response = await apiClient.get<MuseumVirtualExhibition[]>(`/museums/virtual-exhibitions/?museum=${museumSlug}`);
+    return response.data;
+  }
+
+  async createVirtualExhibition(exhibitionData: FormData | Partial<MuseumVirtualExhibition>): Promise<MuseumVirtualExhibition> {
+    const config = exhibitionData instanceof FormData ? 
+      { headers: { 'Content-Type': 'multipart/form-data' } } : 
+      {};
+    const response = await apiClient.post<MuseumVirtualExhibition>('/museums/virtual-exhibitions/', exhibitionData, config);
+    return response.data;
+  }
+
+  async updateVirtualExhibition(id: number, exhibitionData: FormData | Partial<MuseumVirtualExhibition>): Promise<MuseumVirtualExhibition> {
+    const config = exhibitionData instanceof FormData ? 
+      { headers: { 'Content-Type': 'multipart/form-data' } } : 
+      {};
+    const response = await apiClient.put<MuseumVirtualExhibition>(`/museums/virtual-exhibitions/${id}/`, exhibitionData, config);
+    return response.data;
+  }
+
+  async deleteVirtualExhibition(id: number): Promise<void> {
+    await apiClient.delete(`/museums/virtual-exhibitions/${id}/`);
+  }
+
+  async accessVirtualExhibition(id: number): Promise<{ status: string; url: string }> {
+    const response = await apiClient.post(`/museums/virtual-exhibitions/${id}/access/`);
+    return response.data;
+  }
+
+  async getMuseumInfo(museumSlug: string): Promise<MuseumInfo | null> {
+    try {
+      const response = await apiClient.get<MuseumInfo>(`/museums/info/?museum=${museumSlug}`);
+      return response.data;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async createMuseumInfo(infoData: Partial<MuseumInfo>): Promise<MuseumInfo> {
+    const response = await apiClient.post<MuseumInfo>('/museums/info/', infoData);
+    return response.data;
+  }
+
+  async updateMuseumInfo(id: number, infoData: Partial<MuseumInfo>): Promise<MuseumInfo> {
+    const response = await apiClient.put<MuseumInfo>(`/museums/info/${id}/`, infoData);
+    return response.data;
+  }
 }
 
 // Create and export a singleton instance
@@ -308,4 +532,24 @@ export const {
   markReviewHelpful,
   getCollections,
   getCollection,
+  getMuseumSections,
+  createMuseumSection,
+  updateMuseumSection,
+  deleteMuseumSection,
+  getMuseumGallery,
+  createGalleryItem,
+  updateGalleryItem,
+  deleteGalleryItem,
+  getMuseumArtifacts,
+  createArtifact,
+  updateArtifact,
+  deleteArtifact,
+  getMuseumVirtualExhibitions,
+  createVirtualExhibition,
+  updateVirtualExhibition,
+  deleteVirtualExhibition,
+  accessVirtualExhibition,
+  getMuseumInfo,
+  createMuseumInfo,
+  updateMuseumInfo,
 } = museumService;

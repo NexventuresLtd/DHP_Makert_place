@@ -770,7 +770,7 @@ const MyContentPage = () => {
               </button>
               <button
                 onClick={() => handleUploadTypeSelect("museum")}
-                className="p-4 border border-gray-300 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors group"
+                className="p-4 border border-gray-300 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors group col-span-2"
               >
                 <Building2 className="w-8 h-8 text-purple-500 mx-auto mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-sm font-medium">Museum</span>
@@ -778,7 +778,7 @@ const MyContentPage = () => {
                   Museum profiles, exhibitions
                 </p>
               </button>
-              <button
+              {/* <button
                 onClick={() => handleUploadTypeSelect("collection")}
                 className="p-4 border border-gray-300 rounded-lg hover:bg-orange-50 hover:border-orange-300 transition-colors group"
               >
@@ -787,7 +787,7 @@ const MyContentPage = () => {
                 <p className="text-xs text-gray-500 mt-1">
                   Curated content collections
                 </p>
-              </button>
+              </button> */}
             </div>
             <div className="flex gap-3">
               <button

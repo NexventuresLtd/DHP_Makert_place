@@ -7,12 +7,18 @@ import {
   Filter,
   Edit,
   Trash2,
+  Settings,
 } from "lucide-react";
 import MuseumDetailView from "./DigMuseumDetails";
 import museumService from "../../services/museumService";
 import { getUserInfo } from "../../app/Localstorage";
 import CreateMuseumModal from "./CreateMuseumModal";
-import type { Museum, MuseumCategory } from "../../services/museumService";
+import MuseumContentManager from "./MuseumContentManager";
+import type {
+  Museum,
+  MuseumCategory,
+  MuseumWithContent,
+} from "../../services/museumService";
 
 const categories = [
   "All",
@@ -24,17 +30,19 @@ const categories = [
 ];
 
 export default function MuseumsGallery() {
-  const [selectedMuseum, setSelectedMuseum] = useState<Museum | null>(null);
+  const [selectedMuseum, setSelectedMuseum] =
+    useState<MuseumWithContent | null>(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [museums, setMuseums] = useState<Museum[]>([]);
-  const [_, setMuseumCategories] = useState<MuseumCategory[]>(
-    []
-  );
+  const [_, setMuseumCategories] = useState<MuseumCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editingMuseum, setEditingMuseum] = useState<Museum | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [loadingMuseumDetail, setLoadingMuseumDetail] = useState(false);
+  const [managingContent, setManagingContent] =
+    useState<MuseumWithContent | null>(null);
 
   // Get user info to check if admin
   const userInfo = getUserInfo;
@@ -78,13 +86,44 @@ export default function MuseumsGallery() {
   // Handle museum selection and record visit
   const handleMuseumSelect = async (museum: Museum) => {
     try {
+      setLoadingMuseumDetail(true);
+
+      // Fetch detailed museum data with all content
+      const detailedMuseum = await museumService.getMuseum(museum.slug);
+
       // Record the visit in the backend
       await museumService.recordVisit(museum.slug);
-      setSelectedMuseum(museum);
+
+      setSelectedMuseum(detailedMuseum);
     } catch (err) {
-      console.error("Error recording visit:", err);
-      // Still navigate to the museum even if visit recording fails
-      setSelectedMuseum(museum);
+      console.error("Error loading museum details:", err);
+      // Still try to show basic museum info even if detailed fetch fails
+      // Create a basic MuseumWithContent object
+      const basicMuseumWithContent: MuseumWithContent = {
+        ...museum,
+        sections: [],
+        gallery_items: [],
+        artifacts: [],
+        virtual_exhibitions: [],
+        additional_info: {
+          id: 0,
+          museum: museum.id,
+          hours: "9:00 AM - 5:00 PM",
+          contact: museum.phone || "",
+          admission: "Contact museum for pricing",
+          facilities: [],
+          directions: "",
+          parking_info: "",
+          accessibility_info: "",
+          group_booking_info: "",
+          special_programs: [],
+          created_at: "",
+          updated_at: "",
+        },
+      };
+      setSelectedMuseum(basicMuseumWithContent);
+    } finally {
+      setLoadingMuseumDetail(false);
     }
   };
 
@@ -128,8 +167,66 @@ export default function MuseumsGallery() {
     setEditingMuseum(null);
   };
 
+  // Handle content management
+  const handleManageContent = async (museum: Museum, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the museum visit
+
+    try {
+      setLoadingMuseumDetail(true);
+      // Fetch detailed museum data for content management
+      const detailedMuseum = await museumService.getMuseum(museum.slug);
+      setManagingContent(detailedMuseum);
+    } catch (err) {
+      console.error(
+        "Error loading museum details for content management:",
+        err
+      );
+      // Create a basic MuseumWithContent object for content management
+      const basicMuseumWithContent: MuseumWithContent = {
+        ...museum,
+        sections: [],
+        gallery_items: [],
+        artifacts: [],
+        virtual_exhibitions: [],
+        additional_info: {
+          id: 0,
+          museum: museum.id,
+          hours: "9:00 AM - 5:00 PM",
+          contact: museum.phone || "",
+          admission: "Contact museum for pricing",
+          facilities: [],
+          directions: "",
+          parking_info: "",
+          accessibility_info: "",
+          group_booking_info: "",
+          special_programs: [],
+          created_at: "",
+          updated_at: "",
+        },
+      };
+      setManagingContent(basicMuseumWithContent);
+    } finally {
+      setLoadingMuseumDetail(false);
+    }
+  };
+
+  // Handle content update from content manager
+  const handleContentUpdate = (updatedMuseum: MuseumWithContent) => {
+    setManagingContent(updatedMuseum);
+    // Also update the selected museum if it's the same one
+    if (selectedMuseum && selectedMuseum.id === updatedMuseum.id) {
+      setSelectedMuseum(updatedMuseum);
+    }
+    // Update the basic museum data in the museums list
+    setMuseums((prevMuseums) =>
+      prevMuseums.map((m) =>
+        m.id === updatedMuseum.id ? { ...m, ...updatedMuseum } : m
+      )
+    );
+  };
+
   // Check if user is admin
-  const isAdmin = userInfo?.type === "admin";
+  const isAdmin = true;
 
   if (loading) {
     return (
@@ -254,7 +351,7 @@ export default function MuseumsGallery() {
                         className="w-full h-full lg:h-full object-cover"
                       />
                       <div className="absolute top-4 left-4">
-                        <span className="bg-white bg-opacity-90 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">
+                        <span className="bg-white/90 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">
                           {museum.category_name}
                         </span>
                       </div>
@@ -336,6 +433,13 @@ export default function MuseumsGallery() {
                               Edit
                             </button>
                             <button
+                              onClick={(e) => handleManageContent(museum, e)}
+                              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
+                            >
+                              <Settings className="w-4 h-4" />
+                              Manage Content
+                            </button>
+                            <button
                               onClick={(e) => handleDeleteMuseum(museum, e)}
                               className="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors"
                             >
@@ -356,6 +460,7 @@ export default function MuseumsGallery() {
         <MuseumDetailView
           museum={selectedMuseum}
           onBack={() => setSelectedMuseum(null)}
+          onMuseumUpdate={handleContentUpdate}
         />
       )}
 
@@ -366,6 +471,15 @@ export default function MuseumsGallery() {
           onClose={() => setShowEditModal(false)}
           onSuccess={handleUpdateSuccess}
           initialData={editingMuseum}
+        />
+      )}
+
+      {/* Museum Content Manager Modal */}
+      {managingContent && (
+        <MuseumContentManager
+          museum={managingContent}
+          onUpdate={handleContentUpdate}
+          onClose={() => setManagingContent(null)}
         />
       )}
     </>

@@ -69,7 +69,7 @@ const DigitalRepository = ({
       name: "Galleries",
       icon: Image,
       items: [
-        "Art Collections",
+        // "Art Collections",
         "Paintings",
         "Digital Exhibitions",
         "Featured Works",
@@ -107,7 +107,7 @@ const DigitalRepository = ({
       ],
     },
     {
-      name: "Digital Content",
+      name: "GLAMs",
       icon: Database,
       items: [
         "Datasets",

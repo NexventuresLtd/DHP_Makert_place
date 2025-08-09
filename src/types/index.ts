@@ -35,6 +35,7 @@ export interface Category {
     location?: string;
     tags_list: string[];
     cultural_significance?: string;
+    uploaded_by: number;
     uploaded_by_name: string;
     created_at: string;
     is_featured: boolean;
