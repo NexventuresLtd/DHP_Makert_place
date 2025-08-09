@@ -74,12 +74,9 @@ const MarketPlace = () => {
             const response = await mainAxios.get<Product[]>('/market/products/', {
                 params: {
                     is_featured: true,
-                },
-                headers: {
-                    Accept: 'application/json',
-                },
+                }
             });
-
+            console.log("sdsdsd",)
             setFeaturedProducts(response.data || []);
         } catch (error) {
             console.error('Error fetching featured products:', error);
