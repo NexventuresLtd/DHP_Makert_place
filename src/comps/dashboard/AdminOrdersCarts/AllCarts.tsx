@@ -97,7 +97,8 @@ const AdminCartsViewer: React.FC = () => {
     };
 
     const getUserDisplayName = (cart: AdminCart) => {
-        if (!cart.user) return 'Unknown User';
+        console.log(cart)
+        if (!cart.user) return 'Irage Cart';
         const { first_name, last_name, username } = cart.user;
         if (first_name && last_name) {
             return `${first_name} ${last_name}`;
@@ -394,7 +395,7 @@ const AdminCartsViewer: React.FC = () => {
 
                                             {cart.items.length > 0 && (
                                                 <div className="flex items-center space-x-2 mb-3">
-                                                    <p className="text-sm text-gray-600">Recent items:</p>
+                                                    <p className="text-sm text-gray-600">Recent items:{" "}</p>
                                                     <div className="flex space-x-2">
                                                         {cart.items.slice(0, 3).map((item) => (
                                                             <div key={item.id} className="flex items-center space-x-1">
