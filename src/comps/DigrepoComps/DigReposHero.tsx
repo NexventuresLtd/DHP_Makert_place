@@ -16,11 +16,6 @@ import {
 import PaintingsGallery from "./DigRepoPainting";
 import MuseumsGallery from "./DigRepoMesuasem";
 import LibraryGallery from "./DigRepoLibrary";
-import ArtCollectionsGallery from "./DigRepoArtCollections";
-import DigitalExhibitionsGallery from "./DigRepoDigitalExhibitions";
-import VirtualToursGallery from "./DigRepoVirtualTours";
-import FeaturedWorksGallery from "./DigRepoFeaturedWorks";
-import RecentAdditionsGallery from "./DigRepoRecentAdditions";
 import ArchiveGallery from "./DigRepoArchive";
 import DigitalContentGallery from "./DigRepoDigitalContent";
 
@@ -66,48 +61,52 @@ const DigitalRepository = ({
 
   const navigationItems = [
     {
-      name: "Galleries",
+      name: "GLAMs",
       icon: Image,
       items: [
         // "Art Collections",
-        "Paintings",
-        "Digital Exhibitions",
-        "Featured Works",
-        "Recent Additions",
+        // "Paintings",
+        // "Digital Exhibitions",
+        // "Featured Works",
+        // "Recent Additions",
+        "Galleries",
+        "Museums",
+        "Libraries",
+        "Archives",
       ],
     },
+    // {
+    //   name: "Museums",
+    //   icon: Building2,
+    //   items: ["All Museums", "Virtual Tours"],
+    //   // items: ['National Museum', 'Cultural Heritage', 'History Museum', 'Science Museum', 'Art Museum', 'Local Museums']
+    // },
+    // {
+    //   name: "Libraries",
+    //   icon: BookOpen,
+    //   items: [
+    //     "Digital Books",
+    //     "Research Papers",
+    //     "Manuscripts",
+    //     "Journals",
+    //     "Special Collections",
+    //     "Open Access",
+    //   ],
+    // },
+    // {
+    //   name: "Archives",
+    //   icon: Archive,
+    //   items: [
+    //     "Historical Documents",
+    //     "Government Records",
+    //     "Personal Papers",
+    //     "Institutional Archives",
+    //     "Media Archives",
+    //     "Digital Preservation",
+    //   ],
+    // },
     {
-      name: "Museums",
-      icon: Building2,
-      items: ["All Museums", "Virtual Tours"],
-      // items: ['National Museum', 'Cultural Heritage', 'History Museum', 'Science Museum', 'Art Museum', 'Local Museums']
-    },
-    {
-      name: "Libraries",
-      icon: BookOpen,
-      items: [
-        "Digital Books",
-        "Research Papers",
-        "Manuscripts",
-        "Journals",
-        "Special Collections",
-        "Open Access",
-      ],
-    },
-    {
-      name: "Archives",
-      icon: Archive,
-      items: [
-        "Historical Documents",
-        "Government Records",
-        "Personal Papers",
-        "Institutional Archives",
-        "Media Archives",
-        "Digital Preservation",
-      ],
-    },
-    {
-      name: "GLAMs",
+      name: "Digital Content",
       icon: Database,
       items: [
         "Datasets",
@@ -410,29 +409,11 @@ const DigitalRepository = ({
         </>
       )}
       {/** Change the Viepages Here */}
-      {viewDig == "Paintings" && <PaintingsGallery />}
-      {viewDig == "All Museums" && <MuseumsGallery />}
-      {viewDig == "Art Collections" && <ArtCollectionsGallery />}
-      {viewDig == "Digital Exhibitions" && <DigitalExhibitionsGallery />}
-      {viewDig == "Virtual Tours" && <VirtualToursGallery />}
-      {viewDig == "Featured Works" && <FeaturedWorksGallery />}
-      {viewDig == "Recent Additions" && <RecentAdditionsGallery />}
-      {(viewDig == "Digital Books" ||
-        viewDig == "Research Papers" ||
-        viewDig == "Manuscripts" ||
-        viewDig == "Journals" ||
-        viewDig == "Special Collections" ||
-        viewDig == "Open Access") && <LibraryGallery libraryType={viewDig} />}
-
-      {/* Archives Section */}
-      {(viewDig == "Historical Documents" ||
-        viewDig == "Government Records" ||
-        viewDig == "Personal Papers" ||
-        viewDig == "Institutional Archives" ||
-        viewDig == "Media Archives" ||
-        viewDig == "Digital Preservation") && (
-        <ArchiveGallery archiveType={viewDig} />
-      )}
+      {/* GLAMs Section */}
+      {viewDig == "Galleries" && <PaintingsGallery />}
+      {viewDig == "Museums" && <MuseumsGallery />}
+      {viewDig == "Libraries" && <LibraryGallery libraryType={viewDig} />}
+      {viewDig == "Archives" && <ArchiveGallery archiveType={viewDig} />}
 
       {/* Digital Content Section */}
       {(viewDig == "Datasets" ||
