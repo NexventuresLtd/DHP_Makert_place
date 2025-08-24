@@ -6,7 +6,6 @@ import {
   Download,
   Share2,
   Users,
-  BookOpen,
   Archive,
   Database,
   Image,
