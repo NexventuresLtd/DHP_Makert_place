@@ -36,10 +36,9 @@ export default function PaintingsGallery() {
     apiService.getCategories()
   );
 
-  // Fetch artworks with search and filter
-  const [artworks, setArtworks] = useState<Artwork[]>([]);
+  // Fetch all artworks (without category filtering)
+  const [allArtworks, setAllArtworks] = useState<Artwork[]>([]);
   const [artworksLoading, setArtworksLoading] = useState(false);
-  const [totalCount, setTotalCount] = useState(0);
   const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
@@ -48,19 +47,16 @@ export default function PaintingsGallery() {
       try {
         const params: any = {
           page: currentPage,
-          search: searchTerm || undefined,
-          category: selectedCategory !== "All" ? selectedCategory : undefined,
           ordering: "-created_at",
         };
 
         const response = await apiService.getArtworks(params);
         if (currentPage === 1) {
-          setArtworks(response.results);
+          setAllArtworks(response.results);
         } else {
-          setArtworks((prev) => [...prev, ...response.results]);
+          setAllArtworks((prev) => [...prev, ...response.results]);
         }
 
-        setTotalCount(response.count);
         setHasMore(!!response.next);
       } catch (error) {
         console.error("Failed to fetch artworks:", error);
@@ -70,7 +66,38 @@ export default function PaintingsGallery() {
     };
 
     fetchArtworks();
-  }, [searchTerm, selectedCategory, currentPage]);
+  }, [currentPage]);
+
+  // Filter artworks based on search term and selected category
+  const filteredArtworks = useMemo(() => {
+    let filtered = allArtworks;
+
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (artwork) =>
+          artwork.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          artwork.description
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          artwork.artist_display
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          artwork.tags_list.some((tag) =>
+            tag.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+      );
+    }
+
+    // Filter by category
+    if (selectedCategory !== "All") {
+      filtered = filtered.filter(
+        (artwork) => artwork.category_name === selectedCategory
+      );
+    }
+
+    return filtered;
+  }, [allArtworks, searchTerm, selectedCategory]);
 
   // Reset page when search/filter changes
   useEffect(() => {
@@ -82,6 +109,14 @@ export default function PaintingsGallery() {
     return ["All", ...categories.results.map((cat) => cat.name)];
   }, [categories]);
 
+  // Calculate category counts from all artworks
+  const getCategoryCount = (categoryName: string) => {
+    if (categoryName === "All") return allArtworks.length;
+    return allArtworks.filter(
+      (artwork) => artwork.category_name === categoryName
+    ).length;
+  };
+
   const togglePaintingSelection = (id: number) => {
     setSelectedPaintings((prev) =>
       prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
@@ -91,12 +126,16 @@ export default function PaintingsGallery() {
   // Check if user can edit/delete artwork
   const canModifyArtwork = (artwork: Artwork) => {
     console.log(userInfo?.type, userInfo);
-    return userInfo?.type === "admin" || artwork.uploaded_by_name === `${userInfo?.first_name} ${userInfo?.last_name}`;
+    return (
+      userInfo?.type === "admin" ||
+      artwork.uploaded_by_name ===
+        `${userInfo?.first_name} ${userInfo?.last_name}`
+    );
   };
 
   // Get artworks that user can modify from selected ones
   const getModifiableSelectedArtworks = () => {
-    return artworks.filter(
+    return filteredArtworks.filter(
       (artwork) =>
         selectedPaintings.includes(artwork.id) && canModifyArtwork(artwork)
     );
@@ -145,7 +184,7 @@ export default function PaintingsGallery() {
       await apiService.bulkDeleteArtworks(slugs);
 
       // Remove deleted artworks from state
-      setArtworks((prev) =>
+      setAllArtworks((prev) =>
         prev.filter((artwork) => !slugs.includes(artwork.slug))
       );
       setSelectedPaintings([]);
@@ -182,13 +221,13 @@ export default function PaintingsGallery() {
   const handleUploadSuccess = () => {
     // Refresh the artworks list by resetting to page 1
     setCurrentPage(1);
-    setArtworks([]);
+    setAllArtworks([]);
     // This will trigger the useEffect to fetch fresh data
   };
 
   const handleEditSuccess = (updatedArtwork: Artwork) => {
     // Update the artwork in the current state
-    setArtworks((prev) =>
+    setAllArtworks((prev) =>
       prev.map((artwork) =>
         artwork.id === updatedArtwork.id ? updatedArtwork : artwork
       )
@@ -214,7 +253,7 @@ export default function PaintingsGallery() {
 
   const handleViewIncrement = (updatedArtwork: Artwork) => {
     // Update the view count in the artworks list
-    setArtworks((prev) =>
+    setAllArtworks((prev) =>
       prev.map((artwork) =>
         artwork.id === updatedArtwork.id ? updatedArtwork : artwork
       )
@@ -356,13 +395,7 @@ export default function PaintingsGallery() {
               <h3 className="font-semibold text-gray-900 mb-4">Categories</h3>
               <nav className="space-y-2">
                 {categoryOptions.map((category) => {
-                  const categoryData = categories?.results.find(
-                    (cat) => cat.name === category
-                  );
-                  const categoryCount =
-                    category === "All"
-                      ? totalCount
-                      : categoryData?.artwork_count || 0;
+                  const categoryCount = getCategoryCount(category);
 
                   return (
                     <button
@@ -390,14 +423,15 @@ export default function PaintingsGallery() {
             {/* Results count */}
             <div className="mb-6">
               <p className="text-sm text-gray-600">
-                Showing {artworks.length} of {totalCount} artworks
+                Showing {filteredArtworks.length} of {allArtworks.length}{" "}
+                artworks
                 {selectedCategory !== "All" && (
                   <span className="ml-1">in "{selectedCategory}"</span>
                 )}
               </p>
             </div>
 
-            {artworks.length === 0 && !artworksLoading ? (
+            {filteredArtworks.length === 0 && !artworksLoading ? (
               <div className="text-center py-12">
                 <div className="text-gray-400 mb-4">
                   <Search className="w-12 h-12 mx-auto" />
@@ -422,7 +456,7 @@ export default function PaintingsGallery() {
             ) : (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {artworks.map((artwork) => (
+                  {filteredArtworks.map((artwork) => (
                     <div
                       key={artwork.id}
                       className="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
