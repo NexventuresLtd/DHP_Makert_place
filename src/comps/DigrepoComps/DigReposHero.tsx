@@ -69,9 +69,9 @@ const DigitalRepository = ({
         // "Featured Works",
         // "Recent Additions",
         "Galleries",
-        "Museums",
         "Libraries",
         "Archives",
+        "Museums",
       ],
     },
     // {
