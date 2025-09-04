@@ -1,4 +1,4 @@
-import {  ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import React from 'react';
 
 const MissionVision: React.FC = () => {
@@ -14,62 +14,62 @@ const MissionVision: React.FC = () => {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Image Grid */}
-          <div className="lg:col-span-2">
+          <div className="">
             <div className="grid grid-cols-2 gap-4">
-              {/* Top Left - Keys/Tools Image */}
-              <div className="bg-gray-200 rounded-lg p-8 flex items-center justify-center h-40">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-gray-800 rounded mx-auto mb-2 flex items-center justify-center">
-                    <div className="text-white text-xs">🔧</div>
-                  </div>
-                  <div className="text-xs text-gray-600">TOOLS</div>
-                </div>
+              {/* Top Left - Traditional Tools */}
+              <div className="rounded-lg overflow-hidden h-40">
+                <img 
+                  src="https://visitrwanda.com/wp-content/uploads/fly-images/4464/Screen-Shot-2019-12-20-at-16.08.24-1650x925.png" 
+                  alt="Traditional cultural tools" 
+                  className="w-full h-full object-cover"
+                />
               </div>
 
-              {/* Top Right - Abstract Shape */}
-              <div className="bg-gray-300 rounded-lg relative h-40 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-400 to-gray-600 transform rotate-12 scale-150"></div>
+              {/* Top Right - Cultural Artifact */}
+              <div className="rounded-lg overflow-hidden h-40">
+                <img 
+                  src="https://primatesafaris.info/wp-content/uploads/2018/07/rwandan-culture-510x340.jpg" 
+                  alt="Ancient cultural artifact" 
+                  className="w-full h-full object-cover"
+                />
               </div>
 
-              {/* Middle Left - Figure/Person */}
-              <div className="bg-gray-100 rounded-lg p-8 flex items-center justify-center h-40">
-                <div className="text-center">
-                  <div className="w-12 h-16 bg-gray-400 rounded-t-full mx-auto mb-2"></div>
-                  <div className="w-8 h-12 bg-gray-400 rounded mx-auto"></div>
-                  <div className="w-6 h-8 bg-gray-400 rounded mx-auto mt-1"></div>
-                </div>
+              {/* Middle Left - Cultural Figure */}
+              <div className="rounded-lg overflow-hidden h-40">
+                <img 
+                  src="https://visitrwanda.com/wp-content/uploads/fly-images/4516/Amasunzu-Collage-web-v2-1650x1004.jpg" 
+                  alt="Cultural heritage figure" 
+                  className="w-full h-full object-cover"
+                />
               </div>
 
-              {/* Middle Right - Document/Book */}
-              <div className="bg-red-500 rounded-lg p-6 flex items-center justify-center h-40">
-                <div className="bg-white rounded p-4 w-full max-w-20">
-                  <div className="space-y-1">
-                    <div className="h-2 bg-red-200 rounded"></div>
-                    <div className="h-2 bg-red-200 rounded"></div>
-                    <div className="h-2 bg-red-200 rounded w-3/4"></div>
-                    <div className="h-2 bg-red-200 rounded"></div>
-                    <div className="h-2 bg-red-200 rounded w-1/2"></div>
-                  </div>
-                </div>
+              {/* Middle Right - Ancient Manuscript */}
+              <div className="rounded-lg overflow-hidden h-40">
+                <img 
+                  src="https://www.newtimes.co.rw/uploads/imported_images/files/main/articles/2017/02/11/paidincowsthoughnowadaysmostpeoplehavereplacedcowswithmoney.T.jpg" 
+                  alt="Ancient manuscript" 
+                  className="w-full h-full object-cover"
+                />
               </div>
 
-              {/* Bottom Left - Abstract Light */}
-              <div className="bg-gray-200 rounded-lg relative h-40 overflow-hidden">
-                <div className="absolute bottom-0 left-4 w-2 h-20 bg-gradient-to-t from-yellow-200 to-transparent transform -skew-x-12"></div>
-                <div className="absolute bottom-0 left-6 w-4 h-24 bg-gradient-to-t from-yellow-300 to-transparent transform -skew-x-12"></div>
-                <div className="absolute bottom-0 left-10 w-3 h-16 bg-gradient-to-t from-yellow-200 to-transparent transform -skew-x-12"></div>
+              {/* Bottom Left - Cultural Architecture */}
+              <div className="rounded-lg overflow-hidden h-40">
+                <img 
+                  src="https://eastafricavoyages.com/wp-content/uploads/2025/01/intore-dancers-performance-visit-rwanda-copy.jpg" 
+                  alt="Cultural architecture" 
+                  className="w-full h-full object-cover"
+                />
               </div>
 
-              {/* Bottom Right - Feather/Quill */}
-              <div className="bg-gray-200 rounded-lg p-8 flex items-center justify-center h-40">
-                <div className="text-center">
-                  <div className="w-1 h-16 bg-gray-800 rounded mx-auto relative">
-                    <div className="absolute -top-2 -left-2 w-5 h-12 bg-gray-600 rounded-full transform -rotate-12"></div>
-                    <div className="absolute -top-1 -right-2 w-4 h-10 bg-gray-500 rounded-full transform rotate-12"></div>
-                  </div>
-                </div>
+              {/* Bottom Right - Cultural Art Form */}
+              <div className="rounded-lg overflow-hidden h-40">
+                <img 
+                  src="https://visitrwanda.com/wp-content/uploads/fly-images/1238/Visit-Rwanda-Kings-Palace-Nyanza-Front-1-700x467.jpg" 
+                  alt="Traditional art form" 
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
           </div>
@@ -91,6 +91,9 @@ const MissionVision: React.FC = () => {
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
                 Preserving the past for the future
               </h2>
+              <p className="text-gray-700 leading-relaxed">
+                We leverage cutting-edge technologies like 3D scanning, digital archiving, and virtual reality to document and preserve cultural heritage that might otherwise be lost to time, conflict, or environmental factors.
+              </p>
             </div>
 
             {/* Elevating cultural treasures */}
@@ -98,6 +101,9 @@ const MissionVision: React.FC = () => {
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
                 Elevating cultural treasures into the digital realm
               </h2>
+              <p className="text-gray-700 leading-relaxed">
+                Through our digital platform, we make cultural heritage accessible to people worldwide, fostering cross-cultural understanding and appreciation while ensuring these treasures endure for generations to come.
+              </p>
             </div>
           </div>
         </div>

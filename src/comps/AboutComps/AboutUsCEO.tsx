@@ -19,28 +19,28 @@ const CEOProfileSlider: React.FC = () => {
       position: "CEO",
       quote: "Let's Keep on fostering African Heritage entrepreneurial ecosystem through investing in Africa's Heritage and Digital solutions toward sustinable Heritage Preservation",
       image: "images/ceo.png"
-    },
-    {
-      id: 2,
-      name: "Sarah Johnson",
-      position: "CTO",
-      quote: "Technology is the bridge between our rich cultural past and an innovative digital future",
-      image: "https://live.staticflickr.com/65535/54571298920_798668e3c5_z.jpg"
-    },
-    {
-      id: 3,
-      name: "Michael Chen",
-      position: "Head of Operations",
-      quote: "Preserving heritage requires both passion and precision in our approach",
-      image: "https://live.staticflickr.com/65535/54571298920_798668e3c5_z.jpg"
-    },
-    {
-      id: 4,
-      name: "Amara Okafor",
-      position: "Cultural Director",
-      quote: "Every artifact tells a story that deserves to be preserved for generations",
-      image: "/api/placeholder/400/400"
     }
+    // {
+    //   id: 2,
+    //   name: "Sarah Johnson",
+    //   position: "CTO",
+    //   quote: "Technology is the bridge between our rich cultural past and an innovative digital future",
+    //   image: "https://live.staticflickr.com/65535/54571298920_798668e3c5_z.jpg"
+    // },
+    // {
+    //   id: 3,
+    //   name: "Michael Chen",
+    //   position: "Head of Operations",
+    //   quote: "Preserving heritage requires both passion and precision in our approach",
+    //   image: "https://live.staticflickr.com/65535/54571298920_798668e3c5_z.jpg"
+    // },
+    // {
+    //   id: 4,
+    //   name: "Amara Okafor",
+    //   position: "Cultural Director",
+    //   quote: "Every artifact tells a story that deserves to be preserved for generations",
+    //   image: "/api/placeholder/400/400"
+    // }
   ];
 
   const nextSlide = () => {
