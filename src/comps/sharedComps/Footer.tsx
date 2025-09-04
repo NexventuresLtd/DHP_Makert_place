@@ -41,7 +41,6 @@ const Footer = () => {
       >
         <ChevronUp size={16} className="sm:w-5 sm:h-5" />
       </button>
-
       <div className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-2">
         {/* Main footer content */}
         <div className="py-12 sm:py-16">

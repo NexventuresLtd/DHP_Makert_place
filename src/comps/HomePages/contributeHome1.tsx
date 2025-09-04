@@ -38,7 +38,7 @@ const ContributeSection = () => {
               </div>
             </div>
             
-            <button className="inline-flex items-center px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg border border-white/30 transition-all duration-300 hover:scale-105 backdrop-blur-sm">
+            <button onClick={()=>window.location.href="/involved"} className="inline-flex items-center px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg border border-white/30 transition-all duration-300 hover:scale-105 backdrop-blur-sm">
               Start now
             </button>
           </div>

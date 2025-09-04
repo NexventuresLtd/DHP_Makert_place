@@ -45,7 +45,7 @@ export default function HistoricalEventsGrid() {
                         <h2 className="text-4xl max-md:text-xl font-bold bg-gradient-to-r bg-clip-text text-black">
                             Historical Events
                         </h2>
-                        <button className="inline-flex items-center px-4 py-2 rounded-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-0.5 ml-4">
+                        <button onClick={() => { localStorage.setItem("showThing", "false"); localStorage.setItem("viewDig", "Archives"); window.location.href = "/resources"; }}  className="inline-flex items-center px-4 py-2 rounded-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-0.5 ml-4">
                             Explore More
                             <ChevronRight className="ml-2 w-4 h-4" />
                         </button>

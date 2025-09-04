@@ -95,8 +95,8 @@ export default function DigitalHeritagePlatform() {
                 className={getNavClasses(item.path)}
                 aria-label={`Navigate to ${item.name}`}
               >
-                {item.icon}
-                <span className="font-bold max-2xl:text-sm">{item.name}</span>
+                {/* {item.icon} */}
+                <span className="font-bold max-2xl:text-sm cursor-pointer">{item.name}</span>
               </button>
             ))}
           </div>
