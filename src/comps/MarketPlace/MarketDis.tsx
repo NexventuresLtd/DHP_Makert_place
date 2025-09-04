@@ -159,9 +159,15 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
 
             <div className="flex items-center justify-between">
               <div className="flex items-baseline space-x-1">
-                <span className="text-lg font-bold text-primary">RWF {product.price}</span>
+                <span className="text-lg font-bold text-primary">{new Intl.NumberFormat('rw', {
+                  style: 'currency',
+                  currency: 'RWF',
+                }).format(parseFloat(product.price))}</span>
                 {parseFloat(product.original_price) > parseFloat(product.price) && (
-                  <span className="text-xs text-slate-400 line-through">RWF {product.original_price}</span>
+                  <span className="text-xs text-slate-400 line-through">{new Intl.NumberFormat('rw', {
+                    style: 'currency',
+                    currency: 'RWF',
+                  }).format(parseFloat(product.original_price))}</span>
                 )}
               </div>
               <span className={`text-xs px-2 py-1 rounded-xl font-medium ${stockStatus.class}`}>

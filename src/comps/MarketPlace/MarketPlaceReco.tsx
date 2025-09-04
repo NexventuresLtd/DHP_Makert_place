@@ -278,11 +278,17 @@ export default function RecommendedItemsSection() {
 
                               <div className="flex items-baseline gap-3 mb-6">
                                 <span className="text-xl font-bold text-primary bg-clip-text text-transparent">
-                                  RWF {product.price || '0'}
+                                  {new Intl.NumberFormat('rw', {
+                                    style: 'currency',
+                                    currency: 'RWF',
+                                  }).format(parseFloat(product.price) || 0)}
                                 </span>
                                 {product.original_price && (
                                   <span className="text-slate-400 line-through">
-                                    RWF {product.original_price}
+                                    {new Intl.NumberFormat('rw', {
+                                      style: 'currency',
+                                      currency: 'RWF',
+                                    }).format(parseFloat(product.original_price))}
                                   </span>
                                 )}
                               </div>
@@ -327,11 +333,17 @@ export default function RecommendedItemsSection() {
                             <div className="flex items-center justify-between">
                               <div className="flex flex-col">
                                 <span className="text-xl font-bold text-primary bg-clip-text text-transparent">
-                                  RWF {product.price || '0'}
+                                  {new Intl.NumberFormat('rw', {
+                                    style: 'currency',
+                                    currency: 'RWF',
+                                  }).format(parseFloat(product.price) || 0)}
                                 </span>
                                 {product.original_price && (
                                   <span className="text-sm text-slate-400 line-through">
-                                    RWF {product.original_price}
+                                    {new Intl.NumberFormat('rw', {
+                                      style: 'currency',
+                                      currency: 'RWF',
+                                    }).format(parseFloat(product.original_price) || 0)}
                                   </span>
                                 )}
                               </div>

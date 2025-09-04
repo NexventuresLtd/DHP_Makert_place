@@ -158,11 +158,17 @@ const ProductView = () => {
                                         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                                             <div className="flex flex-col">
                                                 <div className="text-2xl font-bold text-primary">
-                                                    ${price.toFixed(2)}
+                                                    {new Intl.NumberFormat('rw', {
+                                                        style: 'currency',
+                                                        currency: 'RWF',
+                                                    }).format(price)}
                                                 </div>
                                                 {hasDiscount && (
                                                     <div className="text-sm text-gray-500 line-through">
-                                                        ${originalPrice.toFixed(2)}
+                                                        {new Intl.NumberFormat('rw', {
+                                                            style: 'currency',
+                                                            currency: 'RWF',
+                                                        }).format(originalPrice)}
                                                     </div>
                                                 )}
                                             </div>
