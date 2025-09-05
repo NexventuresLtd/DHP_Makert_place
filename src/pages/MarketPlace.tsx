@@ -46,7 +46,7 @@ const MarketPlace = () => {
     const [currentSlide, setCurrentSlide] = useState<number>(0);
     const [user, setUser] = useState<UserInfo | null>(null);
     const [categories_nav, setCategories_nav] = useState<string[]>(['All category']);
-    const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+    const [featuredProducts, setFeaturedProducts] = useState([]);
     const [isLoadingCategories, setIsLoadingCategories] = useState<boolean>(true);
     const [isLoadingProducts, setIsLoadingProducts] = useState<boolean>(true);
 
@@ -71,13 +71,13 @@ const MarketPlace = () => {
     const fetchFeaturedProducts = async (): Promise<void> => {
         try {
             setIsLoadingProducts(true);
-            const response = await mainAxios.get<Product[]>('/market/products/', {
+            const response = await mainAxios.get('/market/products/', {
                 params: {
                     is_featured: true,
                 }
             });
-            console.log("sdsdsd",)
-            setFeaturedProducts(response.data || []);
+            // console.log("sdsdsd", response.data?.results)
+            setFeaturedProducts(response.data?.results || []);
         } catch (error) {
             console.error('Error fetching featured products:', error);
             setFeaturedProducts([]);

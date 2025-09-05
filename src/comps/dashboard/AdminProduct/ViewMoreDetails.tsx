@@ -109,7 +109,7 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
     const formatPrice = (price: string) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
-            currency: 'USD',
+            currency: 'RWF',
         }).format(parseFloat(price));
     };
 
