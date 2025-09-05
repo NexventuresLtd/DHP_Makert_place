@@ -44,7 +44,7 @@ const WhereToStartSection = () => {
     }
   ];
   type ColorName = 'blue' | 'emerald' | 'amber' | 'rose' | 'purple';
-  const getColorClasses = (color:ColorName) => {
+  const getColorClasses = (color: ColorName) => {
     const colors = {
       blue: {
         bg: 'bg-blue-50',
@@ -98,8 +98,9 @@ const WhereToStartSection = () => {
           {sections.map((section) => {
             const colorClasses = getColorClasses(section.color as ColorName);
             return (
-              <div 
-                key={section.id} 
+              <div
+                onClick={() => { localStorage.setItem("showThing", "false"); localStorage.setItem("viewDig", section.title); window.location.href = "/resources"; }}
+                key={section.id}
                 className={`group relative ${colorClasses.bg} rounded-2xl p-8 transition-all duration-300 hover:shadow-lg cursor-pointer border border-gray-100`}
               >
                 {/* Icon */}
@@ -111,7 +112,7 @@ const WhereToStartSection = () => {
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4 group-hover:text-gray-700 transition-colors">
                   {section.title}
                 </h3>
-                
+
                 <p className="text-gray-600 leading-relaxed mb-6 text-base">
                   {section.description}
                 </p>
