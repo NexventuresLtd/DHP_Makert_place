@@ -306,7 +306,14 @@ class MuseumService {
     const config = museumData instanceof FormData ? 
       { headers: { 'Content-Type': 'multipart/form-data' } } : 
       {};
-    const response = await apiClient.put<Museum>(`/museums/${slug}/`, museumData, config);
+    // Use PATCH for partial updates instead of PUT
+    const response = await apiClient.patch<Museum>(`/museums/${slug}/`, museumData, config);
+    return response.data;
+  }
+
+  async patchMuseum(slug: string, updates: Partial<Museum>): Promise<Museum> {
+    // Dedicated method for JSON-only partial updates
+    const response = await apiClient.patch<Museum>(`/museums/${slug}/`, updates);
     return response.data;
   }
 
@@ -522,6 +529,7 @@ export const {
   recordVisit,
   createMuseum,
   updateMuseum,
+  patchMuseum,
   deleteMuseum,
   getExhibitions,
   getExhibition,
