@@ -231,7 +231,6 @@ export default function SecureAdminLogin() {
                   onChange={(e) => handleInputChange('username', e.target.value, setUsername)}
                   onKeyPress={handleKeyPress}
                   disabled={isLoading || (lockoutTime !== null && Date.now() < lockoutTime)}
-                  maxLength={20}
                 />
                 {errors.username && (
                   <p className="mt-2 text-sm text-red-600 flex items-center">
@@ -261,7 +260,6 @@ export default function SecureAdminLogin() {
                     onKeyPress={handleKeyPress}
                     disabled={isLoading || (lockoutTime !== null && Date.now() < lockoutTime)}
                     minLength={8}
-                    maxLength={32}
                   />
                   <button
                     type="button"

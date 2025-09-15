@@ -33,6 +33,7 @@ const MainContent = ({
     const sidebarCategories = categories.length > 0 ? categories : ['All category'];
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [catnum, setcatnum] = useState<number>(6)
 
     return (
         <div className="max-w-full md:max-w-11/12 m-auto bg-gray-50">
@@ -58,12 +59,12 @@ const MainContent = ({
                             </div>
 
                             <div className="space-y-1.5">
-                                {sidebarCategories.map((category, index) => (
+                                {sidebarCategories.slice(0, catnum).map((category, index) => (
                                     <button
                                         key={index}
-                                        className="w-full group flex items-center justify-between p-3 rounded-lg transition-all duration-200 hover:bg-gray-50 border border-transparent hover:border-gray-200"
+                                        className="w-full group flex items-start justify-between p-3 rounded-lg transition-all duration-200 bg-slate-50 hover:bg-gray-50 border border-transparent hover:border-gray-200"
                                     >
-                                        <span className="text-sm font-medium text-gray-700 group-hover:text-emerald-600 transition-colors">
+                                        <span className="text-sm font-medium text-gray-700 group-hover:text-emerald-600 transition-colors text-left">
                                             {category}
                                         </span>
                                         <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-emerald-500 transition-all group-hover:translate-x-0.5" />
@@ -71,7 +72,7 @@ const MainContent = ({
                                 ))}
                             </div>
 
-                            <button className="w-full mt-6 p-3 rounded-lg border border-dashed border-gray-300 hover:border-emerald-400 hover:bg-emerald-50 text-gray-600 hover:text-emerald-600 text-sm font-medium transition-all duration-200 group">
+                            <button onClick={()=>setcatnum(20)} className="w-full mt-6 p-3 rounded-lg border border-dashed border-gray-300 hover:border-emerald-400 hover:bg-emerald-50 text-gray-600 hover:text-emerald-600 text-sm font-medium transition-all duration-200 group">
                                 <span className="flex items-center justify-center space-x-1.5">
                                     <span>View All Categories</span>
                                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />

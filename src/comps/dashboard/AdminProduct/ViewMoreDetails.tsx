@@ -85,6 +85,14 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
     const [categoryError, setCategoryError] = useState<string | null>(null);
     const [isAddingToCart, setIsAddingToCart] = useState(false);
     const [alert, setAlert] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
+    useEffect(() => {
+        // Disable scrolling
+        document.body.style.overflow = "hidden";
+        // Cleanup when component unmounts
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, []);
 
     useEffect(() => {
         const fetchCategory = async () => {
@@ -174,13 +182,13 @@ export default function ProductDetailModal({ product, onClose }: ProductDetailMo
         <div className="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center p-4 z-50">
 
             <div className="bg-white rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto relative">
-            {alert && (
-                <CustomAlert 
-                    message={alert.message} 
-                    type={alert.type} 
-                    onClose={() => setAlert(null)} 
-                />
-            )}
+                {alert && (
+                    <CustomAlert
+                        message={alert.message}
+                        type={alert.type}
+                        onClose={() => setAlert(null)}
+                    />
+                )}
                 <div className="sticky top-0 bg-white z-10 p-4 border-b border-gray-200 flex justify-between items-center">
                     <div className="w-6"></div>
                     <h2 className="text-xl font-bold text-gray-900">Product Details</h2>

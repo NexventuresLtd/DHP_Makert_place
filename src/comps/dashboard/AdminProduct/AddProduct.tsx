@@ -45,6 +45,7 @@ interface AddProductFormProps {
 
 export default function AddProductForm({ onSuccess, onCancel, productToEdit }: AddProductFormProps) {
     const [categories, setCategories] = useState<Category[]>([]);
+    const [clutureSign, setclutureSign] = useState<string>("")
     const [isLoadingCategories, setIsLoadingCategories] = useState(false);
     const [formData, setFormData] = useState<ProductFormData>({
         uploaded_images: [],
@@ -430,6 +431,21 @@ export default function AddProductForm({ onSuccess, onCancel, productToEdit }: A
                     placeholder="Enter product description (optional)"
                 />
             </div>
+            {/*  culture significance */}
+            <div>
+                <label htmlFor="clutureSign" className="block text-sm font-medium text-gray-700 mb-2">
+                    Culture significance
+                </label>
+                <textarea
+                    id="clu"
+                    name="description"
+                    value={clutureSign}
+                    onChange={(e) => setclutureSign(e.target.value)}
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors"
+                    placeholder="Enter product description (optional)"
+                />
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Price */}
@@ -439,7 +455,7 @@ export default function AddProductForm({ onSuccess, onCancel, productToEdit }: A
                     </label>
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span className="text-gray-500">$</span>
+                            <span className="text-gray-500">Rwf</span>
                         </div>
                         <input
                             type="text"
@@ -449,7 +465,7 @@ export default function AddProductForm({ onSuccess, onCancel, productToEdit }: A
                             onChange={handleInputChange}
                             className={`block w-full pl-8 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors ${errors.price ? 'border-red-300' : 'border-gray-300'
                                 }`}
-                            placeholder="0.00"
+                            placeholder="100,000"
                         />
                     </div>
                     {errors.price && (
@@ -467,7 +483,7 @@ export default function AddProductForm({ onSuccess, onCancel, productToEdit }: A
                     </label>
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span className="text-gray-500">$</span>
+                            <span className="text-gray-500">Rwf</span>
                         </div>
                         <input
                             type="text"
@@ -477,7 +493,7 @@ export default function AddProductForm({ onSuccess, onCancel, productToEdit }: A
                             onChange={handleInputChange}
                             className={`block w-full pl-8 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors ${errors.original_price ? 'border-red-300' : 'border-gray-300'
                                 }`}
-                            placeholder="0.00"
+                            placeholder="10,000"
                         />
                     </div>
                     {errors.original_price && (

@@ -2,22 +2,51 @@ import { useState, useEffect, type SetStateAction } from 'react';
 
 export default function ShareholdersRow() {
   const shareholders = [
-    "Heritage Foundation",
-    "Cultural Preservation Ltd",
-    "Rwanda Development Bank",
-    "Digital Heritage Corp",
-    "Legacy Partners",
-    "Cultural Innovation Hub",
-    "Heritage Tech Solutions",
-    "Rwanda Cultural Fund",
-    "Digital Legacy Inc",
-    "Heritage Ventures",
-    "Cultural Bridge Partners",
-    "Rwanda Heritage Group"
+    {
+      image: "https://www.nexventures.net/assets/Icon-ueBx2e_P.png",
+      name: "Nexventures Ltd",
+      type: "Innovation • Growth • Excellence"
+    },
+    {
+      image: "https://framerusercontent.com/images/fSoESBqOrj2XDZv0nyqa0BMjIc.png?scale-down-to=1024", // Add your actual image paths
+      name: "Duktep Ltd",
+      type: "Digital Solutions"
+    },
+    {
+      image: "https://media.licdn.com/dms/image/v2/D4D0BAQEmTaxOMXDdbA/company-logo_200_200/company-logo_200_200/0/1722533094551?e=1759968000&v=beta&t=A8uP_Mztsxi5TCZlPTOBYrwdp1xOLSvfjmbYUtTfe2w",
+      name: "L&D Community",
+      type: "Learn, Evolve, Thrive"
+    },
+    {
+      image: "/placeholder-image.jpg",
+      name: "Digital Heritage Corp",
+      type: " Digital Organization"
+    },
+    {
+      image: "/placeholder-image.jpg",
+      name: "Legacy Partners",
+      type: " Cultural Organization"
+    },
+    {
+      image: "/placeholder-image.jpg",
+      name: "Cultural Innovation Hub",
+      type: " Cultural Organization"
+    },
+    {
+      image: "/placeholder-image.jpg",
+      name: "Rwanda Cultural Fund",
+      type: " Cultural Organization"
+    },
+    {
+      image: "/placeholder-image.jpg",
+      name: "Digital Legacy Inc",
+      type: " Digital Organization"
+    },
+
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [itemsPerView, setItemsPerView] = useState(4); // Default to 4 items
+  const [itemsPerView, setItemsPerView] = useState(4);
   const totalSlides = Math.ceil(shareholders.length / itemsPerView);
 
   useEffect(() => {
@@ -33,25 +62,19 @@ export default function ShareholdersRow() {
       }
     };
 
-    // Set initial value
     handleResize();
-
-    // Add event listener
     window.addEventListener('resize', handleResize);
-
-    // Clean up
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
-    // Reset current index when itemsPerView changes to avoid out of bounds
     setCurrentIndex(0);
   }, [itemsPerView]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % totalSlides);
-    }, 4000);
+    }, 6000);
     return () => clearInterval(interval);
   }, [totalSlides]);
 
@@ -90,7 +113,7 @@ export default function ShareholdersRow() {
 
       {/* Slider Container */}
       <div className="overflow-hidden mx-4 sm:mx-8 md:mx-12 lg:mx-16">
-        <div 
+        <div
           className="flex transition-transform duration-700 ease-out"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
@@ -107,20 +130,24 @@ export default function ShareholdersRow() {
                       {/* Gradient Overlay */}
                       <div className="absolute via-transparent to-indigo-50/30 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                      {/* Icon */}
+                      {/* Logo */}
                       <div className="relative mb-4 sm:mb-5 md:mb-6">
                         <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-primary/10 via-indigo-500/10 to-purple-500/10 rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
-                          <div className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 bg-gradient-to-br from-primary/30 to-indigo-500/30 rounded-xl" />
+                          <img
+                            src={shareholder.image}
+                            alt={shareholder.name}
+                            className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 object-contain rounded-xl"
+                          />
                         </div>
                       </div>
 
                       {/* Content */}
                       <h3 className="relative text-xs sm:text-sm font-semibold text-slate-800 group-hover:text-primary transition-colors duration-300 leading-snug mb-1 sm:mb-2">
-                        {shareholder}
+                        {shareholder.name}
                       </h3>
 
                       <p className="relative text-xs text-slate-500 opacity-60 group-hover:opacity-100 group-hover:text-slate-600 transition-all duration-300">
-                        Strategic Partner
+                        {shareholder.type}
                       </p>
                     </div>
                   ))}
@@ -136,11 +163,10 @@ export default function ShareholdersRow() {
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              index === currentIndex 
-                ? 'bg-primary w-4 sm:w-6 md:w-8' 
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentIndex
+                ? 'bg-primary w-4 sm:w-6 md:w-8'
                 : 'bg-slate-300 hover:bg-slate-400'
-            }`}
+              }`}
           />
         ))}
       </div>

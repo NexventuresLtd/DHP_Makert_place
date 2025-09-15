@@ -72,22 +72,22 @@ const Header = ({
                         </div>
 
                         {/* Search Bar - Hidden on mobile */}
-                        <div className="hidden md:flex flex-1 max-w-2xl mx-4 lg:mx-8">
+                        <div className="hidden md:flex flex-1 max-w-3xl mx-4 lg:mx-8">
                             <div className="flex w-full bg-white rounded-lg overflow-hidden">
                                 <input
                                     type="text"
                                     placeholder="Search for heritage products..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="flex-1 px-4 lg:px-5 py-2 bg-transparent focus:outline-none text-gray-800 placeholder-gray-500 text-sm lg:text-base"
+                                    className="flex-1 px-4 lg:px-5 py-2 bg-transparent focus:outline-none text-gray-800 placeholder-gray-500 text-sm lg:text-base w-full"
                                     onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                                 />
-                                <div className="relative border-l border-gray-200">
+                                <div className="relative border-l border-gray-200 w-1/4 overflow-clip">
                                     <select
                                         value={selectedCategory}
                                         onChange={(e) => setSelectedCategory(e.target.value)}
                                         disabled={isLoadingCategories}
-                                        className="appearance-none bg-white px-3 lg:px-4 py-2 pr-8 focus:outline-none text-gray-700 cursor-pointer disabled:opacity-50 text-sm lg:text-base"
+                                        className="appearance-none overflow-clip w-/1/2 px-3 lg:px-4 py-2 pr-8 focus:outline-none text-gray-700 cursor-pointer disabled:opacity-50 text-sm lg:text-base"
                                     >
                                         {isLoadingCategories ? (
                                             <option>Loading...</option>
@@ -106,7 +106,7 @@ const Header = ({
                                 </div>
                                 <button
                                     onClick={() => handleSearch()}
-                                    className="bg-primary text-white px-4 lg:px-5 py-2 transition-colors duration-200"
+                                    className="bg-primary w-1/12 text-white px-4 lg:px-5 py-2 transition-colors duration-200"
                                     aria-label="Search"
                                 >
                                     <Search className="w-4 h-4 lg:w-5 lg:h-5" />
