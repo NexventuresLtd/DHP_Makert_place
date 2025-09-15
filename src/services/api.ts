@@ -177,6 +177,44 @@ class ApiService {
     }
   }
 
+  async patchArtwork(slug: string, updates: any): Promise<Artwork> {
+    const url = `${API_BASE_URL}/artworks/${slug}/`;
+    
+    // Get auth token from localStorage
+    const token = localStorage.getItem('authToken');
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    const config: RequestInit = {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify(updates),
+    };
+
+    try {
+      const response = await fetch(url, config);
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('You must be logged in to update artworks');
+        } else if (response.status === 403) {
+          throw new Error('You do not have permission to update this artwork');
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('API request failed:', error);
+      throw error;
+    }
+  }
+
   async deleteArtwork(slug: string): Promise<void> {
     const url = `${API_BASE_URL}/artworks/${slug}/`;
     

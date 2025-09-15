@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Upload, Building2 } from "lucide-react";
-import { createMuseum, updateMuseum } from "../../services/museumService";
+import {
+  createMuseum,
+  updateMuseum,
+  patchMuseum,
+} from "../../services/museumService";
 import type { Museum } from "../../services/museumService";
 
 interface CreateMuseumModalProps {
@@ -48,6 +52,61 @@ export default function CreateMuseumModal({
 
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [creating, setCreating] = useState(false);
+  const [originalData, setOriginalData] = useState<typeof formData | null>(
+    null
+  );
+
+  // Track original values when editing
+  useEffect(() => {
+    if (initialData) {
+      const original = {
+        name: initialData.name || "",
+        description: initialData.description || "",
+        long_description: initialData.long_description || "",
+        location: initialData.location || "",
+        address: initialData.address || "",
+        city: initialData.city || "",
+        country: initialData.country || "",
+        phone: initialData.phone || "",
+        email: initialData.email || "",
+        website: initialData.website || "",
+        opening_hours:
+          typeof initialData.opening_hours === "string"
+            ? initialData.opening_hours
+            : initialData.opening_hours
+            ? JSON.stringify(initialData.opening_hours)
+            : "",
+        admission_fee: initialData.admission_fee || "",
+        admission_info: initialData.admission_info || "",
+        established_year:
+          initialData.established_year || new Date().getFullYear(),
+        has_parking: initialData.has_parking || false,
+        has_wifi: initialData.has_wifi || false,
+        has_restaurant: initialData.has_restaurant || false,
+        has_gift_shop: initialData.has_gift_shop || false,
+        is_wheelchair_accessible: initialData.is_wheelchair_accessible || false,
+        has_guided_tours: initialData.has_guided_tours || false,
+        tags: initialData.tags || "",
+        status: initialData.status || "active",
+      };
+      setOriginalData(original);
+    }
+  }, [initialData]);
+
+  // Get only the changed fields
+  const getChangedFields = () => {
+    if (!originalData) return formData; // If no original data, return all fields (for creation)
+
+    const changes: Record<string, any> = {};
+    Object.keys(formData).forEach((key) => {
+      const typedKey = key as keyof typeof formData;
+      if (formData[typedKey] !== originalData[typedKey]) {
+        changes[key] = formData[typedKey];
+      }
+    });
+
+    return changes;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,66 +114,114 @@ export default function CreateMuseumModal({
 
     setCreating(true);
     try {
-      // Prepare form data for API
-      const museumData = new FormData();
-
-      // Add text fields
-      museumData.append("name", formData.name);
-      museumData.append("description", formData.description);
-      museumData.append("long_description", formData.long_description);
-      museumData.append("location", formData.location);
-      museumData.append("address", formData.address);
-      museumData.append("city", formData.city);
-      museumData.append("country", formData.country);
-      museumData.append("phone", formData.phone);
-      museumData.append("email", formData.email);
-      museumData.append("website", formData.website);
-      museumData.append("admission_fee", formData.admission_fee);
-      museumData.append("admission_info", formData.admission_info);
-      museumData.append(
-        "established_year",
-        formData.established_year.toString()
-      );
-      museumData.append("status", formData.status);
-
-      // Add boolean fields
-      museumData.append("has_parking", formData.has_parking.toString());
-      museumData.append("has_wifi", formData.has_wifi.toString());
-      museumData.append("has_restaurant", formData.has_restaurant.toString());
-      museumData.append("has_gift_shop", formData.has_gift_shop.toString());
-      museumData.append(
-        "is_wheelchair_accessible",
-        formData.is_wheelchair_accessible.toString()
-      );
-      museumData.append(
-        "has_guided_tours",
-        formData.has_guided_tours.toString()
-      );
-
-      // Add tags as JSON array
-      if (formData.tags) {
-        const tagsArray = formData.tags
-          .split(",")
-          .map((tag) => tag.trim())
-          .filter((tag) => tag);
-        museumData.append("tags", JSON.stringify(tagsArray));
-      }
-
-      // Add opening hours as string
-      museumData.append("opening_hours", formData.opening_hours);
-
-      // Add image if selected
-      if (selectedImage) {
-        museumData.append("main_image", selectedImage);
-      }
-
       let response;
+
       if (initialData) {
-        museumData.append("category", initialData.category.toString());
         // Editing existing museum
-        response = await updateMuseum(initialData.slug.toString(), museumData);
+        if (selectedImage) {
+          // If there's a new image, use FormData with PATCH
+          const museumData = new FormData();
+          const changedFields = getChangedFields();
+
+          Object.entries(changedFields).forEach(([key, value]) => {
+            if (typeof value === "boolean") {
+              museumData.append(key, value.toString());
+            } else if (key === "tags" && value && typeof value === "string") {
+              const tagsArray = value
+                .split(",")
+                .map((tag: string) => tag.trim())
+                .filter((tag: string) => tag);
+              museumData.append("tags", JSON.stringify(tagsArray));
+            } else if (value !== null && value !== undefined) {
+              museumData.append(key, value.toString());
+            }
+          });
+
+          museumData.append("main_image", selectedImage);
+          response = await updateMuseum(
+            initialData.slug.toString(),
+            museumData
+          );
+        } else {
+          // No new image, use JSON PATCH for efficiency
+          const changedFields = getChangedFields();
+
+          // Only send request if there are actual changes
+          if (Object.keys(changedFields).length === 0) {
+            console.log("No changes detected, skipping update");
+            onClose();
+            return;
+          }
+
+          // Process tags if changed and convert to proper format for API
+          const apiChanges: Record<string, any> = { ...changedFields };
+          if (changedFields.tags && typeof changedFields.tags === "string") {
+            const tagsArray = changedFields.tags
+              .split(",")
+              .map((tag: string) => tag.trim())
+              .filter((tag: string) => tag);
+            apiChanges.tags = tagsArray;
+          }
+
+          response = await patchMuseum(
+            initialData.slug.toString(),
+            apiChanges as Partial<Museum>
+          );
+        }
       } else {
-        // Creating new museum
+        // Creating new museum - send all data
+        const museumData = new FormData();
+
+        // Add text fields
+        museumData.append("name", formData.name);
+        museumData.append("description", formData.description);
+        museumData.append("long_description", formData.long_description);
+        museumData.append("location", formData.location);
+        museumData.append("address", formData.address);
+        museumData.append("city", formData.city);
+        museumData.append("country", formData.country);
+        museumData.append("phone", formData.phone);
+        museumData.append("email", formData.email);
+        museumData.append("website", formData.website);
+        museumData.append("admission_fee", formData.admission_fee);
+        museumData.append("admission_info", formData.admission_info);
+        museumData.append(
+          "established_year",
+          formData.established_year.toString()
+        );
+        museumData.append("status", formData.status);
+
+        // Add boolean fields
+        museumData.append("has_parking", formData.has_parking.toString());
+        museumData.append("has_wifi", formData.has_wifi.toString());
+        museumData.append("has_restaurant", formData.has_restaurant.toString());
+        museumData.append("has_gift_shop", formData.has_gift_shop.toString());
+        museumData.append(
+          "is_wheelchair_accessible",
+          formData.is_wheelchair_accessible.toString()
+        );
+        museumData.append(
+          "has_guided_tours",
+          formData.has_guided_tours.toString()
+        );
+
+        // Add tags as JSON array
+        if (formData.tags) {
+          const tagsArray = formData.tags
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter((tag) => tag);
+          museumData.append("tags", JSON.stringify(tagsArray));
+        }
+
+        // Add opening hours as string
+        museumData.append("opening_hours", formData.opening_hours);
+
+        // Add image if selected
+        if (selectedImage) {
+          museumData.append("main_image", selectedImage);
+        }
+
         response = await createMuseum(museumData);
       }
 
