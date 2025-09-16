@@ -210,15 +210,15 @@ const Footer = () => {
               {/* Social Icons */}
               <div className="flex flex-wrap gap-3 sm:gap-4">
                 {[
-                  { Icon: Facebook, label: 'Facebook' },
-                  { Icon: Twitter, label: 'Twitter' },
-                  { Icon: Instagram, label: 'Instagram' },
-                  { Icon: Linkedin, label: 'LinkedIn' },
-                  { Icon: Youtube, label: 'YouTube' }
-                ].map(({ Icon, label }) => (
+                  { Icon: Facebook, label: 'Facebook', link: 'https://www.facebook.com/share/14KxmeeGa8V/' },
+                  { Icon: Twitter, label: 'Twitter', link: 'https://x.com/The_DHPplatform?t=Rpaep02cN10rzg3A67HyDA&s=09' },
+                  { Icon: Instagram, label: 'Instagram', link: 'https://www.instagram.com/the_dhp_platform?igsh=MWo3czJkb2F6dWhvbQ==' },
+                  { Icon: Linkedin, label: 'LinkedIn', link: 'https://www.linkedin.com/company/the-dhp-platform/' },
+                  { Icon: Youtube, label: 'YouTube', link: 'https://youtube.com/@thedhpplatform-irage?si=9NEF1E0WwqsNCwDU' }
+                ].map(({ Icon, label, link }) => (
                   <a
                     key={label}
-                    href="#"
+                    href={link}
                     className="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors duration-200"
                     aria-label={label}
                   >
