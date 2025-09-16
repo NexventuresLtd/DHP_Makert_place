@@ -330,7 +330,7 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
                                 </div>
 
                                 {/* Price and Stock */}
-                                <div className="mt-3 flex items-center justify-between">
+                                <div className="mt-3 flex items-start flex-col justify-start">
                                     <div className="flex flex-col">
                                         <span className="text-lg font-bold text-primary">
                                             {formatPrice(product.price)}
@@ -341,7 +341,7 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
                                             </span>
                                         )}
                                     </div>
-                                    <span className={`text-xs px-2 py-1 rounded-full ${getStockStatus(product.stock).class}`}>
+                                    <span className={`text-xs mt-2 ml-auto px-2 py-1 rounded-full ${getStockStatus(product.stock).class}`}>
                                         {getStockStatus(product.stock).text}
                                     </span>
                                 </div>
