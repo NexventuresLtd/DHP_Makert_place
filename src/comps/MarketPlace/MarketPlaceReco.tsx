@@ -295,7 +295,7 @@ export default function RecommendedItemsSection() {
                                 </div>
                               </div>
 
-                              <div className="flex items-center gap-4">
+                              <div className="flex flex-col items-center gap-4">
                                 <WishlistHeart productId={product.id} className="w-5 h-5" />
                                 {isLoggedIn &&
                                   <button
@@ -331,7 +331,7 @@ export default function RecommendedItemsSection() {
                                 {product.description || 'No description available'}
                               </p>
 
-                              <div className="flex items-center justify-between">
+                              <div className="flex flex-col items-start justify-between">
                                 <div className="flex flex-col">
                                   <span className="text-xl font-bold text-primary bg-clip-text text-transparent">
                                     {new Intl.NumberFormat('rw', {
@@ -351,7 +351,7 @@ export default function RecommendedItemsSection() {
 
                                 <button
                                   onClick={() => { setSelectedProduct(product); setIsModalOpen(true); }}
-                                  className="px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-2xl hover:from-emerald-600 hover:to-teal-600 transition-all duration-300 flex items-center gap-2  shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105"
+                                  className="px-5 mt-2 ml-auto py-2.5 bg-primary text-white text-sm font-semibold rounded-2xl hover:from-emerald-600 hover:to-teal-600 transition-all duration-300 flex items-center gap-2  shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105"
                                 >
                                   <ShoppingCart className="w-4 h-4" />
                                   Add
