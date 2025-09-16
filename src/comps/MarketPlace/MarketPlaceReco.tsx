@@ -277,7 +277,7 @@ export default function RecommendedItemsSection() {
                                   {product.description || 'No description available'}
                                 </p>
 
-                                <div className="flex items-baseline gap-3 mb-6">
+                                <div className="flex flex-col items-baseline gap-3 mb-6">
                                   <span className="text-xl font-bold text-primary bg-clip-text text-transparent">
                                     {new Intl.NumberFormat('rw', {
                                       style: 'currency',

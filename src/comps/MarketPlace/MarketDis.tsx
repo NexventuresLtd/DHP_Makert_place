@@ -157,8 +157,8 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
               <span className="text-xs text-slate-500">({product.review_count})</span>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-baseline space-x-1">
+            <div className="flex items-start flex-col justify-start">
+              <div className="flex flex-col gap-2 w-full items-baseline space-x-1">
                 <span className="text-lg font-bold text-primary">{new Intl.NumberFormat('rw', {
                   style: 'currency',
                   currency: 'RWF',
@@ -170,7 +170,7 @@ const ProductsShowcase: React.FC<ProductsShowcaseProps> = ({ data }) => {
                   }).format(parseFloat(product.original_price))}</span>
                 )}
               </div>
-              <span className={`text-xs px-2 py-1 rounded-xl font-medium ${stockStatus.class}`}>
+              <span className={`text-xs mt-2 ml-auto w-fit px-2 py-1 rounded-xl font-medium ${stockStatus.class}`}>
                 {stockStatus.text}
               </span>
             </div>

@@ -155,7 +155,7 @@ const ProductView = () => {
                                         </p>
 
                                         {/* Price and Purchase Button */}
-                                        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                                        <div className="flex flex-col items-start justify-start pt-4 border-t border-gray-100">
                                             <div className="flex flex-col">
                                                 <div className="text-2xl font-bold text-primary">
                                                     {new Intl.NumberFormat('rw', {
@@ -177,7 +177,7 @@ const ProductView = () => {
                                                     setSelectedProduct(product);
                                                     setIsModalOpen(true);
                                                 }}
-                                                className="flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-lg font-medium transition-all duration-200 hover:scale-[1.02] active:scale-95 shadow-md hovershadow-lg"
+                                                className="flex mt-2 w-full items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-lg font-medium transition-all duration-200 hover:scale-[1.02] active:scale-95 shadow-md hovershadow-lg"
                                                 aria-label={`Add ${product.name} to cart`}
                                                 disabled={product.stock <= 0}
                                             >
