@@ -21,14 +21,16 @@ const Footer = () => {
   };
 
   const handleSubscribe = () => {
-    if (email.trim()) {
-      // Simulate subscription
-      setIsSubscribed(true);
-      setTimeout(() => {
-        setIsSubscribed(false);
-        setEmail('');
-      }, 3000);
-    }
+    // if (email.trim()) {
+    //   // Simulate subscription
+    //   setIsSubscribed(true);
+    //   setTimeout(() => {
+    //     setIsSubscribed(false);
+    //     setEmail('');
+    //   }, 3000);
+    // }
+    setIsSubscribed(true);
+    window.location.href = 'https://www.linkedin.com/company/the-dhp-platform/';
   };
 
   return (
